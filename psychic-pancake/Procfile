@@ -1,0 +1,1 @@
+web: java -Dclojure.main.report=stderr -cp target/uberjar/psychic-pancake.jar clojure.main -m psychic-pancake.core
