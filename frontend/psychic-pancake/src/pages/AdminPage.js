@@ -17,20 +17,27 @@ export default function AdminPanel() {
         }
     ];
 
-    const [selectedUser, setSelectedUser] = useState(null);
-    
-    useEffect(() => {
-        
-    }, [selectedUser]);
+    const [selectedUser, setSelectedUser] = useState({});
 
-    console.log(selectedUser)
     return (
         <div className="row">
             <div className="col-sm-3">
-                <AdminUserList userList={users} setSelectedUser={setSelectedUser} selectedUser={selectedUser}/>
+                <AdminUserList userList={users} setSelectedUser={setSelectedUser} selectedUser={selectedUser} />
             </div>
             <div className="col-sm-9">
-                <span>{selectedUser.email}</span>
+                <div className="row">
+
+                    <span className="col-sm-4">{selectedUser.id}</span>
+                    <span className="col-sm-4">{selectedUser.username}</span>
+                    <span className="col-sm-4">{selectedUser.email}</span>
+                    
+                </div>
+                {/* <div className="row">
+                    <span>Photo:</span>
+                </div>
+                <div className="row">
+                    <span>Items :</span>
+                </div> */}
             </div>
         </div>
     );
