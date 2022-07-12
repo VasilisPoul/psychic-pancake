@@ -64,7 +64,8 @@
                   :repl-options {:init-ns user
                                  :timeout 120000
                                  :port 7000
-                                 :host "0.0.0.0"}
+                                 :host "0.0.0.0"
+                                 :init (start)}
                   :injections [(require 'pjstadig.humane-test-output)
                                (pjstadig.humane-test-output/activate!)]}
    :project/test {:jvm-opts ["-Dconf=test-config.edn" ]
