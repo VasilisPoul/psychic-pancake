@@ -1,24 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
-import Navbar from './components/Navbar';
-import LandingPage from './pages/Landing';
-import AdminPanel from './pages/AdminPage';
-import AdminNavbar from './components/AdminNavbar';
-import { BrowserRouter } from "react-router-dom";
+import AdminUsersPage from './pages/AdminUsersPage'
+import AdminPendingPagePanel from './pages/AdminUsersPagePending'
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
+
 function App() {
   console.log(process.env.REACT_APP_URL)
-  // const router = useRouter();
-  // console.log(router)
+  const isAdmin = false;
   return (
     <BrowserRouter>
-    <div style={{backgroundColor:"#f0f0e1", width:"100%", height:"100%", minHeight:"100%"}}>
-      <AdminNavbar />
-      <span>Hello</span>
-      <div>
-        {/* <AdminPanel /> */}
-      </div>
-    </div>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={isAdmin ? <Navigate to="users" /> : <span>HI</span>}/>
+      <Route path="users" element={ isAdmin ? <AdminUsersPage /> : <span>Not Authorized</span>} />
+      <Route path="pending" element={isAdmin? <AdminPendingPagePanel /> : <span>Not Authorized</span>} />
+    </Routes>
+  </BrowserRouter>
   );
 }
 
