@@ -3,19 +3,19 @@
     [reitit.swagger :as swagger]
     [reitit.swagger-ui :as swagger-ui]
     [reitit.ring.coercion :as coercion]
-    [reitit.coercion.schema :as S]
+    [reitit.coercion.spec]
     [reitit.ring.middleware.muuntaja :as muuntaja]
     [reitit.ring.middleware.multipart :as multipart]
     [reitit.ring.middleware.parameters :as parameters]
     [psychic-pancake.middleware.formats :as formats]
     [ring.util.http-response :refer :all]
     [clojure.java.io :as io]
-    [schema.core :as s]
-    [psychic-pancake.routes.user :as user]))
+    [psychic-pancake.routes.user :as user]
+    [psychic-pancake.routes.listings :as listings]))
 
 (defn service-routes []
   ["/api"
-   {:coercion S/coercion
+   {:coercion reitit.coercion.spec/coercion
     :muuntaja formats/instance
     :swagger {:id ::api}
     :middleware [;; query-params & form-params
@@ -52,7 +52,12 @@
     {:get (constantly (ok {:message "pong"}))}]
    
    user/user-routes
+   listings/routes
 
+   ["/test"
+    {:swagger {:tags ["default"]}
+     :get {:handler (constantly (ok {}))}}]
+   
    ;; ["/math"
    ;;  {:swagger {:tags ["math"]}}
 
