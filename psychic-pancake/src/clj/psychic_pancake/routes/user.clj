@@ -1,18 +1,19 @@
 (ns psychic-pancake.routes.user
   (:require
    [ring.util.http-response :refer :all]
-   [spec-tools.core :as st]))
+   [spec-tools.core :as st]
+   [psychic-pancake.specs.common :refer [resp-404able]]
+   [psychic-pancake.routes.common :refer [resp-404]]
+   [psychic-pancake.specs.user :refer [user-info-shape]]))
 
 
-(defn resp-404able [resp-schema]
-  (assoc resp-schema
-         404 {:body {:message string?}}))
+
 
 (def
   users
   "hard coded users for testing"
-  {22 {:username "foo" :email "foo@test.com" :user-type "admin"}
-   28 {:username "bar" :email "bar@test.com" :user-type "seller"}})
+  {"foo" {:username "foo" :email "foo@test.com" :user-type "admin"}
+   "bar" {:username "bar" :email "bar@test.com" :user-type "seller"}})
 
 
 (def user-routes
@@ -22,6 +23,7 @@
      {:handler (fn [{{{id :id} :query} :parameters}]
                  (if (users id)
                    (ok (users id))
-                   (not-found {:message "user not found"})))
-      :responses (resp-404able {200 {:body {:username string? :email string? :user-type string?}}})
-      :parameters {:query {:id pos-int?}}}}])
+                   resp-404))
+      :responses (resp-404able {200 {:body user-info-shape}})
+      :parameters {:query {:id :usr/uid}}}}])
+
