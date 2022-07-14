@@ -1,8 +1,10 @@
+import { useContext } from 'react';
 import AdminUsersPage from '../pages/AdminUsersPage'
 import AdminPendingPagePanel from '../pages/AdminUsersPagePending'
 import WelcomePage from '../pages/WelcomePage'
 import Login from './Login';
 import Signup from './Signup'
+import { UserContext } from './UserContext';
 import {
   BrowserRouter,
   Routes,
@@ -13,8 +15,11 @@ import RequestPending from './/RequestPending';
 
 
 export default function RoutesComponent() {
-  const isAdmin = false;
-  const isLoggedIn = false;
+  const user = useContext(UserContext);
+  const isAdmin = user['user-role'] === 'admin';
+  const isLoggedIn = user['user-role'] === 'seller' || user['user-role'] === 'buyer';
+  console.log(isAdmin)
+  console.log(isLoggedIn)
   return (
     <BrowserRouter>
       <Routes>
