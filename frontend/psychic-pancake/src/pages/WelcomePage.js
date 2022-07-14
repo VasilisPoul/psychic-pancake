@@ -15,10 +15,10 @@ export default function WelcomePage() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-link">
-                
+
               </li>
               <li className="nav-link">
-                
+
               </li>
             </ul>
             <Link to={`/login`}>Log In</Link>
@@ -36,7 +36,7 @@ export default function WelcomePage() {
             <Login />
           </div>
           <div className="col">
-            <img src={auction} className="img-thumbnail"/>
+            <img src={auction} className="img-thumbnail" />
           </div>
         </div>
 

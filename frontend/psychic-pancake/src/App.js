@@ -17,14 +17,14 @@ function App() {
   const isLoggedIn = false;
   return (
     <BrowserRouter>
-    <Routes>
-      <Route path="/" element={isAdmin ? <Navigate to="users" /> :  (isLoggedIn ? <span>FrontPage</span> : <WelcomePage/>)}/>
-      <Route path="/signup" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Signup/>)}/>
-      <Route path="/login" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Login/>)}/>
-      <Route path="users" element={ isAdmin ? <AdminUsersPage /> : <span>Not Authorized</span>} />
-      <Route path="pending" element={isAdmin? <AdminPendingPagePanel /> : <span>Not Authorized</span>} />
-    </Routes>
-  </BrowserRouter>
+      <Routes>
+        <Route path="/" element={isAdmin ? <Navigate to="users" /> : (isLoggedIn ? <span>FrontPage</span> : <WelcomePage />)} />
+        <Route path="/signup" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Signup />)} />
+        <Route path="/login" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Login />)} />
+        <Route path="users" element={isAdmin ? <AdminUsersPage /> : <span>Not Authorized</span>} />
+        <Route path="pending" element={isAdmin ? <AdminPendingPagePanel /> : <span>Not Authorized</span>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
