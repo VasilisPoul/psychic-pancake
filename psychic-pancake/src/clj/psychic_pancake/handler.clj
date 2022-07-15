@@ -28,3 +28,34 @@
 
 (defn app []
   (middleware/wrap-base #'app-routes))
+
+
+(comment
+  (import org.hibernate.SessionFactory)
+  (import org.hibernate.cfg.Configuration)
+  (import psychic_pancake.User)
+  (def session-factory
+    (-> (Configuration.)
+        (.configure "hibernate.cfg.xml")
+        .buildSessionFactory))
+
+  (let [session (.openSession session-factory)
+        usr (User.)]
+    (do (.SetUID usr "foo")
+        (.SetEmail usr "foo@domain.com")
+        (.persist session usr)
+        ;; (.save session usr)
+
+        (let [transaction (.getTransaction session)]
+          (do (.begin transaction)
+              (.commit transaction)))))
+
+  (.GetUID (User.))
+  (em/create-entity-manager)
+  (em/create-native-query "name" User)
+  (.getEntityManagerFactory (cljjpa.producers.EntityManagerFactoryProcducer.))
+  (.getPersistenceProviders (javax.persistence.spi.PersistenceProviderResolverHolder/getPersistenceProviderResolver))
+  (with-entity-manager
+  (with-transaction
+    (em/merge User {:uid "group1"
+                    :email ""}))))

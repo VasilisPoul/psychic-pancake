@@ -11,15 +11,16 @@
             :json-schema/default "user_name"
             :swagger/example "user_name"}))
 
-(s/def :usr/email
-  (st/spec (let [email-pattern "^(.+)@(.+)$"]
-             {:spec (partial re-matches (re-pattern email-pattern))
-              :description "Email Address"
-              :json-schema/default "test@domain.com"
-              :swagger/example "test@domain.com"
-              :swagger/type "string"
-              :swagger/format "email"
-              :swagger/pattern email-pattern})))
+(let [email-pattern "^(.+)@(.+)$"]
+  (s/def :usr/email
+    (st/spec 
+     {:spec (partial re-matches (re-pattern email-pattern))
+      :description "Email Address"
+      :json-schema/default "test@domain.com"
+      :swagger/example "test@domain.com"
+      :swagger/type "string"
+      :swagger/format "email"
+      :swagger/pattern email-pattern})))
 
 
 (s/def :usr/role
@@ -51,10 +52,4 @@
 (s/def :usr/info-spec
   (st/spec
    {:spec {:username string? :email :usr/email :user-type :usr/role}}))
-
-
-(ds/spec :test (s/and string? ))
-
-(s/def ::regex-test
-  (fn [x] (not (nil? (re-matches #"foo*" x)))))
 

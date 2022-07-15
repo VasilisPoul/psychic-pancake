@@ -19,7 +19,7 @@ services:
     image: adminer
     restart: always
     ports:
-      - 3002:3002
+      - 3002:8080
   react:
     build: "./frontend/psychic-pancake/"
     ports:

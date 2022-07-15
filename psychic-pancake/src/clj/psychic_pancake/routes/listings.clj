@@ -59,6 +59,8 @@
                               :Location "Alice's Shoe Factory"
                               :Country "United Kingdom"}}))
 
+(s/def :bid/time string?)
+
 (def listing-spec
    {:ItemID :item/id
     :Name :item/name
@@ -89,9 +91,6 @@
    (ds/opt :Started) :listing/started
    (ds/opt :Ends) :listing/ends
    (ds/opt :Seller-Rating) :usr/rating})
-
-((st/spec {:spec #"foo"}) "foo")
-
 
 (def routes
   ["/listings"

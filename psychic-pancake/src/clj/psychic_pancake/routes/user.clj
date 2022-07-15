@@ -17,13 +17,12 @@
 
 
 (def user-routes
-  ["/user"
+  ["/user/:id"
    {:swagger {:tags ["user"]}
     :get
-     {:handler (fn [{{{id :id} :query} :parameters}]
+     {:handler (fn [{{{id :id} :path} :parameters}]
                  (if (users id)
                    (ok (users id))
                    resp-404))
       :responses (resp-404able {200 {:body user-info-shape}})
-      :parameters {:query {:id :usr/uid}}}}])
-
+      :parameters {:path {:id :usr/uid}}}}])

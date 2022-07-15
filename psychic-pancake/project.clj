@@ -27,11 +27,20 @@
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.9.5"]
                  [ring/ring-defaults "0.3.3"]
-                 [selmer "1.12.50"]]
+                 [selmer "1.12.50"]
+                 ;; jpa
+                 [org.hibernate/hibernate-core "6.1.1.Final"]
+                 [org.postgresql/postgresql "42.4.0"]
+                 [org.jboss.weld.se/weld-se-core "5.0.1.Final"]
+                 [javax.persistence/javax.persistence-api "2.2"]
+                 ;; buddy
+                 [buddy/buddy-auth "3.0.1"]
+                 [buddy/buddy-sign "3.4.333"]]
 
   :min-lein-version "2.0.0"
   
   :source-paths ["src/clj"]
+  :java-source-paths ["src/java"]
   :test-paths ["test/clj"]
   :resource-paths ["resources"]
   :target-path "target/%s/"
@@ -43,7 +52,7 @@
   {:uberjar {:omit-source true
              :aot :all
              :uberjar-name "psychic-pancake.jar"
-             :source-paths ["env/prod/clj" ]
+             :source-paths ["env/prod/clj"]
              :resource-paths ["env/prod/resources"]}
 
    :dev           [:project/dev :profiles/dev]
