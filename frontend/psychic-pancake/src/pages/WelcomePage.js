@@ -33,7 +33,7 @@ export default function WelcomePage() {
       <div className="container mb-4">
         <div className="row">
           <div className="col">
-            <Login />
+            <Login frontPage={true}/>
           </div>
           <div className="col">
             <img src={auction} className="img-thumbnail" />

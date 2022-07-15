@@ -1,45 +1,65 @@
 import { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
+import '../style.css'
+import classNames from "classnames";
 
-export default function Login() {
-  const {user, setUser} = useContext(UserContext);
-  const [ email, setEmail ] = useState('');
+export default function Login(props) {
+  const frontPage = props.frontPage;
+  const { user, setUser } = useContext(UserContext);
+  const [email, setEmail] = useState('');
   const navigate = useNavigate();
+
   const LogInUser = (e) => {
-    setUser({'username': 'foo', 'email': email, 'user-role': 'buyer'}) 
+    setUser({ 'username': 'foo', 'email': email, 'user-role': 'buyer' })
+    navigate("/")
+  }
+
+  const HandleCancel = () => {
     navigate("/")
   }
 
   return (
-    <>
-      <div className="col-xs-1" align="center"><h3>Sign In</h3></div>
-      <div className="container d-flex justify-content-center" >
-        <div class="col-md-8 d-flex justify-content-center" style={{ boxShadow: "0px 14px 80px rgb(34 35 58 / 20%)" }}>
-
-          <div className="row">
-            <form onSubmit={LogInUser}>
-              <div className="form-outline mb-4">
-                <label className="form-label">Email address</label><br />
-                <input required
-                  type="email"
-                  name="email"
-                  placeholder="Enter Email"
-                  onChange={(e) => {setEmail(e.target.value)}} />
-              </div>
-              <div className="form-outline mb-4">
-                <label>Password</label><br />
-                <input required
-                  type="password"
-                  name="password"
-                  placeholder="Enter your password" />
-
-              </div>
-              <button type="submit" className="btn btn-primary btn-block mb-4" >Submit</button>
-            </form>
+    <div className={classNames(frontPage ? '' : "Auth-form-container")}>
+      <form className="Auth-form" onSubmit={LogInUser}>
+        <div className="Auth-form-content">
+          <h3 className="Auth-form-title">Sign In</h3>
+          <div className="text-center">
+            Not registered yet?{" "}
+            <Link to="/signup" className="link-primary">
+              Sign Up
+            </Link>
           </div>
+          <div className="form-group mt-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              className="form-control mt-1"
+              placeholder="Enter email"
+              onChange={(e) => { setEmail(e.target.value) }}
+            />
+          </div>
+          <div className="form-group mt-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control mt-1"
+              placeholder="Enter password"
+            />
+          </div>
+          <div className="d-grid gap-2 mt-3">
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+            {!frontPage && <button type="submit" className="btn btn-grey" onClick={HandleCancel}>
+              Cancel
+            </button>}
+          </div>
+          <p className="text-center mt-2">
+            Forgot <a href="#">password?</a>
+          </p>
         </div>
-      </div>
-    </>
+      </form>
+    </div>
   );
 }
