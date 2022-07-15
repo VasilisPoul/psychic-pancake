@@ -93,7 +93,7 @@ export default function HomePage() {
           {ItemsList.map((item, idx) => {
             console.log(item)
             return (
-              <div className='col-sm-3'>
+              <div className='col-sm-3 mb-3'>
                 <div class="card" style={{ "width": "18rem;" }}>
                   <img src={auction} class="card-img-top" alt="..." />
                   <div class="card-body">
