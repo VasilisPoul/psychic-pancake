@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import RequestPending from './RequestPending';
 import HomePage from '../pages/HomePage';
+import SetupAdmin from './SetupAdmin';
 
 export default function RoutesComponent() {
   const {user, setUser} = useContext(UserContext);
@@ -31,6 +32,7 @@ export default function RoutesComponent() {
         <Route path="/users" element={isAdmin ? <AdminUsersPage /> : <span>Not Authorized.</span>} />
         <Route path="/pending" element={isAdmin ? <AdminPendingPagePanel /> : <span>Not Authorized.</span>} />
         <Route path="/request-sent" element={(isAdmin || isLoggedIn) ? <Navigate to="/" /> : <RequestPending />} />
+        <Route path="/install" element={<SetupAdmin />} />
       </Routes>
     </BrowserRouter>
   );
