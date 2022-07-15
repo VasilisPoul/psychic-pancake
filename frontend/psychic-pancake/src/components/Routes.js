@@ -33,6 +33,7 @@ export default function RoutesComponent() {
         <Route path="/pending" element={isAdmin ? <AdminPendingPagePanel /> : <span>Not Authorized.</span>} />
         <Route path="/request-sent" element={(isAdmin || isLoggedIn) ? <Navigate to="/" /> : <RequestPending />} />
         <Route path="/install" element={<SetupAdmin />} />
+        <Route path="/my-auctions" element={<span>Under Construction</span>} />
       </Routes>
     </BrowserRouter>
   );
