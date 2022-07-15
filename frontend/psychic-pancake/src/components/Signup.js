@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 
 const GeneralInfo = () => {
   return (
@@ -100,6 +100,11 @@ const PersonalInfo = () => {
 
 export default function Signup() {
 
+  const navigate = useNavigate();
+  
+  const HandleSignUp = () => {
+    navigate("/request-sent")
+  }
   return (
     <>
       <div className="col-xs-1" align="center"><h3>Sign Up</h3></div>
@@ -107,7 +112,7 @@ export default function Signup() {
         <div className="col-md-8 col-lg-6 col-xl-4 offset-xl-1 d-flex justify-content-center" style={{ boxShadow: "0px 14px 80px rgb(34 35 58 / 20%)" }}>
 
           <div className="row">
-            <form>
+            <form onSubmit={HandleSignUp}>
               <nav>
                 <div className="nav nav-tabs" id="nav-tab" role="tablist">
                   <button className="nav-link active" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
@@ -127,9 +132,7 @@ export default function Signup() {
                 </div>
               </div>
               <button type="submit" className="btn btn-light btn-block mb-4">
-                <Link to="/request-sent">
                   Submit
-                </Link>
               </button>
             </form>
           </div>
