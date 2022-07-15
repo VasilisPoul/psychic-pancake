@@ -35,7 +35,7 @@ const Footer = () => <footer className="page-footer font-small blue pt-4" style=
   </div>
 
   <div className="footer-copyright text-center py-3">© 2022 Copyright:
-    <a href="#"> PsychicPancake.com</a>
+    <Link to="/"> PsychicPancake.com</Link>
   </div>
 
 </footer>

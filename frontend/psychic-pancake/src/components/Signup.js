@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 
 const GeneralInfo = () => {
   return (
@@ -50,8 +51,8 @@ const AddressInfo = () => {
       <div className="form-outline mb-4">
         <label> Post code</label><br />
         <input required
-          type="password"
-          name="password"
+          type="text"
+          name="post-code"
           placeholder="Re-enter your password" />
 
       </div>
@@ -89,7 +90,7 @@ const PersonalInfo = () => {
         <label>VAT Number</label><br />
         <input required
           type="text"
-          name="phone"
+          name="vat"
           placeholder="Enter VAT number" />
 
       </div>
@@ -98,6 +99,7 @@ const PersonalInfo = () => {
 }
 
 export default function Signup() {
+
   return (
     <>
       <div className="col-xs-1" align="center"><h3>Sign Up</h3></div>
@@ -124,7 +126,11 @@ export default function Signup() {
                   <AddressInfo />
                 </div>
               </div>
-              <button type="submit" className="btn btn-primary btn-block mb-4">Submit</button>
+              <button type="submit" className="btn btn-light btn-block mb-4">
+                <Link to="/request-sent">
+                  Submit
+                </Link>
+              </button>
             </form>
           </div>
         </div>
