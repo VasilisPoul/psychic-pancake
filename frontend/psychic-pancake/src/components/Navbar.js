@@ -6,6 +6,7 @@ export default function Navbar() {
     const { user, setUser } = useContext(UserContext);
 
     const HandleLogOut = () => {
+        localStorage.setItem("user", JSON.stringify('{}'));
         setUser({});    
     }
 

@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import AdminUsersPage from '../pages/AdminUsersPage'
 import AdminPendingPagePanel from '../pages/AdminUsersPagePending'
 import WelcomePage from '../pages/WelcomePage'
@@ -17,12 +17,24 @@ import SetupAdmin from './SetupAdmin';
 
 export default function RoutesComponent() {
   const {user, setUser} = useContext(UserContext);
-  const isAdmin = user['user-role'] === 'admin';
-  const isLoggedIn = user['user-role'] === 'seller' || user['user-role'] === 'buyer';
-  console.log("user: ", user)
-  console.log("user: ", user['user-role'])
-  console.log(user['user-role'] === 'admin')
-  console.log(user['user-role'] === 'buyer')
+  let isAdmin = false;
+  let isLoggedIn = false;
+  
+  // useEffect(() => {
+  //   console.log("id: ", user.id)
+  //   if (localStorage == null)
+  //     localStorage.setItem("user", user.id);
+
+  //   // setUser(user)
+  //   console.log("localStorage: ", localStorage.getItem('user'))
+  // }, [user])
+
+  if (typeof user !== 'undefined'){
+    console.log("user: ", user)
+    isAdmin = user['user-role'] === 'admin';
+    isLoggedIn = user['user-role'] === 'seller' || user['user-role'] === 'buyer';
+  }
+
   return (
     <BrowserRouter>
       <Routes>

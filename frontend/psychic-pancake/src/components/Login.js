@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Navigate, useNavigate, Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import '../style.css'
@@ -10,8 +10,12 @@ export default function Login(props) {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
 
+  
+
   const LogInUser = (e) => {
-    setUser({ 'username': 'foo', 'email': email, 'user-role': 'buyer' })
+    e.preventDefault();
+    setUser({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'buyer' })
+    localStorage.setItem("user", JSON.stringify({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'buyer' }));
     navigate("/")
   }
 

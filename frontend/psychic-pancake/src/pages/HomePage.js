@@ -91,7 +91,6 @@ export default function HomePage() {
       <div className='container mt-3'>
         <div className='row mb-2'>
           {ItemsList.map((item, idx) => {
-            console.log(item)
             return (
               <div className='col-sm-3 mb-3'>
                 <div class="card" style={{ "width": "18rem;" }}>
