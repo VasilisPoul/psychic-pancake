@@ -33,6 +33,8 @@
                  [org.postgresql/postgresql "42.4.0"]
                  [org.jboss.weld.se/weld-se-core "5.0.1.Final"]
                  [javax.persistence/javax.persistence-api "2.2"]
+                 [org.projectlombok/lombok "1.18.24"]
+                 [jakarta.validation/jakarta.validation-api "3.0.2"]
                  ;; buddy
                  [buddy/buddy-auth "3.0.1"]
                  [buddy/buddy-sign "3.4.333"]]

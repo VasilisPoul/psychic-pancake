@@ -26,12 +26,20 @@
         1234
       </property>
       
-      <property name = "hbm2ddl.auto">create</property>
+      <property name = "hbm2ddl.auto">update</property>
       <property name="javax.persistence.schema-generation.database.action">create</property>
 
       <property name="show_sql">true</property>
 
       <!-- List of XML mapping files -->
+      <mapping class="psychic_pancake.Bid"/>
+      <mapping class="psychic_pancake.Category"/>
+      <mapping class="psychic_pancake.Country"/>
+      <mapping class="psychic_pancake.Listing"/>
+      <mapping class="psychic_pancake.Location"/>
+      <mapping class="psychic_pancake.Message"/>
+      <mapping class="psychic_pancake.Resource"/>
       <mapping class="psychic_pancake.User"/>
+
    </session-factory>
 </hibernate-configuration>

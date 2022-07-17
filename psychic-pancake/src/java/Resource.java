@@ -1,5 +1,6 @@
 package psychic_pancake;
 
+
 import javax.persistence.*;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -20,4 +21,9 @@ public class Resource implements Serializable {
     private User owner;
     public User GetOwner() {return owner;}
     public void SetOwner(User owner) {this.owner = owner;}
+
+    public Resource() {}
+    public Resource(User owner) {
+	this.owner = owner;
+    }
 }
