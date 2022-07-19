@@ -1,13 +1,14 @@
-import { Link } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useContext } from 'react';
 import { UserContext } from './UserContext';
 
 export default function Navbar() {
     const { user, setUser } = useContext(UserContext);
-
+    const navigate = useNavigate();
     const HandleLogOut = () => {
         localStorage.setItem("user", JSON.stringify('{}'));
         setUser({});    
+        navigate('/')
     }
 
     return (

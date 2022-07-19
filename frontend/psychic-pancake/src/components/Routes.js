@@ -14,6 +14,8 @@ import {
 import RequestPending from './RequestPending';
 import HomePage from '../pages/HomePage';
 import SetupAdmin from './SetupAdmin';
+import UserAuctions from '../pages/UserAuctions';
+import Auction from '../pages/Auction';
 
 export default function RoutesComponent() {
   const {user, setUser} = useContext(UserContext);
@@ -45,7 +47,8 @@ export default function RoutesComponent() {
         <Route path="/pending" element={isAdmin ? <AdminPendingPagePanel /> : <span>Not Authorized.</span>} />
         <Route path="/request-sent" element={(isAdmin || isLoggedIn) ? <Navigate to="/" /> : <RequestPending />} />
         <Route path="/install" element={<SetupAdmin />} />
-        <Route path="/my-auctions" element={<span>Under Construction</span>} />
+        <Route path="/my-auctions" element={isLoggedIn ? <UserAuctions/> : <span>Not Authorized.</span>} />
+        <Route path="/auction" element={<Auction />} />
       </Routes>
     </BrowserRouter>
   );

@@ -84,7 +84,6 @@ const ItemsList = [
 ];
 
 export default function HomePage() {
-  console.log("HERE")
   return (
     <>
       <Navbar />

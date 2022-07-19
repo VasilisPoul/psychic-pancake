@@ -14,8 +14,8 @@ export default function Login(props) {
 
   const LogInUser = (e) => {
     e.preventDefault();
-    setUser({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'buyer' })
-    localStorage.setItem("user", JSON.stringify({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'buyer' }));
+    setUser({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'seller' })
+    localStorage.setItem("user", JSON.stringify({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'seller' }));
     navigate("/")
   }
 
