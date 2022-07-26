@@ -37,7 +37,8 @@
                  [jakarta.validation/jakarta.validation-api "3.0.2"]
                  ;; buddy
                  [buddy/buddy-auth "3.0.1"]
-                 [buddy/buddy-sign "3.4.333"]]
+                 [buddy/buddy-sign "3.4.333"]
+                 [buddy/buddy-hashers "1.8.158"]]
 
   :min-lein-version "2.0.0"
   

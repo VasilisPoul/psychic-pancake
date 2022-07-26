@@ -64,10 +64,36 @@
             :json-schema/default "your password"
             :swagger/example "password123"}))
 
+(s/def :usr/first_name
+  (st/spec {:spec string?
+            :description "User's first name"
+            :json-schema/default "Firstname"
+            :swagger/example "John"}))
+
+(s/def :usr/last_name
+  (st/spec {:spec string?
+            :description "User's last name"
+            :json-schema/default "Lastname"
+            :swagger/example "Wick"}))
+
 (def user-info-shape
+  "Shape of a user's information"
   {:username string? :email :usr/email :user-type :usr/role})
 
-(s/def :usr/info-spec
-  (st/spec
-   {:spec {:username string? :email :usr/email :user-type :usr/role}}))
 
+
+(def user-registration-shape
+  "Shape used to validate the registration form"
+  {(ds/req :role) :usr/role
+   (ds/req :uid) :usr/uid
+   (ds/req :first_name) :usr/first_name
+   (ds/req :last_name) :usr/last_name
+   (ds/req :email) :usr/email
+   (ds/req :SSN) :usr/ssn
+   (ds/req :phone_num) :usr/phone_num
+   (ds/req :password) :usr/password
+   (ds/req :country) :usr/country})
+
+(def user-login-shape
+  {:uid :usr/uid
+   :password :usr/password})

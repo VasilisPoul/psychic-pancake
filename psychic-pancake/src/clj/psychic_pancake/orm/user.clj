@@ -12,12 +12,11 @@
 (defn create! [map]
   (orm/with-session
     (orm/with-transaction
-      (orm/save!
+      (orm/merge!
        (map->user
-        ;; (assoc map
-        ;;        :country
-        ;;        (orm/obj->map (orm/find! psychic_pancake.Country (:country map))))
-        map)))))
+        (assoc map
+               :country
+               (orm/obj->map (orm/find! psychic_pancake.Country (:country map)))))))))
 
 (defn get-by-id [uid]
   (orm/with-session
@@ -34,46 +33,52 @@
     (orm/with-transaction
       (let [sender (orm/find! User (:from msg))
             receiver (orm/find! User (:to msg))
-            message (orm/hash-map->obj
-                     (assoc msg
-                            :from sender
-                            :to receiver)
-                     Message)]
-        (.sendMessage sender message)
-        (orm/merge! sender)
-        (orm/merge! receiver)))))
+            message  (orm/hash-map->obj
+                      (assoc msg
+                             :from sender
+                             :to receiver)
+                      Message)]
+        (orm/merge! message)))))
 
-(create!
- {:role (name :admin),
-  :email "foo@test.com",
-  :first_name "foo",
-  :last_name "bar",
-  :uid "test2",
-  :pending false,
-  :SSN "2903429570",
-  :phone_num "123456",
-  :password_digest "41903wjifdsk",
-  :location nil,
-  :country {:name "foo"}})
+;; (create!
+;;  {:role (name :admin),
+;;   :email "foo@test.com",
+;;   :first_name "foo",
+;;   :last_name "bar",
+;;   :uid "test2",
+;;   :pending false,
+;;   :SSN "2903429570",
+;;   :phone_num "123456",
+;;   :password_digest "41903wjifdsk",
+;;   :location nil,
+;;   :inbox [],
+;;   :outbox [],
+;;   :country {:name "foo"}})
 
+;; (create!
+;;  {:role (name :buyer),
+;;   :email "foo@test.com",
+;;   :first_name "foo",
+;;   :last_name "bar",
+;;   :uid "test",
+;;   :pending false,
+;;   :SSN "2903429570",
+;;   :phone_num "123456",
+;;   :password_digest "41903wjifdsk",
+;;   :location nil,
+;;   :inbox [],
+;;   :outbox [],
+;;   :country {:name "foo"}})
 
-(do
-  (orm/with-session
-  (orm/with-transaction
-    (let [country (orm/find! psychic_pancake.Country "foo")
-          user (orm/find! psychic_pancake.User "test")]
-      ;; (.add (.getUsers country) user)
-      ;; (.setUsers country (.getUsers country))
-      (.setCountry user country)
-      (orm/merge! user)))))
 
 ;; (get-by-id "test2")
 
 ;; (remove! "b")
 
-(send-message! {:from "test"
-                :to "test"
-                :subject "test"
-                :body "test"
-                })
+
+;; (send-message! {:from "test"
+;;                 :to "test2"
+;;                 :subject "testasfdfasf"
+;;                 :body "test"})
+
 

@@ -32,7 +32,7 @@ public class User implements Serializable {
     @NotNull
     private String password_digest;
     @ManyToOne
-    @JoinColumn(insertable=false, updatable=false)
+    @JoinColumn(insertable=true, updatable=true)
     @NotNull
     private Location location;
     @ManyToOne
@@ -51,11 +51,15 @@ public class User implements Serializable {
 
     @OrderBy ("timestamp DESC")
     @OneToMany(fetch = FetchType.LAZY, mappedBy="to")
-    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference(value="to")
+    @ToString.Exclude
     Set<Message> inbox;
     @OrderBy ("timestamp DESC")
     @OneToMany(fetch = FetchType.LAZY, mappedBy="from")
-    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @JsonManagedReference(value="from")
+    @ToString.Exclude
     Set<Message> outbox;
 
     @Enumerated(EnumType.ORDINAL)

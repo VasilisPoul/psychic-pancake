@@ -10,23 +10,29 @@ import java.util.List;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.*;
+
 @Entity
 @Table(name = "message", schema="main")
 @Data
 public class Message implements Serializable {
     @Id
-    @GeneratedValue
-    private Long msg_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long msg_id;
 
     @NotNull
     @ManyToOne
-    @JoinColumn(insertable=false, updatable=false)
+    @JsonBackReference(value="from")
     User from;
     @NotNull
     @ManyToOne
-    @JoinColumn(insertable=false, updatable=false)
+    @JsonBackReference(value="to")
     User to;
     @NotNull
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+	    nullable=false,
+	    updatable=false,
+	    insertable=false)
     Date timestamp;
     @NotNull
     private String subject;

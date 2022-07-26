@@ -12,5 +12,5 @@
     (orm/with-transaction
       (orm/find! Country name))))
 
-;; (create! {:name "foo" :latitude 1.2 :longitude 1.3})
-;; (get-by-name "foo")
+;; (create! {:name "Germany" :latitude 1.2 :longitude 1.3})
+;; (get-by-name "Germany")

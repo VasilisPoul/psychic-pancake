@@ -11,13 +11,19 @@
     [ring.util.http-response :refer :all]
     [clojure.java.io :as io]
     [psychic-pancake.routes.user :as user]
-    [psychic-pancake.routes.listings :as listings]))
+    [psychic-pancake.routes.listings :as listings]
+    [psychic-pancake.routes.token :as token]
+    [buddy.auth.middleware]
+    [buddy.auth.backends.token]))
 
 (defn service-routes []
   ["/api"
    {:coercion reitit.coercion.spec/coercion
     :muuntaja formats/instance
-    :swagger {:id ::api}
+    :swagger {:id ::api
+              :securityDefinitions {:apiAuth {:type "apiKey"
+                                              :name "authorization"
+                                              :in "header"}}}
     :middleware [;; query-params & form-params
                  parameters/parameters-middleware
                  ;; content-negotiation
@@ -33,7 +39,12 @@
                  ;; coercing request parameters
                  coercion/coerce-request-middleware
                  ;; multipart
-                 multipart/multipart-middleware]}
+                 multipart/multipart-middleware
+                 #(buddy.auth.middleware/wrap-authentication
+                   %
+                   (buddy.auth.backends.token/jws-backend
+                    {:secret token/secret}
+                    ))]}
 
    ;; swagger documentation
    ["" {:no-doc true
@@ -41,7 +52,7 @@
                          :description "https://cljdoc.org/d/metosin/reitit"}}}
 
     ["/swagger.json"
-     {:get (swagger/create-swagger-handler)}]
+     {:get {:handler (swagger/create-swagger-handler)}}]
 
     ["/api-docs/*"
      {:get (swagger-ui/create-swagger-ui-handler
@@ -53,6 +64,7 @@
    
    user/user-routes
    listings/routes
+   token/routes
 
    ["/test"
     {:swagger {:tags ["default"]}

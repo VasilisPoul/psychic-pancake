@@ -4,7 +4,10 @@
    [spec-tools.core :as st]
    [psychic-pancake.specs.common :refer [resp-404able]]
    [psychic-pancake.routes.common :refer [resp-404]]
-   [psychic-pancake.specs.user :refer [user-info-shape]]))
+   [psychic-pancake.specs.user :as specs.user]
+   [psychic-pancake.orm.user :as orm.user]
+   [psychic-pancake.orm.core :as orm]
+   [buddy.hashers :as h]))
 
 
 
@@ -17,12 +20,26 @@
 
 
 (def user-routes
-  ["/user/:id"
-   {:swagger {:tags ["user"]}
-    :get
-     {:handler (fn [{{{id :id} :path} :parameters}]
+  ["/user"
+   {:swagger {:tags ["user"]}}
+   [""
+    {:post
+     {:parameters {:form specs.user/user-registration-shape}
+      :responses {200 {:body specs.user/user-registration-shape}}
+      :handler (fn [{{params :form} :parameters}]
+                 (ok
+                  (orm/obj->map
+                   (orm.user/create!
+                    (dissoc
+                     (assoc params
+                            :password_digest (h/derive (params :password))
+                            :pending true)
+                     :password)))))}}]
+   ["/:id"
+   {:get
+    {:handler (fn [{{{id :id} :path} :parameters}]
                  (if (users id)
                    (ok (users id))
                    resp-404))
-      :responses (resp-404able {200 {:body user-info-shape}})
-      :parameters {:path {:id :usr/uid}}}}])
+     :responses (resp-404able {200 {:body specs.user/user-info-shape}})
+     :parameters {:path {:id :usr/uid}}}}]])

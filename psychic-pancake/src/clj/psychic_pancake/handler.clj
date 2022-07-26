@@ -28,22 +28,3 @@
 
 (defn app []
   (middleware/wrap-base #'app-routes))
-
-
-(comment
-  
-  
-  
-
-
-  
-
-  (.GetUID (User.))
-  (em/create-entity-manager)
-  (em/create-native-query "name" User)
-  (.getEntityManagerFactory (cljjpa.producers.EntityManagerFactoryProcducer.))
-  (.getPersistenceProviders (javax.persistence.spi.PersistenceProviderResolverHolder/getPersistenceProviderResolver))
-  (with-entity-manager
-  (with-transaction
-    (em/merge User {:uid "group1"
-                    :email ""}))))
