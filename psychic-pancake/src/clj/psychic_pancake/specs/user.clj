@@ -46,6 +46,24 @@
             :json-schema/default "Germany"
             :swagger/example "Germany"}))
 
+(s/def :usr/ssn
+  (st/spec {:spec string?
+            :description "User SSN"
+            :json-schema/default "your-ssn-here"
+            :swagger/example "ΑΦΜ4567890"}))
+
+(s/def :usr/phone_num
+  (st/spec {:spec string?
+            :description "User phone number"
+            :json-schema/default "yourphonenumber"
+            :swagger/example "+306958758231"}))
+
+(s/def :usr/password
+  (st/spec {:spec string?
+            :description "User password"
+            :json-schema/default "your password"
+            :swagger/example "password123"}))
+
 (def user-info-shape
   {:username string? :email :usr/email :user-type :usr/role})
 

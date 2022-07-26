@@ -12,6 +12,8 @@ import java.util.HashMap;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.*;
+
 @Entity
 @Table(name = "user", schema="main")
 @Data
@@ -29,9 +31,12 @@ public class User implements Serializable {
     private String email;
     @NotNull
     private String password_digest;
+    @ManyToOne
+    @JoinColumn(insertable=false, updatable=false)
     @NotNull
     private Location location;
-    @NotNull
+    @ManyToOne
+    @JoinColumn(insertable=true, updatable=true, nullable=false)
     private Country country;
     @NotNull
     private String SSN;
@@ -45,18 +50,25 @@ public class User implements Serializable {
     private boolean pending;
 
     @OrderBy ("timestamp DESC")
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="to")
+    @JsonIgnore
     Set<Message> inbox;
     @OrderBy ("timestamp DESC")
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="from")
+    @JsonIgnore
     Set<Message> outbox;
 
     @Enumerated(EnumType.ORDINAL)
     private Role role;
 
     public Message sendMessage(Message msg) {
-	if(msg.getFrom().getUid().equals(uid)) {
+	if(msg.getFrom() == null)
+	    msg.setTo(this);
+
+	if(msg.getFrom().getUid().equals(uid) &&
+	   msg.getTo() != null) {
 	    outbox.add(msg);
+	    msg.getTo().getInbox().add(msg);
 	    return msg;
 	}
 	return null;		// message was not sent

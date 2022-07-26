@@ -20,9 +20,11 @@ public class Message implements Serializable {
 
     @NotNull
     @ManyToOne
+    @JoinColumn(insertable=false, updatable=false)
     User from;
     @NotNull
     @ManyToOne
+    @JoinColumn(insertable=false, updatable=false)
     User to;
     @NotNull
     Date timestamp;
