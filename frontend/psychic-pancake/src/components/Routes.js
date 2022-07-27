@@ -16,6 +16,7 @@ import HomePage from '../pages/HomePage';
 import SetupAdmin from './SetupAdmin';
 import UserAuctions from '../pages/UserAuctions';
 import Auction from '../pages/Auction';
+import Messages from '../pages/Messages';
 
 export default function RoutesComponent() {
   const {user, setUser} = useContext(UserContext);
@@ -49,6 +50,7 @@ export default function RoutesComponent() {
         <Route path="/install" element={<SetupAdmin />} />
         <Route path="/my-auctions" element={isLoggedIn ? <UserAuctions/> : <span>Not Authorized.</span>} />
         <Route path="/auction" element={<Auction />} />
+        <Route path="/messages" element={<Messages />} />
       </Routes>
     </BrowserRouter>
   );
