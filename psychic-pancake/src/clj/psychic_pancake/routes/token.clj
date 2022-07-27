@@ -8,12 +8,12 @@
    [psychic-pancake.orm.user :as orm.user]
    [psychic-pancake.orm.core :as orm]
    [buddy.hashers :as h]
-   [buddy.sign.jwt :as jwt]))
-
+   [buddy.sign.jwt :as jwt]
+   [reitit.ring :as ring]
+   [psychic-pancake.permissions :refer [check-permissions]]))
 
 
 (def secret "VERY_SECRET_MOVE_TO_ENV")
-
 
 (def routes
   ["/token"
@@ -25,16 +25,18 @@
       :handler (fn [{{{uid :uid pwd :password} :form} :parameters}]
                  (let [user (orm.user/get-by-id uid)]
                    (if (:valid (h/verify pwd (.getPassword_digest user)))
-                     (ok {:token (jwt/sign {:uid uid} secret {:alg :es256})}))))}}]
-   ["/cancel"
-    {:post
+                     (ok {:token (str "Token " (jwt/sign {:uid uid} secret))}))))}}]
+   ["/check"
+    {:get
      {:swagger {:tags ["login"] :security [{:apiAuth []}]}
-      :handler (fn [req] (ok {:id (-> req :identity)}))}}]])
+      :test "foo"
+      :middleware [check-permissions]
+      :permissions []
+      :handler (fn [req] (ok {:id (-> req :identity)
+                             :test (-> req
+                                       ring/get-match
+                                       :data
+                                       ((req :request-method))
+                                       :test)}))}}]])
 
-(ok {:test ""})
 
-(let [user (orm.user/get-by-id "user_name")]
-  (if (h/verify "" (.getPassword_digest user))
-    (h/verify "" (.getPassword_digest user))
-    (ok {:token (jwt/sign {:uid "user_name"} secret)})
-))

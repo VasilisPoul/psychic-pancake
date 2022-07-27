@@ -78,7 +78,15 @@
 
 (def user-info-shape
   "Shape of a user's information"
-  {:username string? :email :usr/email :user-type :usr/role})
+  {:role :usr/role
+   :uid :usr/uid
+   (ds/opt :first_name) :usr/first_name
+   (ds/opt :last_name) :usr/last_name
+   (ds/opt :email) :usr/email
+   (ds/opt :SSN) :usr/ssn
+   (ds/opt :phone_num) :usr/phone_num
+   (ds/opt :country) :usr/country
+   (ds/opt :rating) :usr/rating})
 
 
 

@@ -10,13 +10,10 @@
    [buddy.hashers :as h]))
 
 
-
-
-(def
-  users
-  "hard coded users for testing"
-  {"foo" {:username "foo" :email "foo@test.com" :user-type "admin"}
-   "bar" {:username "bar" :email "bar@test.com" :user-type "seller"}})
+(defn wrap-referenced-user [handler]
+  (fn [req]
+    (handler (assoc req
+                    :user-ref (orm.user/get-by-id (-> req :parameters :path :id))))))
 
 
 (def user-routes
@@ -36,10 +33,11 @@
                             :pending true)
                      :password)))))}}]
    ["/:id"
-   {:get
-    {:handler (fn [{{{id :id} :path} :parameters}]
-                 (if (users id)
-                   (ok (users id))
-                   resp-404))
-     :responses (resp-404able {200 {:body specs.user/user-info-shape}})
+    {:middleware [wrap-referenced-user]
+     :get
+     {:handler (fn ;; [{{{id :id} :path} :parameters user :user-ref}]
+                 [req]
+                 (ok (select-keys (orm/obj->map (:user-ref req))
+                                  [:role :uid :first_name :last_name])))
+     ;; :responses (resp-404able {200 {:body specs.user/user-info-shape}})
      :parameters {:path {:id :usr/uid}}}}]])

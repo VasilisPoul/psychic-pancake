@@ -1,13 +1,14 @@
 (ns psychic-pancake.orm.core
   (:require
    [clojure.walk :refer [keywordize-keys stringify-keys]])
-  (:import psychic_pancake.User
-           psychic_pancake.User$Role
-           org.hibernate.SessionFactory
-           org.hibernate.cfg.Configuration
-           com.fasterxml.jackson.databind.ObjectMapper               
-           com.fasterxml.jackson.annotation.PropertyAccessor         
-           com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility))
+  (:import
+   psychic_pancake.User
+   psychic_pancake.User$Role
+   org.hibernate.SessionFactory
+   org.hibernate.cfg.Configuration
+   com.fasterxml.jackson.databind.ObjectMapper               
+   com.fasterxml.jackson.annotation.PropertyAccessor         
+   com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility))
 
 ;; (deftype ^{Entity {:name "entity_test"}
 ;;            Table {:name "entity_test" :schema "main"}}
@@ -49,13 +50,6 @@
 
 (defn refresh! [ent]
   (.refresh *session* ent))
-
-
-
-
-
-    
-
 
 (def DefaultObjectMapper
   (let [om (ObjectMapper.)]
