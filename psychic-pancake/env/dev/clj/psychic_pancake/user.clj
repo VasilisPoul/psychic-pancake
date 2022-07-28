@@ -1,4 +1,4 @@
-(ns user
+(ns psychic-pancake.user
   "Userspace functions you can run by default in your local REPL."
   (:require
    [psychic-pancake.config :refer [env]]

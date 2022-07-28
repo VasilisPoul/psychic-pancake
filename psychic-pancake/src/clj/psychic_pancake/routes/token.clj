@@ -9,8 +9,7 @@
    [psychic-pancake.orm.core :as orm]
    [buddy.hashers :as h]
    [buddy.sign.jwt :as jwt]
-   [reitit.ring :as ring]
-   [psychic-pancake.permissions :refer [check-permissions]]))
+   [reitit.ring :as ring]))
 
 
 (def secret "VERY_SECRET_MOVE_TO_ENV")
@@ -30,8 +29,6 @@
     {:get
      {:swagger {:tags ["login"] :security [{:apiAuth []}]}
       :test "foo"
-      :middleware [check-permissions]
-      :permissions []
       :handler (fn [req] (ok {:id (-> req :identity)
                              :test (-> req
                                        ring/get-match
