@@ -3,8 +3,7 @@
     [psychic-pancake.env :refer [defaults]]
     [psychic-pancake.config :refer [env]]
     [ring-ttl-session.core :refer [ttl-memory-store]]
-    [ring.middleware.defaults :refer [site-defaults wrap-defaults]])
-  )
+    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
 
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)

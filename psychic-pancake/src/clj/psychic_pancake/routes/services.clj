@@ -13,12 +13,28 @@
     [psychic-pancake.routes.user :as user]
     [psychic-pancake.routes.listings :as listings]
     [psychic-pancake.routes.token :as token]
+    [psychic-pancake.routes.messages :as messages]
     [buddy.auth.middleware]
-    [buddy.auth.backends.token]))
+    [buddy.auth.backends.token]
+    [spec-tools.core :as st]
+    [spec-tools.transform :as stt]))
+
+
+(def coercion
+  (-> reitit.coercion.spec/default-options
+      (assoc-in
+       ,,,
+       [:transformers :response :default]
+       (st/type-transformer
+        {:name :response
+         :decoders stt/json-type-decoders
+         :encoders stt/json-type-encoders
+         :default-encoder stt/any->any}))
+      reitit.coercion.spec/create))
 
 (defn service-routes []
   ["/api"
-   {:coercion reitit.coercion.spec/coercion
+   {:coercion coercion
     :muuntaja formats/instance
     :swagger {:id ::api
               :securityDefinitions {:apiAuth {:type "apiKey"
@@ -65,6 +81,7 @@
    user/user-routes
    listings/routes
    token/routes
+   messages/routes
 
    ["/test"
     {:swagger {:tags ["default"]}

@@ -17,6 +17,7 @@ import lombok.*;
 public class Bid extends Resource implements Serializable {
     @Id
     @GeneratedValue
+    private int id;
     @NotNull
     private User bidder;
     @NotNull
@@ -26,6 +27,6 @@ public class Bid extends Resource implements Serializable {
 
     @ManyToOne
     @NotNull
-    @JoinColumn(name="listing_item_id", nullable=false)
+    @JoinColumn(name="item_id", nullable=false)
     private Listing listing;
 }

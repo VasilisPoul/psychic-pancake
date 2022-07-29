@@ -7,6 +7,7 @@ import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import lombok.*;
 
@@ -14,7 +15,7 @@ import lombok.*;
 @Table(name = "listing", schema="main")
 @Data
 @NoArgsConstructor
-public class Listing extends Resource implements Serializable {
+public class Listing implements Serializable {
     @Id
     @GeneratedValue
     private int item_id;
@@ -22,8 +23,9 @@ public class Listing extends Resource implements Serializable {
     private String name;
 
     @NotNull
-    @OneToMany
-    private List<Category> Categories;
+    @ManyToMany
+    @JoinTable(name="listing_categories")
+    private Set<Category> Categories;
     
     @NotNull
     private int first_bid;
@@ -31,7 +33,8 @@ public class Listing extends Resource implements Serializable {
     private int currently;
 
     @NotNull
-    @OneToMany
+    @OneToMany(mappedBy="listing")
+    @OrderBy("time DESC")
     private List<Bid> bids;
     
     @NotNull

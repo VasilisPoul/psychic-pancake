@@ -1,6 +1,7 @@
 (ns psychic-pancake.specs.common
   (:require [clojure.spec.alpha :as s]
-            [spec-tools.core :as st]))
+            [spec-tools.core :as st]
+            [java-time]))
 
 (defn resp-404able [resp-schema]
   (assoc resp-schema
@@ -50,5 +51,15 @@
     "United Kingdom" "United States" "Uruguay" "Uzbekistan" "Vanuatu"
     "Vatican City" "Venezuela" "Vietnam" "Yemen" "Zambia" "Zimbabwe"})
 
-(s/def :common/time string?)
+(def format-time (comp java-time/format java-time/instant->sql-timestamp))
+(s/def :common/time
+  (st/spec
+   {:spec string?
+    :description "time"
+    :decode/json #(format-time %2)
+    :decode/response #(format-time %2)}))
 
+;; (st/coerce
+;;  :common/time
+;;  1659051982906
+;;  st/json-transformer)

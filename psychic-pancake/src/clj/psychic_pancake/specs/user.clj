@@ -11,6 +11,15 @@
             :json-schema/default "user_name"
             :swagger/example "user_name"}))
 
+(s/def :usr/ref
+  (st/spec {:spec (s/and string? (partial re-matches #"/user/.*"))
+            :description "User Reference"
+            :json-schema/default "/user/user_name"
+            :swagger/example "/user/<uid>"
+            :swagger/pattern "/user/.*"
+            :reason "invalid user url"
+            :decode/response #(str "/user/" %2)}))
+
 (let [email-pattern "^(.+)@(.+)$"]
   (s/def :usr/email
     (st/spec 
@@ -75,6 +84,8 @@
             :description "User's last name"
             :json-schema/default "Lastname"
             :swagger/example "Wick"}))
+
+
 
 (def user-info-shape
   "Shape of a user's information"

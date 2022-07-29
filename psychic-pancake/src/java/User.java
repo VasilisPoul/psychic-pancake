@@ -52,13 +52,11 @@ public class User implements Serializable {
     @OrderBy ("timestamp DESC")
     @OneToMany(fetch = FetchType.LAZY, mappedBy="to")
     @EqualsAndHashCode.Exclude
-    @JsonManagedReference(value="to")
     @ToString.Exclude
     Set<Message> inbox;
     @OrderBy ("timestamp DESC")
     @OneToMany(fetch = FetchType.LAZY, mappedBy="from")
     @EqualsAndHashCode.Exclude
-    @JsonManagedReference(value="from")
     @ToString.Exclude
     Set<Message> outbox;
 

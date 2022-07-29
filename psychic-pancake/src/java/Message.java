@@ -22,11 +22,17 @@ public class Message implements Serializable {
 
     @NotNull
     @ManyToOne
-    @JsonBackReference(value="from")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+		      property = "uid",
+		      scope = User.class)
+    @JsonIdentityReference(alwaysAsId=true)
     User from;
     @NotNull
     @ManyToOne
-    @JsonBackReference(value="to")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+		      property = "uid",
+		      scope = Message.class)
+    @JsonIdentityReference(alwaysAsId=true)
     User to;
     @NotNull
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",

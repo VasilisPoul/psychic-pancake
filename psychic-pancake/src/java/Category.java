@@ -13,12 +13,9 @@ import lombok.*;
 
 @Entity
 @Data
-@Table(name="item_category", schema="default")
+@Table(name="item_category", schema="main")
 public class Category implements Serializable {
     @Id
-    @GeneratedValue
-    private Long id;
-
     @NotNull
     private String name;
 
