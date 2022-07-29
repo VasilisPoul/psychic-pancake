@@ -16,7 +16,8 @@
                              :from sender
                              :to receiver)
                       Message)]
-        (orm/merge! message)))))
+        (when (every? (complement nil?) [sender receiver])
+          (orm/merge! message))))))
 
 (defn get-by-id [uid]
   (orm/with-session
@@ -31,4 +32,4 @@
 
 ;; (get-by-id 1)
 
-(orm/obj->map (get-by-id 1))
+;; (orm/obj->map (get-by-id 1))

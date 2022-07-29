@@ -6,9 +6,6 @@
 (def instance
   (m/create
     (-> m/default-options
-        (update-in
-          [:formats "application/transit+json" :decoder-opts]
-          (partial merge time/time-deserialization-handlers))
-        (update-in
-          [:formats "application/transit+json" :encoder-opts]
-          (partial merge time/time-serialization-handlers)))))
+        (update
+         :formats
+         #(select-keys % ["application/json"])))))

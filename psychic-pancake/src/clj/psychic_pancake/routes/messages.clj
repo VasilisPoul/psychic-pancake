@@ -23,12 +23,12 @@
   [path
    {:conflicting true
     :get
-     {:responses {200 {:body (s/coll-of :msg/url)}}
+     {:responses {200 {:body (s/coll-of :msg/ref)}}
       :parameters {}
       :handler (fn [req]
                  (ok
                   (map
-                    (fn [^Message msg] (str "/messages/" (.getMsg_id msg)))
+                   (fn [^Message msg] (.getMsg_id msg))
                     (-> req :identity :uid orm.user/get-by-id getter))))}}])
 
 
@@ -38,16 +38,18 @@
     :auth? true}
    [""
     {:post
-     {:parameters {:form {:to :usr/uid
+     {:parameters {:body {:to :usr/uid
                           :subject :msg/subject
                           :body :msg/body}}
+      :responses {200 {:body {:url :msg/ref}}
+                  422 {:body nil?}}
       :handler (fn [req]
-                 (ok
-                   (orm.message/create!
-                    (-> req
-                        :parameters
-                        :form
-                        (assoc :from (-> req :identity :uid))))))}}]
+                 (if-let [msg (orm.message/create!
+                               (-> req
+                                   :parameters
+                                   :body
+                                   (assoc :from (-> req :identity :uid))))]
+                   (-> msg .getMsg_id ((fn [x] {:url x})) ok)))}}]
    (mailbox-route "/inbox" (fn [^User u] (.getInbox u)))
    (mailbox-route "/outbox" (fn [^User u] (.getOutbox u)))
    ["/:id"

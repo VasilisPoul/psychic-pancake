@@ -19,11 +19,11 @@
             :json-schema/default "Message body"
             :swagger/example "I wish to buy your vintage blue t-shirt"}))
 
-(s/def :msg/url
-  (st/spec {:spec (s/and string? (partial re-matches #"/messages/\d"))
+(s/def :msg/ref
+  (st/spec {:spec (s/and string? (partial re-matches #"/messages/\d+"))
             :reason "invalid message url"
             :description "/messages/:id"
-            :swagger/pattern "/messages/\\d"
+            :swagger/pattern "/messages/\\d+"
             :json-schema/default "/messages/:id"
             :swagger/example "/messages/1"
             :decode/response #(str "/messages/" %2)}))
@@ -34,7 +34,7 @@
    :subject :msg/subject
    :body :msg/body
    (ds/opt :timestamp) :common/time
-   (ds/opt :self) :msg/url})
+   (ds/opt :self) :msg/ref})
 
-(map (fn [{r :reason v :val}] (format r v)) (:clojure.spec.alpha/problems (st/explain-data :msg/url "a")))
-(st/conform :msg/url "a")
+;; (map (fn [{r :reason v :val}] (format r v)) (:clojure.spec.alpha/problems (st/explain-data :msg/url "a")))
+;; (st/conform :msg/url "a")
