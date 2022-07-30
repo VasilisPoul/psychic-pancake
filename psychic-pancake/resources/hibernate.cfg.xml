@@ -38,7 +38,6 @@
       <mapping class="psychic_pancake.Listing"/>
       <mapping class="psychic_pancake.Location"/>
       <mapping class="psychic_pancake.Message"/>
-      <mapping class="psychic_pancake.Resource"/>
       <mapping class="psychic_pancake.User"/>
 
    </session-factory>

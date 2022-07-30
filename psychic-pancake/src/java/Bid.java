@@ -14,7 +14,7 @@ import lombok.*;
 @Table(name = "bid", schema="main")
 @Data
 @NoArgsConstructor
-public class Bid extends Resource implements Serializable {
+public class Bid implements Serializable {
     @Id
     @GeneratedValue
     private int id;
