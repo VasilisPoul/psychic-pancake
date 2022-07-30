@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.*;
 public class Message implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long msg_id;
+    private Long msg_id;
 
     @NotNull
     @ManyToOne
