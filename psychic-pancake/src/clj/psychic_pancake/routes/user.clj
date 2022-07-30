@@ -34,10 +34,22 @@
                      :password)))))}}]
    ["/:id"
     {:middleware [wrap-referenced-user]
+     :parameters {:path {:id :usr/uid}}
      :get
-     {:handler (fn ;; [{{{id :id} :path} :parameters user :user-ref}]
+     {:parameters {}
+      :responses {200 {:body {:role :usr/role
+                              :self :usr/ref
+                              :uid :usr/uid
+                              :first_name :usr/first_name
+                              :last_name :usr/last_name}}}
+      :handler (fn ;; [{{{id :id} :path} :parameters user :user-ref}]
                  [req]
-                 (ok (select-keys (orm/obj->map (:user-ref req))
-                                  [:role :uid :first_name :last_name])))
+                 (ok (-> req
+                         :user-ref
+                         orm/obj->map
+                         (select-keys
+                          [:role :uid :first_name :last_name])
+                         (assoc :self (-> req :uid)))))
      ;; :responses (resp-404able {200 {:body specs.user/user-info-shape}})
-     :parameters {:path {:id :usr/uid}}}}]])
+      }}]])
+
