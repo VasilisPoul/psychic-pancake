@@ -25,7 +25,7 @@
             :description "/messages/:id"
             :swagger/pattern "/messages/\\d+"
             :json-schema/default "/messages/:id"
-            :swagger/example "/messages/1"
+            :swagger/example "/messages/<id>"
             :decode/response #(str "/messages/" %2)}))
 
 (def message-shape
