@@ -8,6 +8,7 @@
     [reitit.ring.middleware.multipart :as multipart]
     [reitit.ring.middleware.parameters :as parameters]
     [psychic-pancake.middleware.formats :as formats]
+    [psychic-pancake.middleware.util :as util]
     [ring.util.http-response :refer :all]
     [clojure.java.io :as io]
     [psychic-pancake.routes.user :as user]
@@ -40,6 +41,8 @@
               :securityDefinitions {:apiAuth {:type "apiKey"
                                               :name "authorization"
                                               :in "header"}}}
+    :responses {401 {:body {:reason string?
+                            :info string?}}}
     :middleware [;; query-params & form-params
                  parameters/parameters-middleware
                  ;; content-negotiation
@@ -59,9 +62,9 @@
                  #(buddy.auth.middleware/wrap-authentication
                    %
                    (buddy.auth.backends.token/jws-backend
-                    {:secret token/secret}
-                    ))]}
-
+                    {:secret token/secret}))
+                 util/check-auth-middleware]}
+   
    ;; swagger documentation
    ["" {:no-doc true
         :swagger {:info {:title "my-api"
