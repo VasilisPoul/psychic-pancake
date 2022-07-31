@@ -18,7 +18,8 @@
     [buddy.auth.middleware]
     [buddy.auth.backends.token]
     [spec-tools.core :as st]
-    [spec-tools.transform :as stt]))
+    [spec-tools.transform :as stt]
+    [psychic-pancake.specs.responses :as specs.responses]))
 
 
 (def coercion
@@ -41,8 +42,7 @@
               :securityDefinitions {:apiAuth {:type "apiKey"
                                               :name "authorization"
                                               :in "header"}}}
-    :responses {401 {:body {:reason string?
-                            :info string?}}}
+    :responses {401 specs.responses/status-401-shape}
     :middleware [;; query-params & form-params
                  parameters/parameters-middleware
                  ;; content-negotiation

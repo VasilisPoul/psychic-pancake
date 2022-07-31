@@ -3,7 +3,9 @@
             [clojure.spec.alpha :as s]
             [spec-tools.core :as st]
             [spec-tools.data-spec :as ds]
-            [spec-tools.swagger.core :refer [accept-spec]]))
+            [spec-tools.swagger.core :refer [accept-spec]]
+            [psychic-pancake.orm.core :as orm]
+            [psychic-pancake.orm.user :as orm.user]))
 
 (s/def :usr/uid
   (st/spec {:spec string?
@@ -11,14 +13,16 @@
             :json-schema/default "user_name"
             :swagger/example "user_name"}))
 
+
+
 (s/def :usr/ref
-  (st/spec {:spec (s/and string? (partial re-matches #"/user/.*"))
+  (st/spec {:spec (s/and string? (partial re-matches #"/api/user/.*"))
             :description "User Reference"
-            :json-schema/default "/user/user_name"
-            :swagger/example "/user/<uid>"
-            :swagger/pattern "/user/.*"
+            :json-schema/default "/api/user/user_name"
+            :swagger/example "/api/user/<uid>"
+            :swagger/pattern "/api/user/.*"
             :reason "invalid user url"
-            :decode/response #(str "/user/" %2)}))
+            :decode/response #(str "/api/user/" %2)}))
 
 (let [email-pattern "^(.+)@(.+)$"]
   (s/def :usr/email
@@ -85,6 +89,13 @@
             :json-schema/default "Lastname"
             :swagger/example "Wick"}))
 
+
+(s/def :usr/existing
+  (st/spec
+   {:spec #(-> % class (= psychic_pancake.User))
+    :type psychic_pancake.User
+    :decode/json #(orm.user/get-by-id %2)
+    :reason "User '%s' does not exist."}))
 
 
 (def user-info-shape

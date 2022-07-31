@@ -49,7 +49,7 @@
                          orm/obj->map
                          (select-keys
                           [:role :uid :first_name :last_name])
-                         (assoc :self (-> req :uid)))))
+                         (#(assoc % :self (:uid %))))))
      ;; :responses (resp-404able {200 {:body specs.user/user-info-shape}})
       }}]])
 
