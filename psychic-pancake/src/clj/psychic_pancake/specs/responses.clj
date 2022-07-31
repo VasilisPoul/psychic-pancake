@@ -17,3 +17,8 @@
                    "in the 'Authorization' "
                    "header.")})}})
 
+(def status-404-shape
+  {:body {:reason (st/spec
+                   {:spec string?
+                    :swagger/example "Not Found"})
+          :info string?}})

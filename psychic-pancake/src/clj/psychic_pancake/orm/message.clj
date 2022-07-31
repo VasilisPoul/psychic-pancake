@@ -9,14 +9,8 @@
 (defn create! [msg]
   (orm/with-session
     (orm/with-transaction
-      (let [sender (orm/find! User (:from msg))
-            receiver (orm/find! User (:to msg))
-            message  (orm/hash-map->obj
-                      (assoc msg
-                             :from sender
-                             :to receiver)
-                      Message)]
-        (when (every? (complement nil?) [sender receiver])
+      (let [message (orm/hash-map->obj msg Message)]
+        (when (every? (comp not nil? msg) [:from :to])
           (orm/merge! message))))))
 
 (defn get-by-id [uid]

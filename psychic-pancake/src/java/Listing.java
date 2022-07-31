@@ -17,8 +17,8 @@ import lombok.*;
 @NoArgsConstructor
 public class Listing implements Serializable {
     @Id
-    @GeneratedValue
-    private int item_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long item_id;
     @NotNull
     private String name;
 
@@ -28,9 +28,9 @@ public class Listing implements Serializable {
     private Set<Category> Categories;
     
     @NotNull
-    private int first_bid;
+    private Double first_bid;
 
-    private int currently;
+    private Double currently;
 
     @NotNull
     @OneToMany(mappedBy="listing")

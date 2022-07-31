@@ -10,7 +10,6 @@
    [psychic-pancake.orm.message :as orm.message]
    [psychic-pancake.orm.core :as orm]
    [buddy.hashers :as h]
-   [psychic-pancake.ownership :refer [owns?]]
    [psychic-pancake.specs.message :refer [message-shape]]
    [java-time :as time])
   (:import
@@ -41,6 +40,10 @@
      {:parameters {:body {:to :usr/uid
                           :subject :msg/subject
                           :body :msg/body}}
+      :ref-users [{:key :from
+                   :req->uid (comp :uid :identity)}
+                  {:key :to
+                   :req->uid (comp :to :body :parameters)}]
       :responses {200 {:body {:url :msg/ref}}
                   422 {:body nil?}}
       :handler (fn [req]
@@ -48,7 +51,8 @@
                                (-> req
                                    :parameters
                                    :body
-                                   (assoc :from (-> req :identity :uid))))]
+                                   (assoc :from (:from req))
+                                   (assoc :to (:to req))))]
                    (-> msg .getMsg_id ((fn [x] {:url x})) ok)))}}]
    (mailbox-route "/inbox" (fn [^User u] (.getInbox u)))
    (mailbox-route "/outbox" (fn [^User u] (.getOutbox u)))

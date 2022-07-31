@@ -10,12 +10,6 @@
    [buddy.hashers :as h]))
 
 
-(defn wrap-referenced-user [handler]
-  (fn [req]
-    (handler (assoc req
-                    :user-ref (orm.user/get-by-id (-> req :parameters :path :id))))))
-
-
 (def user-routes
   ["/user"
    {:swagger {:tags ["user"]}}
@@ -33,7 +27,8 @@
                             :pending true)
                      :password)))))}}]
    ["/:id"
-    {:middleware [wrap-referenced-user]
+    {:ref-users [{:key :user-ref
+                  :req->uid (comp :id :path :parameters)}]
      :parameters {:path {:id :usr/uid}}
      :get
      {:parameters {}
@@ -42,14 +37,11 @@
                               :uid :usr/uid
                               :first_name :usr/first_name
                               :last_name :usr/last_name}}}
-      :handler (fn ;; [{{{id :id} :path} :parameters user :user-ref}]
-                 [req]
+      :handler (fn [req]
                  (ok (-> req
                          :user-ref
                          orm/obj->map
                          (select-keys
                           [:role :uid :first_name :last_name])
-                         (#(assoc % :self (:uid %))))))
-     ;; :responses (resp-404able {200 {:body specs.user/user-info-shape}})
-      }}]])
+                         (#(assoc % :self (:uid %))))))}}]])
 
