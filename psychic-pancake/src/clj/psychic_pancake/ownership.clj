@@ -31,7 +31,7 @@
 (defmethod owns? String [^String uid thing]
   (let [thing-owner (owner thing)]
     (if (coll? thing-owner)
-      ((set (map User->uid thing-owner)) contains? uid)
+      (contains? (set (map User->uid thing-owner)) uid)
     (= uid (-> thing owner User->uid)))))
 
 (defmethod owns? User [^User user thing]

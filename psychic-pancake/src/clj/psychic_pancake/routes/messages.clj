@@ -34,7 +34,7 @@
 (def routes
   ["/messages"
    {:swagger {:tags ["messages"] :security [{:apiAuth []}]}
-    :auth? false}
+    :auth? true}
    [""
     {:post
      {:parameters {:body {:to :usr/uid
@@ -71,11 +71,11 @@
       :handler
       (fn [{{me :uid} :identity
           {msg :msg} :db}]
-        (let [resp (-> msg
-                       orm/obj->map
-                       (clojure.set/rename-keys {:msg_id :self}))]
-
-          ))}}]])
+        (-> msg
+            orm/obj->map
+            (clojure.set/rename-keys {:msg_id :self})
+            ok)
+          )}}]])
 
 ;; (.setTo
 ;;  (orm/hash-map->obj

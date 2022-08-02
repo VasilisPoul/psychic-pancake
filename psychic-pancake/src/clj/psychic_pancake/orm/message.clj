@@ -12,8 +12,8 @@
       (let [message (orm/hash-map->obj (dissoc msg :from :to)
                                        Message)]
         (when (every? (comp not nil? msg) [:from :to])
-          (.setFrom (:from msg))
-          (.setTo (:to msg))
+          (.setFrom message (:from msg))
+          (.setTo message (:to msg))
           (orm/merge! message))))))
 
 (defn get-by-id [uid]
