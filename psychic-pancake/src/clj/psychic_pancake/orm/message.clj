@@ -9,8 +9,11 @@
 (defn create! [msg]
   (orm/with-session
     (orm/with-transaction
-      (let [message (orm/hash-map->obj msg Message)]
+      (let [message (orm/hash-map->obj (dissoc msg :from :to)
+                                       Message)]
         (when (every? (comp not nil? msg) [:from :to])
+          (.setFrom (:from msg))
+          (.setTo (:to msg))
           (orm/merge! message))))))
 
 (defn get-by-id [uid]

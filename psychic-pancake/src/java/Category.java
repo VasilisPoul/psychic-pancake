@@ -10,6 +10,7 @@ import java.util.List;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @Data
@@ -18,6 +19,9 @@ public class Category implements Serializable {
     @Id
     @NotNull
     private String name;
+
+    @ManyToMany(mappedBy="categories")
+    private List<Listing> listings;
 
     public Category() {}
     public Category(String name) { this.name = name; }

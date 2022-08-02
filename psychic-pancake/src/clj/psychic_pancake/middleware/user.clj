@@ -3,7 +3,6 @@
    [ring.util.http-response :refer :all]
    [psychic-pancake.orm.user :as orm.user]))
 
-
 (def ref-user-middleware
   {:name ::ref-user-middleware
    :compile

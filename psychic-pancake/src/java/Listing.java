@@ -11,6 +11,8 @@ import java.util.Set;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.*;
+
 @Entity
 @Table(name = "listing", schema="main")
 @Data
@@ -24,8 +26,12 @@ public class Listing implements Serializable {
 
     @NotNull
     @ManyToMany
-    @JoinTable(name="listing_categories")
-    private Set<Category> Categories;
+    @JoinTable(schema="main")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+		      property = "name",
+		      scope = Listing.class)
+    @JsonIdentityReference(alwaysAsId=true)
+    private List<Category> categories;
     
     @NotNull
     private Double first_bid;
@@ -38,15 +44,22 @@ public class Listing implements Serializable {
     private List<Bid> bids;
     
     @NotNull
+    @ManyToOne
     private Location location;
     @NotNull
+    @ManyToOne
     private Country country;
 
     @NotNull
+    @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+	    nullable=false,
+	    updatable=false,
+	    insertable=false)
     private Date started;
     @NotNull
     private Date ends;
     @NotNull
+    @ManyToOne
     private User seller;
     @NotNull
     private String description;

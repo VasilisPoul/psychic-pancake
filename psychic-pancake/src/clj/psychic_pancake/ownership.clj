@@ -4,6 +4,9 @@
            psychic_pancake.Listing
            psychic_pancake.Bid))
 
+(defn ^String User->uid [^User u]
+  (.getUid u))
+
 (defmulti owner (fn [thing] (class thing)))
 
 (defmethod owner User [^User thing]
@@ -15,6 +18,10 @@
 (defmethod owner Bid [^Bid thing]
   (.getBidder thing))
 
+(defmethod owner Message [^Message thing]
+  [(.getFrom thing)
+   (.getTo thing)])
+
 (defmethod owner :default [thing]
   nil)
 
@@ -22,8 +29,13 @@
 (defmulti owns? (fn [user _] (class user)))
 
 (defmethod owns? String [^String uid thing]
-  (= uid (.getUid thing)))
+  (let [thing-owner (owner thing)]
+    (if (coll? thing-owner)
+      ((set (map User->uid thing-owner)) contains? uid)
+    (= uid (-> thing owner User->uid)))))
 
 (defmethod owns? User [^User user thing]
   (owns? (.getUid user) thing))
 
+(defmethod owns? :default [_ _]
+  false)

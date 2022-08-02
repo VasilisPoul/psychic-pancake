@@ -34,25 +34,28 @@
 (def routes
   ["/messages"
    {:swagger {:tags ["messages"] :security [{:apiAuth []}]}
-    :auth? true}
+    :auth? false}
    [""
     {:post
      {:parameters {:body {:to :usr/uid
                           :subject :msg/subject
                           :body :msg/body}}
-      :ref-users [{:key :from
-                   :req->uid (comp :uid :identity)}
-                  {:key :to
-                   :req->uid (comp :to :body :parameters)}]
-      :responses {200 {:body {:url :msg/ref}}
-                  422 {:body nil?}}
+      :fetch! [{:key :from
+                :req->id (comp :uid :identity)
+                :type :user}
+               {:key :to
+                :req->id (comp :to :body :parameters)
+                :type :user}]
+      :responses {200 {:body {:url :msg/ref}}}
       :handler (fn [req]
                  (if-let [msg (orm.message/create!
                                (-> req
                                    :parameters
                                    :body
-                                   (assoc :from (:from req))
-                                   (assoc :to (:to req))))]
+                                   (assoc :from
+                                          (-> req :db :from))
+                                   (assoc :to
+                                          (-> req :db :to))))]
                    (-> msg .getMsg_id ((fn [x] {:url x})) ok)))}}]
    (mailbox-route "/inbox" (fn [^User u] (.getInbox u)))
    (mailbox-route "/outbox" (fn [^User u] (.getOutbox u)))
@@ -60,15 +63,40 @@
     {:conflicting true
      :get
      {:parameters {:path {:id int?}}
+      :fetch! [{:key :msg
+                :req->id (comp :id :path :parameters)
+                :type :message
+                :must-own true}]
       :responses {200 {:body message-shape}}
       :handler
-      (fn [req]
-        (let [me (-> req :identity :uid)
-              msg (-> req
-                      :parameters
-                      :path
-                      :id
-                      orm.message/get-by-id
-                      orm/obj->map
-                      (clojure.set/rename-keys {:msg_id :self}))]
-          (ok msg)))}}]])
+      (fn [{{me :uid} :identity
+          {msg :msg} :db}]
+        (let [resp (-> msg
+                       orm/obj->map
+                       (clojure.set/rename-keys {:msg_id :self}))]
+
+          ))}}]])
+
+;; (.setTo
+;;  (orm/hash-map->obj
+;;  (with-meta
+;;    {:body "test"
+;;     :subject "test"
+    
+;;     }
+;;    {:class Message}))
+;;  (orm.user/get-by-id "user_name"))
+
+;; (orm/hash-map->obj
+;;  (->
+;;   (orm/obj->map
+;;    (let [u (orm.user/get-by-id "user_name")
+;;          m (Message.)]
+;;      (.setTo m u)
+;;      (.setBody m "test")
+;;      (.setFrom m u)
+;;      (.setSubject m "test")
+;;      m))))
+
+;; (orm/hash-map->obj
+;;  {:from (orm.user/get-by-id "user_name")} Message)

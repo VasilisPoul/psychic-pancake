@@ -27,8 +27,9 @@
                             :pending true)
                      :password)))))}}]
    ["/:id"
-    {:ref-users [{:key :user-ref
-                  :req->uid (comp :id :path :parameters)}]
+    {:fetch! [{:key :user-ref
+               :req->id (comp :id :path :parameters)
+               :type :user}]
      :parameters {:path {:id :usr/uid}}
      :get
      {:parameters {}
@@ -39,6 +40,7 @@
                               :last_name :usr/last_name}}}
       :handler (fn [req]
                  (ok (-> req
+                         :db
                          :user-ref
                          orm/obj->map
                          (select-keys

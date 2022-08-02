@@ -51,10 +51,20 @@
     "United Kingdom" "United States" "Uruguay" "Uzbekistan" "Vanuatu"
     "Vatican City" "Venezuela" "Vietnam" "Yemen" "Zambia" "Zimbabwe"})
 
-(def format-time (comp java-time/format java-time/instant->sql-timestamp))
+
+(def time-formatter (-> "LLL-dd-yy HH:mm:ss"
+                        java-time/formatter 
+                        (.withZone  (java-time/zone-id))))
+
+(def format-time (comp (partial java-time/format time-formatter)
+                       java-time/local-date-time
+                       java-time/instant->sql-timestamp))
+(def parse-time (partial java-time/java-date time-formatter))
+
+
 (s/def :common/time
   (st/spec
-   {:spec string?
+   {:spec (s/and string? (partial re-matches #"\w\w\w-\d\d-\d\d \d\d:\d\d:\d\d"))
     :description "time"
     :decode/json #(format-time %2)
     :decode/response #(format-time %2)}))

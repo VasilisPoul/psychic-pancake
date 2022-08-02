@@ -9,7 +9,7 @@
     [reitit.ring.middleware.parameters :as parameters]
     [psychic-pancake.middleware.formats :as formats]
     [psychic-pancake.middleware.util :as util]
-    [psychic-pancake.middleware.user :as mw.user]
+    [psychic-pancake.middleware.orm :as mw.orm]
     [ring.util.http-response :refer :all]
     [clojure.java.io :as io]
     [psychic-pancake.routes.user :as user]
@@ -66,7 +66,7 @@
                    (buddy.auth.backends.token/jws-backend
                     {:secret token/secret}))
                  util/check-auth-middleware
-                 mw.user/ref-user-middleware]}
+                 mw.orm/db-fetch-middleware]}
    
    ;; swagger documentation
    ["" {:no-doc true
