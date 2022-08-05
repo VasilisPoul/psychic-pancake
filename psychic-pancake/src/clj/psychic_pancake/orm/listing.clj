@@ -25,3 +25,9 @@
     (orm/with-transaction
       (orm/find! Listing id)))))
 
+(defn delete-by-id [^Long id]
+  (->
+   (orm/with-session
+    (orm/with-transaction
+      (let [l (orm/find! Listing id)]
+        (orm/remove! l))))))

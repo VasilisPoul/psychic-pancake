@@ -49,7 +49,12 @@
                :req->id (comp :listing-id :path :parameters)
                :type :listing}]
      :put {:handler (constantly (ok))}
-     :delete {:handler (constantly (ok))}
+     :delete {:responses {200 {:body {:deleted :listing/ref}}}
+              :handler
+              (fn [{{{id :listing-id} :path} :parameters}]
+                (do
+                  (orm.listing/delete-by-id id)
+                  (ok {:deleted id})))}
      :get {:responses {200 {:body specs.listings/listing-shape}}
            :handler
            (fn [{{listing :listing} :db}]

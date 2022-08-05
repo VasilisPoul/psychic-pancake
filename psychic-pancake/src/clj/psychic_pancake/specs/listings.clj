@@ -95,8 +95,7 @@
     :started :common/time
     :ends :common/time
     :seller :listing/poster
-    :description string?
-    })
+    :description string?})
 
 
 (def listings-filters-shape
