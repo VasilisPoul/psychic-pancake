@@ -4,10 +4,23 @@
    [psychic-pancake.specs.listings :as specs.listings]
    [psychic-pancake.orm.listing :as orm.listing]
    [psychic-pancake.orm.core :as orm]
-   [clojure.spec.alpha :as s]))
+   [clojure.spec.alpha :as s]
+   [clojure.walk :refer [postwalk]]
+   [spec-tools.data-spec :as ds]))
 
 
-
+(defn transform-listing [listing]
+  (-> listing
+      (update :country :name)
+      (assoc :location "test")
+      (update :seller #(select-keys %
+                                    [:uid
+                                     :rating
+                                     :location
+                                     :country]))
+      (assoc-in [:seller :rating] 100)
+      (assoc-in [:seller :location] "test")
+      (update-in [:seller :country] :name)))
 
 
 (def routes
@@ -24,11 +37,7 @@
                       :type :user}]
             :responses {200 {:body {:listing :listing/ref}}}
             :parameters {:body
-                         {:name :item/name
-                          :description string?
-                          :categories (s/coll-of :item/category)
-                          :first_bid :item/price
-                          :ends :listing/ends}}
+                         specs.listings/listing-post-shape}
             :handler
             (fn [{{body :body} :parameters
                  {usr :user-ref} :db}]
@@ -48,7 +57,19 @@
      :fetch! [{:key :listing
                :req->id (comp :listing-id :path :parameters)
                :type :listing}]
-     :put {:handler (constantly (ok))}
+     :put {:parameters {:body
+                        specs.listings/listing-update-shape}
+           :responses {200 {:body specs.listings/listing-shape}}
+           :handler (fn [{{listing :listing} :db
+                         {params :body
+                          {id :listing-id} :path} :parameters}]
+                      (-> listing
+                          orm/obj->map
+                          (merge params)
+                          orm.listing/create!
+                          orm/obj->map
+                          transform-listing
+                          ok))}
      :delete {:responses {200 {:body {:deleted :listing/ref}}}
               :handler
               (fn [{{{id :listing-id} :path} :parameters}]
@@ -60,15 +81,6 @@
            (fn [{{listing :listing} :db}]
              (-> listing
                  orm/obj->map
-                 (update :country :name)
-                 (assoc :location "test")
-                 (update :seller #(select-keys %
-                                  [:uid
-                                   :rating
-                                   :location
-                                   :country]))
-                 (assoc-in [:seller :rating] 100)
-                 (assoc-in [:seller :location] "test")
-                 (update-in [:seller :country] :name)
+                 transform-listing
                  ok))}}]])
 

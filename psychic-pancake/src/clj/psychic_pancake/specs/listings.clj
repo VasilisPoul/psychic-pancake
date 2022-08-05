@@ -111,3 +111,14 @@
    (ds/opt :ends) :listing/ends
    (ds/opt :seller-rating) :usr/rating})
 
+(def listing-post-shape
+  {:name :item/name
+   :description string?
+   :categories (s/coll-of :item/category)
+   :first_bid :item/price
+   :ends :listing/ends})
+
+(def listing-update-shape
+  (->> listing-post-shape
+       (map (juxt (comp ds/opt first) second))
+       (into {})))
