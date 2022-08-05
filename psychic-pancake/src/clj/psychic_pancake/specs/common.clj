@@ -58,7 +58,8 @@
 
 (def format-time (comp (partial java-time/format time-formatter)
                        java-time/local-date-time
-                       java-time/instant->sql-timestamp))
+                       java-time/instant->sql-timestamp
+                       java-time/instant))
 (def parse-time (partial java-time/java-date time-formatter))
 
 

@@ -1,9 +1,9 @@
 (ns psychic-pancake.routes.listings
   (:require
    [ring.util.http-response :refer :all]
-   [psychic-pancake.specs.listings :refer [listings-filters-shape
-                                           listing-shape]]
+   [psychic-pancake.specs.listings :as specs.listings]
    [psychic-pancake.orm.listing :as orm.listing]
+   [psychic-pancake.orm.core :as orm]
    [clojure.spec.alpha :as s]))
 
 
@@ -15,7 +15,8 @@
    [""
     {:swagger {:tags ["listing"]
                :security [{:apiAuth []}]}
-     :get {:parameters {:query listings-filters-shape}
+     :get {:parameters {:query
+                        specs.listings/listings-filters-shape}
            :handler (constantly (ok))
            :responses {200 {:body [:item/id]}}}  ;get all listings with filters
      :post {:fetch! [{:key :user-ref
@@ -44,11 +45,25 @@
    ["/:listing-id"
     {:swagger {:tags ["listing"]}
      :parameters {:path {:listing-id pos-int?}}
-     :fetch! []
+     :fetch! [{:key :listing
+               :req->id (comp :listing-id :path :parameters)
+               :type :listing}]
      :put {:handler (constantly (ok))}
      :delete {:handler (constantly (ok))}
-     :get {:responses {200 {:body listing-shape}}
+     :get {:responses {200 {:body specs.listings/listing-shape}}
            :handler
-           (fn [req]
-             )}}]])
+           (fn [{{listing :listing} :db}]
+             (-> listing
+                 orm/obj->map
+                 (update :country :name)
+                 (assoc :location "test")
+                 (update :seller #(select-keys %
+                                  [:uid
+                                   :rating
+                                   :location
+                                   :country]))
+                 (assoc-in [:seller :rating] 100)
+                 (assoc-in [:seller :location] "test")
+                 (update-in [:seller :country] :name)
+                 ok))}}]])
 

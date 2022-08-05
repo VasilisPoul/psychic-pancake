@@ -58,16 +58,17 @@
             :swagger/example "Dec-19-01 00:00:00"}))
 
 (s/def :listing/poster
-  (st/spec {:spec {:Rating :usr/rating
-                   :UserID :usr/uid
-                   :Location :usr/location
-                   :Country :usr/country}
+  (st/spec {:spec (ds/spec ::seller
+                           {:rating :usr/rating
+                            :uid :usr/uid
+                            :location :usr/location
+                            :country :usr/country})
             :description "The user who posted the listing"
-            :swagger/example {:Rating 942
-                              :UserID "Alice"
-                              :Location "Alice's Shoe Factory"
-                              :Country "United Kingdom"}}))
-
+            :swagger/example {:rating 942
+                              :uid "Alice"
+                              :location "Alice's Shoe Factory"
+                              :country "United Kingdom"}
+            }))
 (s/def :bid/time :common/time)
 
 (s/def :listing/ref
@@ -76,23 +77,26 @@
             :swagger/example "/api/listings/<id>"
             :decode/response #(str "/api/listings/" %2)}))
 
+(s/def :listing/bid
+  (ds/spec {:bidder :bid/bidder
+            :time :common/time
+            :ammount :item/price}))
+
 
 (def listing-shape
-   {:ItemID :item/id
-    :Name :item/name
-    :Categories (s/coll-of :item/category)
-    :Currently :item/price
-    :First-Bid :item/price
-    :Number-of-Bids pos-int?
-    :Bids [{:Bidder :bid/bidder
-            :Time :bid/time
-            :Ammount :item/price}]
-    :Location :usr/location
-    :Country :usr/country
-    :Started :listing/started
-    :Ends :listing/ends
-    :Seller :listing/poster
-    :Description string?})
+   {:item_id :item/id
+    :name :item/name
+    :categories (s/coll-of :item/category)
+    :currently :item/price
+    :first_bid :item/price
+    :bids (s/coll-of :listing/bid)
+    :location :usr/location
+    :country :usr/country
+    :started :common/time
+    :ends :common/time
+    :seller :listing/poster
+    :description string?
+    })
 
 
 (def listings-filters-shape

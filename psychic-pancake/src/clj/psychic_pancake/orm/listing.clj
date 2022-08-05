@@ -20,7 +20,8 @@
         Listing)))))
 
 (defn get-by-id [^Long id]
-  (orm/with-session
+  (->
+   (orm/with-session
     (orm/with-transaction
-      (orm/find! Listing id))))
+      (orm/find! Listing id)))))
 
