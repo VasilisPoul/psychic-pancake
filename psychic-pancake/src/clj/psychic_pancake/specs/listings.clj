@@ -67,9 +67,15 @@
             :swagger/example {:rating 942
                               :uid "Alice"
                               :location "Alice's Shoe Factory"
-                              :country "United Kingdom"}
-            }))
+                              :country "United Kingdom"}}))
+
 (s/def :bid/time :common/time)
+
+(s/def :bid/ref
+  (st/spec {:spec string?
+            :description "Item ID"
+            :swagger/example "/api/listings/<id>"
+            :decode/response #(str "/api/listings/" %2)}))
 
 (s/def :listing/ref
   (st/spec {:spec string?
@@ -78,7 +84,7 @@
             :decode/response #(str "/api/listings/" %2)}))
 
 (s/def :listing/bid
-  (ds/spec {:bidder :bid/bidder
+  (ds/spec {:bidder :usr/ref
             :time :common/time
             :ammount :item/price}))
 
@@ -94,7 +100,7 @@
     :country :usr/country
     :started :common/time
     :ends :common/time
-    :seller :listing/poster
+    :seller :usr/ref
     :description string?})
 
 

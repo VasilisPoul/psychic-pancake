@@ -30,7 +30,9 @@
        [:transformers :response :default]
        (st/type-transformer
         {:name :response
-         :decoders stt/json-type-decoders
+         :decoders (merge
+                    stt/json-type-decoders
+                    stt/strip-extra-keys-type-decoders)
          :encoders stt/json-type-encoders
          :default-encoder stt/any->any}))
       reitit.coercion.spec/create))

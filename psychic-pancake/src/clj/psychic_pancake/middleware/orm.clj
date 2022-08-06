@@ -4,31 +4,33 @@
    [psychic-pancake.orm.user :as user]
    [psychic-pancake.orm.message :as message]
    [psychic-pancake.orm.listing :as listing]
+   [psychic-pancake.orm.bid :as bid]
    [psychic-pancake.ownership :refer [owns?]]))
 
 (def type->db-fn
   {:user user/get-by-id
    :message message/get-by-id
-   :listing listing/get-by-id})
+   :listing listing/get-by-id
+   :bid bid/get-by-id})
 
 (def type->404-msg
   {:user #(str
            "Referenced user ids"
-           " "
+           " ["
            (clojure.string/join ", " %)
-           " do not correspond to"
+           "] do not correspond to"
            " existing users")
    :message #(str
               "Referenced message ids"
-              " "
+              " ["
               (clojure.string/join ", " %)
-              " do not correspond to"
+              "] do not correspond to"
               " existing messages")
    :listing #(str
               "Referenced listing ids"
-              " "
+              " ["
               (clojure.string/join ", " %)
-              " do not correspond to"
+              "] do not correspond to"
               " existing listings")})
 
 (defn- assoc-fetches [req fetches]
@@ -75,4 +77,5 @@
                    (map (fn [[type ents]]
                           (->> ents
                                (map :id)
-                               type->404-msg)) groups)}))))))))})
+                               ((type->404-msg type))))
+                        groups)}))))))))})

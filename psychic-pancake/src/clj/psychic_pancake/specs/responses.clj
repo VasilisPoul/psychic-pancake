@@ -21,4 +21,4 @@
   {:body {:reason (st/spec
                    {:spec string?
                     :swagger/example "Not Found"})
-          :info string?}})
+          :info (s/coll-of string?)}})

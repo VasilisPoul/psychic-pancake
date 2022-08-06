@@ -1,6 +1,7 @@
 (ns psychic-pancake.routes.listings
   (:require
    [ring.util.http-response :refer :all]
+   [psychic-pancake.routes.listings.bids :as routes.bids]
    [psychic-pancake.specs.listings :as specs.listings]
    [psychic-pancake.orm.listing :as orm.listing]
    [psychic-pancake.orm.core :as orm]
@@ -12,15 +13,7 @@
 (defn transform-listing [listing]
   (-> listing
       (update :country :name)
-      (assoc :location "test")
-      (update :seller #(select-keys %
-                                    [:uid
-                                     :rating
-                                     :location
-                                     :country]))
-      (assoc-in [:seller :rating] 100)
-      (assoc-in [:seller :location] "test")
-      (update-in [:seller :country] :name)))
+      (assoc :location "test")))
 
 
 (def routes
@@ -56,8 +49,9 @@
      :parameters {:path {:listing-id pos-int?}}
      :fetch! [{:key :listing
                :req->id (comp :listing-id :path :parameters)
-               :type :listing}]
-     :put {:parameters {:body
+               :type :listing}]}
+    [""
+     {:put {:parameters {:body
                         specs.listings/listing-update-shape}
            :responses {200 {:body specs.listings/listing-shape}}
            :handler (fn [{{listing :listing} :db
@@ -82,5 +76,6 @@
              (-> listing
                  orm/obj->map
                  transform-listing
-                 ok))}}]])
+                 ok))}}]
+    routes.bids/routes]])
 

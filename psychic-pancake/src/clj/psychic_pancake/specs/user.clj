@@ -5,7 +5,9 @@
             [spec-tools.data-spec :as ds]
             [spec-tools.swagger.core :refer [accept-spec]]
             [psychic-pancake.orm.core :as orm]
-            [psychic-pancake.orm.user :as orm.user]))
+            [psychic-pancake.orm.user :as orm.user]
+            [psychic-pancake.specs.decoders.user
+             :refer [this->UserRef]]))
 
 (s/def :usr/uid
   (st/spec {:spec string?
@@ -22,7 +24,7 @@
             :swagger/example "/api/user/<uid>"
             :swagger/pattern "/api/user/.*"
             :reason "invalid user url"
-            :decode/response #(str "/api/user/" %2)}))
+            :decode/response #(this->UserRef %2)}))
 
 (let [email-pattern "^(.+)@(.+)$"]
   (s/def :usr/email
