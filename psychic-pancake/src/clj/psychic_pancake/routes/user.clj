@@ -16,16 +16,15 @@
    [""
     {:post
      {:parameters {:body specs.user/user-registration-shape}
-      :responses {200 {:body specs.user/user-registration-shape}}
+      :responses {200 {:body {:user :usr/ref}}}
       :handler (fn [{{params :body} :parameters}]
                  (ok
-                  (orm/obj->map
-                   (orm.user/create!
-                    (dissoc
-                     (assoc params
-                            :password_digest (h/derive (params :password))
-                            :pending true)
-                     :password)))))}}]
+                  (orm.user/create!
+                   (dissoc
+                    (assoc params
+                           :password_digest (h/derive (params :password))
+                           :pending true)
+                    :password))))}}]
    ["/:id"
     {:fetch! [{:key :user-ref
                :req->id (comp :id :path :parameters)
