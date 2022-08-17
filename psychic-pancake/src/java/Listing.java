@@ -36,7 +36,25 @@ public class Listing implements Serializable {
     @NotNull
     private Double first_bid;
 
-    private Double currently;
+    @JsonGetter("current_bid")
+    private Bid current_bid() {
+	Bid current = null;
+	double max = first_bid;
+	for(Bid b : bids) {
+	    if(b.getAmount() > max) {
+		max = b.getAmount();
+		current = b;
+	    }
+	}
+	return current;
+    }
+
+    @JsonGetter("currently")
+    private double currently() {
+	Bid current = current_bid();
+	return (current == null) ?
+	    first_bid : current.getAmount();
+    }
 
     @NotNull
     @OneToMany(mappedBy="listing")

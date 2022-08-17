@@ -17,4 +17,6 @@
       (.getId b)]))
   java.util.Map
   (this->BidRef [b-map]
-    ((juxt :listing :id) b-map)))
+    (this->BidRef ((juxt :listing :id) b-map)))
+  String
+  (this->BidRef [s] s))

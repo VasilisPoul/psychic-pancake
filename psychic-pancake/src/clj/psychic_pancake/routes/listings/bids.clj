@@ -21,15 +21,25 @@
                       :key :bidder}]
             :parameters {:body
                          {:amount :item/price}}
+            :responses {200 {:bid :bid/ref}}
             :handler (fn [{{body :body} :parameters
                           db :db}]
-                       (-> body
-                           (merge db)
-                           (select-keys
-                            [:amount :listing :bidder])
-                           orm.bid/create!
-                           orm/obj->map
-                           ok))}}]
+                       (if (> (:amount body)
+                              (.getCurrently ^psychic_pancake.Listing (:listing db)))
+                         (assoc-in
+                          (ok {})
+                          [:body :bid]
+                          (-> body
+                              (merge db)
+                              (select-keys
+                               [:amount :listing :bidder])
+                              orm.bid/create!))
+                         {:status 402
+                          :body {:reason "Bidding amount must be higher than current price"
+                                 :info (str "Tried to bid "
+                                            (:amount body)
+                                            " on a listing with a current price of "
+                                            (.getCurrently ^psychic_pancake.Listing (:listing db)))}}))}}]
    ["/:bid-id"
     {:parameters {:path {:bid-id pos-int?}}
      :fetch! [{:type :bid

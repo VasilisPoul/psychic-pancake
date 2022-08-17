@@ -1,11 +1,18 @@
 (ns psychic-pancake.orm.bid
   (:require [psychic-pancake.orm.core :as orm]
             [psychic-pancake.specs.common :refer [parse-time]])
-  (:import (psychic_pancake Bid)))
+  (:import (psychic_pancake Bid Listing)))
 
 (defn create! [params]
-  (orm/save!
-   (orm/hash-map->obj params Bid)))
+  (orm/with-session
+    (let [bid (orm/with-transaction
+                (orm/merge!
+                 (orm/hash-map->obj params Bid)))]
+          (orm/with-transaction
+            (orm/merge!
+             (doto (orm/find! Listing (:listing params))
+               (.setCurrently (:amount params)))))
+          bid)))
 
 (defn get-by-id [id]
   (orm/with-session
