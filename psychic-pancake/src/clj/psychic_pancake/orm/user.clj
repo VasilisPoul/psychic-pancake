@@ -12,7 +12,7 @@
 (defn create! [map]
   (orm/with-session
     (orm/with-transaction
-      (orm/merge!
+      (orm/persist!
        (map->user
         (assoc map
                :country

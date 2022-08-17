@@ -31,12 +31,17 @@
    ["/check"
     {:get
      {:swagger {:tags ["login"] :security [{:apiAuth []}]}
-      :test "foo"
-      :handler (fn [req] (ok {:id (-> req :identity)
-                             :test (-> req
-                                       ring/get-match
-                                       :data
-                                       ((req :request-method))
-                                       :test)}))}}]])
+      :auth? true
+      :fetch! [{:type :user
+                :key :me
+                :req->id (comp :uid :identity)}]
+      :responses {200 {:body {:role :usr/role
+                              :uid :usr/uid
+                              :first_name :usr/first_name
+                              :last_name :usr/last_name}}}
+      :handler (fn [{{me :me} :db}]
+                 (-> me
+                     orm/obj->map
+                     ok))}}]])
 
 

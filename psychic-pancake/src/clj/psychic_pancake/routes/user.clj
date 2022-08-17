@@ -16,15 +16,22 @@
    [""
     {:post
      {:parameters {:body specs.user/user-registration-shape}
-      :responses {200 {:body {:user :usr/ref}}}
+      :responses {200 {:body {:user :usr/ref}}
+                  409 {:body {:reason string?}}}
       :handler (fn [{{params :body} :parameters}]
-                 (ok
-                  (orm.user/create!
-                   (dissoc
-                    (assoc params
-                           :password_digest (h/derive (params :password))
-                           :pending true)
-                    :password))))}}]
+                 (try
+                   (ok
+                    {:user
+                     (orm.user/create!
+                      (dissoc
+                       (assoc params
+                              :password_digest (h/derive (params :password))
+                              :pending true)
+                       :password))})
+                   (catch
+                       jakarta.persistence.EntityExistsException e
+                       (conflict
+                        {:reason "A user with this id already exists"}))))}}]
    ["/:id"
     {:fetch! [{:key :user-ref
                :req->id (comp :id :path :parameters)

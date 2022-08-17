@@ -66,6 +66,9 @@
 (defn merge! [ent]
   (.merge *session* ent))
 
+(defn persist! [ent]
+  (.persist *session* ent))
+
 (defn remove! [ent]
   (.remove *session* ent))
 
