@@ -48,6 +48,8 @@ public class User implements Serializable {
     private String phone_num;
     @NotNull
     private boolean pending;
+    @NotNull
+    private Long rating;
 
     @OrderBy ("timestamp DESC")
     @OneToMany(fetch = FetchType.LAZY, mappedBy="to")

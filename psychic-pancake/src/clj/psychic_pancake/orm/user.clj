@@ -2,21 +2,21 @@
   (:require
    [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.country :as country])
-  (:import psychic_pancake.User
-           psychic_pancake.User$Role
-           psychic_pancake.Message))
+  (:import [psychic_pancake User User$Role Message Country]))
 
 (defn map->user [map]
   (orm/hash-map->obj map User))
 
 (defn create! [map]
-  (orm/with-session
-    (orm/with-transaction
-      (orm/persist!
-       (map->user
-        (assoc map
-               :country
-               (orm/obj->map (orm/find! psychic_pancake.Country (:country map)))))))))
+  (do
+    (orm/with-session
+      (orm/with-transaction
+        (let [country (orm/find! Country (:country map))
+            user (map->user
+                  (assoc map
+                         :country country))]
+          (orm/persist! user)
+          user)))))
 
 (defn get-by-id [uid]
   (orm/with-session
@@ -68,7 +68,7 @@
 ;;   :location nil,
 ;;   :inbox [],
 ;;   :outbox [],
-;;   :country {:name "foo"}})
+;;   :country "Germany"})
 
 
 ;; (get-by-id "test2")

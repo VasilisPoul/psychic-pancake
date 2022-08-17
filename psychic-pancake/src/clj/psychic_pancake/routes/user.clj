@@ -7,7 +7,9 @@
    [psychic-pancake.specs.user :as specs.user]
    [psychic-pancake.orm.user :as orm.user]
    [psychic-pancake.orm.core :as orm]
-   [buddy.hashers :as h]))
+   [clojure.set :refer [rename-keys]]
+   [buddy.hashers :as h])
+  (:import [jakarta.persistence EntityExistsException]))
 
 
 (def user-routes
@@ -22,16 +24,16 @@
                  (try
                    (ok
                     {:user
-                     (orm.user/create!
-                      (dissoc
-                       (assoc params
-                              :password_digest (h/derive (params :password))
-                              :pending true)
-                       :password))})
-                   (catch
-                       jakarta.persistence.EntityExistsException e
-                       (conflict
-                        {:reason "A user with this id already exists"}))))}}]
+                     (-> params
+                         (update :password h/derive)
+                         (rename-keys
+                          {:password :password_digest})
+                         (assoc :pending true)
+                      orm.user/create!)})
+                   (catch EntityExistsException e
+                     (conflict
+                      {:reason
+                       "A user with this id already exists"}))))}}]
    ["/:id"
     {:fetch! [{:key :user-ref
                :req->id (comp :id :path :parameters)
