@@ -24,7 +24,10 @@
       :handler (fn [{{{uid :uid pwd :password} :body} :parameters}]
                  (let [user (orm.user/get-by-id uid)]
                    (if (:valid (h/verify pwd (.getPassword_digest user)))
-                     (ok {:token (str "Token " (jwt/sign {:uid uid} secret))}))))}}]
+                     (ok {:token (str "Token " (jwt/sign {:uid uid} secret))})
+                     (unauthorized
+                      {:reason "Invalid username or password"
+                       :info "Create an account or check your credentials"}))))}}]
    ["/check"
     {:get
      {:swagger {:tags ["login"] :security [{:apiAuth []}]}
