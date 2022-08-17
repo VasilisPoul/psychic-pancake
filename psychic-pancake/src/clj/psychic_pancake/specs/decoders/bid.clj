@@ -19,4 +19,6 @@
   (this->BidRef [b-map]
     (this->BidRef ((juxt :listing :id) b-map)))
   String
-  (this->BidRef [s] s))
+  (this->BidRef [s] s)
+  nil
+  (this->BidRef [_] nil))

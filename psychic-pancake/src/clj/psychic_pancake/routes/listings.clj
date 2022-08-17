@@ -41,7 +41,6 @@
                      (assoc :seller usr)
                      (assoc :location (.getLocation usr))
                      (assoc :country (.getCountry usr))
-                     (assoc :currently (:first_bid body))
                      orm.listing/create!))}))} ;create a new listing
      }]
    ["/:listing-id"

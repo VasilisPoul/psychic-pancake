@@ -95,7 +95,7 @@
     :name :item/name
     :categories (s/coll-of :item/category)
     :currently :item/price
-    :current_bid :bid/ref
+    :current_bid (s/nilable :bid/ref)
     :first_bid :item/price
     :bids (s/coll-of :bid/ref)
     :location :usr/location
@@ -103,7 +103,8 @@
     :started :common/time
     :ends :common/time
     :seller :usr/ref
-    :description string?})
+    :description string?
+    :active boolean?})
 
 
 (def listings-filters-shape
