@@ -15,4 +15,5 @@
       (wrap-cors :access-control-allow-origin #".*"
                  :access-control-allow-methods #{:get :post :put :delete}
                  :access-control-allow-headers #{"Content-Type"
-                                                 "Accept"})))
+                                                 "Accept"
+                                                 "Authorization"})))
