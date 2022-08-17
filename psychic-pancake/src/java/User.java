@@ -39,7 +39,7 @@ public class User implements Serializable {
     @JoinColumn(insertable=true, updatable=true, nullable=false)
     private Country country;
     @NotNull
-    private String SSN;
+    private String VAT;
     @NotNull
     private String first_name;
     @NotNull

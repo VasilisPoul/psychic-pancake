@@ -61,10 +61,10 @@
             :json-schema/default "Germany"
             :swagger/example "Germany"}))
 
-(s/def :usr/ssn
+(s/def :usr/vat
   (st/spec {:spec string?
-            :description "User SSN"
-            :json-schema/default "your-ssn-here"
+            :description "User VAT"
+            :json-schema/default "your-vat-here"
             :swagger/example "ΑΦΜ4567890"}))
 
 (s/def :usr/phone_num
@@ -107,7 +107,7 @@
    (ds/opt :first_name) :usr/first_name
    (ds/opt :last_name) :usr/last_name
    (ds/opt :email) :usr/email
-   (ds/opt :SSN) :usr/ssn
+   (ds/opt :VAT) :usr/vat
    (ds/opt :phone_num) :usr/phone_num
    (ds/opt :country) :usr/country
    (ds/opt :rating) :usr/rating})
@@ -121,7 +121,7 @@
    (ds/req :first_name) :usr/first_name
    (ds/req :last_name) :usr/last_name
    (ds/req :email) :usr/email
-   (ds/req :SSN) :usr/ssn
+   (ds/req :VAT) :usr/vat
    (ds/req :phone_num) :usr/phone_num
    (ds/req :password) :usr/password
    (ds/req :country) :usr/country})
