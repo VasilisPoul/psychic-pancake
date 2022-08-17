@@ -13,7 +13,7 @@
       (orm/find! Bid id))))
 
 
-(create!
- {:amount 12.37
-  :listing (psychic-pancake.orm.listing/get-by-id 6)
-  :bidder (psychic-pancake.orm.user/get-by-id "user_name")})
+;; (create!
+;;  {:amount 12.37
+;;   :listing (psychic-pancake.orm.listing/get-by-id 6)
+;;   :bidder (psychic-pancake.orm.user/get-by-id "user_name")})
