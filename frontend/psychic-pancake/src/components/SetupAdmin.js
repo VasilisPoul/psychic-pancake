@@ -11,7 +11,7 @@ export default function Login(props) {
   const navigate = useNavigate();
 
   const LogInUser = (e) => {
-    setUser({ 'username': 'foo', 'email': email, 'user-role': 'buyer' })
+    setUser({ 'username': 'foo', 'email': email, 'role': 'buyer' })
     navigate("/")
   }
 

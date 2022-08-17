@@ -33,7 +33,7 @@ export default function RoutesComponent() {
       }
     }).then(function (response) {
       // console.log(`GET: ${JSON.parse(response)}`);
-      setUser({ 'username': response.data.id.uid, 'user-role': 'seller' })
+      setUser({ 'username': response.data.uid, 'role': response.data.role })
     }).catch(
       setUser({})
     )
@@ -44,8 +44,8 @@ export default function RoutesComponent() {
 
   if (typeof user !== 'undefined' && user){
     console.log("user: ", user)
-    isAdmin = user['user-role'] === 'admin';
-    isLoggedIn = user['user-role'] === 'seller' || user['user-role'] === 'buyer';
+    isAdmin = user['role'] === 'admin';
+    isLoggedIn = user['role'] === 'seller' || user['role'] === 'buyer';
   }
 
   return (

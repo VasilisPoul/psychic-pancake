@@ -8,7 +8,7 @@ import SendMessageModal from "../components/SendMessageModal";
 
 export default function Auction() {
   const { user, setUser } = useContext(UserContext);
-  const isLoggedIn = (typeof user['user-role'] === 'undefined') ? false : true;
+  const isLoggedIn = (typeof user['role'] === 'undefined') ? false : true;
   return (
     <>
       {isLoggedIn ? <Navbar /> : <InitialNavbar />}
@@ -17,7 +17,7 @@ export default function Auction() {
         <div className='container mt-2'>
           <div className='row'>
             <div className='col-sm-2'>
-              {user['user-role'] === 'seller' && <AddAuctionModal />}
+              {user['role'] === 'seller' && <AddAuctionModal />}
             </div>
             <div className='col-sm-2'>
               <SendMessageModal/>

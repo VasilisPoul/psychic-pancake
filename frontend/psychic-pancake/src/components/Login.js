@@ -35,8 +35,8 @@ export default function Login(props) {
               }
             })
               .then(function (get_response) {
-                console.log(`GET: ${get_response.data.id.uid}`);
-                setUser({ 'username': get_response.data.id.uid, 'user-role': 'seller' });
+                console.log(`GET: ${get_response.data.uid}`);
+                setUser({ 'username': get_response.data.uid, 'role': get_response.data.role });
                 navigate("/")
               })
           }

@@ -33,12 +33,12 @@ const auctionsList = [
 export default function UserAuctions() {
 
   const { user, setUser } = useContext(UserContext);
-  console.log("role", user['user-role'])
+  console.log("role", user['role'])
   return (
     <>
       <Navbar />
       <div className='container mt-3'>
-        {user['user-role'] === 'seller' && <AddAuctionModal />}
+        {user['role'] === 'seller' && <AddAuctionModal />}
 
         <div className='row mb-2'>
           {auctionsList.map((item, idx) => {

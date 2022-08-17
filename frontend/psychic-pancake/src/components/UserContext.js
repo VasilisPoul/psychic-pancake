@@ -12,7 +12,7 @@ function UserContextComponent(props) {
       }
     }).then(function (response) {
       console.log(`GET: ${JSON.parse(response)}`);
-      setUser({ 'username': response.data.id.uid, 'user-role': 'seller' })
+      setUser({ 'username': response.data.uid, 'role': response.data.role })
     })
     currentUser = JSON.parse(localStorage.getItem("user"));
   } catch (error) {
