@@ -46,6 +46,6 @@
                  listing :listing} :db}]
              (-> bid
                  orm/obj->map
-                 (rename-keys {:id :self})
+                 (assoc :self bid)
                  ok))}}]])
 

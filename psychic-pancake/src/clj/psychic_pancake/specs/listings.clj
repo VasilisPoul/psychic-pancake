@@ -2,7 +2,8 @@
   (:require
    [clojure.spec.alpha :as s]
    [spec-tools.core :as st]
-   [spec-tools.data-spec :as ds]))
+   [spec-tools.data-spec :as ds]
+   [psychic-pancake.specs.decoders.bid :as dec.b]))
 
 (s/def :item/id
   (st/spec {:spec int?
@@ -73,9 +74,9 @@
 
 (s/def :bid/ref
   (st/spec {:spec string?
-            :description "Item ID"
-            :swagger/example "/api/listings/<id>"
-            :decode/response #(str "/api/listings/" %2)}))
+            :description "Bid url"
+            :swagger/example "/api/listings/<listing>/bids/<bid>"
+            :decode/response #(dec.b/this->BidRef %2)}))
 
 (s/def :listing/ref
   (st/spec {:spec string?
@@ -95,7 +96,7 @@
     :categories (s/coll-of :item/category)
     :currently :item/price
     :first_bid :item/price
-    :bids (s/coll-of :listing/bid)
+    :bids (s/coll-of :bid/ref)
     :location :usr/location
     :country :usr/country
     :started :common/time
