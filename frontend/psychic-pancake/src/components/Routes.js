@@ -17,22 +17,32 @@ import SetupAdmin from './SetupAdmin';
 import UserAuctions from '../pages/UserAuctions';
 import Auction from '../pages/Auction';
 import Messages from '../pages/Messages';
+import axios from '../api/axios';
 
 export default function RoutesComponent() {
   const {user, setUser} = useContext(UserContext);
   let isAdmin = false;
   let isLoggedIn = false;
   
-  // useEffect(() => {
-  //   console.log("id: ", user.id)
-  //   if (localStorage == null)
-  //     localStorage.setItem("user", user.id);
+  useEffect(() => {
+   
+    axios.get("/api/token/check", {
+      headers: {
+        accept: 'application/json',
+        authorization: localStorage.getItem('AuthToken')
+      }
+    }).then(function (response) {
+      // console.log(`GET: ${JSON.parse(response)}`);
+      setUser({ 'username': response.data.id.uid, 'user-role': 'seller' })
+    }).catch(
+      setUser({})
+    )
+  }, [localStorage.getItem('AuthToken')])
+  
+  console.log("localStorage: ", localStorage.getItem('AuthToken'))
 
-  //   // setUser(user)
-  //   console.log("localStorage: ", localStorage.getItem('user'))
-  // }, [user])
 
-  if (typeof user !== 'undefined'){
+  if (typeof user !== 'undefined' && user){
     console.log("user: ", user)
     isAdmin = user['user-role'] === 'admin';
     isLoggedIn = user['user-role'] === 'seller' || user['user-role'] === 'buyer';

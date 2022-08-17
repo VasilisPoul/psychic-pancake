@@ -3,20 +3,49 @@ import { Navigate, useNavigate, Link } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import '../style.css'
 import classNames from "classnames";
+import axios from '../api/axios';
+// import axios from 'axios'
 
 export default function Login(props) {
   const frontPage = props.frontPage;
   const { user, setUser } = useContext(UserContext);
-  const [email, setEmail] = useState('');
+  const [uid, setUid] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  
+
 
   const LogInUser = (e) => {
     e.preventDefault();
-    setUser({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'seller' })
-    localStorage.setItem("user", JSON.stringify({ 'id': 1, 'username': 'foo', 'email': email, 'user-role': 'seller' }));
-    navigate("/")
+    try {
+      axios.post("/api/token", { uid, password }, {
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(
+          function (response) {
+            console.log(JSON.stringify(response.data.token));
+            localStorage.setItem("AuthToken", response.data.token)
+            axios.get("/api/token/check", {
+              headers: {
+                accept: 'application/json',
+                authorization: localStorage.getItem('AuthToken')
+              }
+            })
+              .then(function (get_response) {
+                console.log(`GET: ${get_response.data.id.uid}`);
+                setUser({ 'username': get_response.data.id.uid, 'user-role': 'seller' });
+                navigate("/")
+              })
+          }
+        )
+    }
+    catch { }
+
+
+
   }
 
   const HandleCancel = () => {
@@ -35,12 +64,12 @@ export default function Login(props) {
             </Link>
           </div>
           <div className="form-group mt-3">
-            <label>Email address</label>
+            <label>Username</label>
             <input
-              type="email"
+              type="test"
               className="form-control mt-1"
-              placeholder="Enter email"
-              onChange={(e) => { setEmail(e.target.value) }}
+              placeholder="Enter username"
+              onChange={(e) => { setUid(e.target.value) }}
             />
           </div>
           <div className="form-group mt-3">
@@ -49,6 +78,7 @@ export default function Login(props) {
               type="password"
               className="form-control mt-1"
               placeholder="Enter password"
+              onChange={(e) => { setPassword(e.target.value) }}
             />
           </div>
           <div className="d-grid gap-2 mt-3">

@@ -3,7 +3,7 @@ import { useMemo, useContext } from 'react';
 import { UserContextComponent, UserContext } from './components/UserContext';
 
 function App() {
-  console.log(process.env.REACT_APP_URL)
+  // console.log(process.env.REACT_APP_URL)
   
 
   return (
