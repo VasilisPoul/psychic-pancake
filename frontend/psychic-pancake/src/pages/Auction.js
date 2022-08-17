@@ -25,7 +25,7 @@ export default function Auction() {
           </div>
         </div>
         <div className="card-body">
-          <h5 class="card-title">Title</h5>
+          <h5 className="card-title">Title</h5>
           <p className="card-text">blah</p>
         </div>
       </div>

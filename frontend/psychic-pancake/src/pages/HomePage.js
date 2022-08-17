@@ -92,12 +92,12 @@ export default function HomePage() {
           {ItemsList.map((item, idx) => {
             return (
               <div className='col-sm-3 mb-3'>
-                <div class="card" style={{ "width": "18rem;" }}>
-                  <img src={auction} class="card-img-top" alt="..." />
-                  <div class="card-body">
-                    <h5 class="card-title">{item.title}</h5>
-                    <p class="card-text">{item.desc}</p>
-                    {/* <a href="#" class="btn btn-primary">Go somewhere</a> */}
+                <div className="card" style={{ "width": "18rem;" }}>
+                  <img src={auction} className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title">{item.title}</h5>
+                    <p className="card-text">{item.desc}</p>
+                    {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
                   </div>
                 </div>
               </div>

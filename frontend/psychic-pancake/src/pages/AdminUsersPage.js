@@ -22,7 +22,7 @@ export default function AdminUsersPagePanel() {
             <AdminNavbar />
 
             <div className="container">
-                <table class="table">
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>

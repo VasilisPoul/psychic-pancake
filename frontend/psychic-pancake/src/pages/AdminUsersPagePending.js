@@ -22,7 +22,7 @@ export default function AdminPendingPagePanel() {
             <AdminNavbar />
 
             <div className="container">
-                <table class="table">
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Id</th>
