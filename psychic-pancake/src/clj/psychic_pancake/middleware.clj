@@ -3,14 +3,8 @@
     [psychic-pancake.env :refer [defaults]]
     [psychic-pancake.config :refer [env]]
     [ring-ttl-session.core :refer [ttl-memory-store]]
-    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]))
-
-(defn my-wrap-cors [handler pat]
-  (fn [req]
-    (let [resp (handler req)]
-      (assoc-in resp
-              [:headers "Access-Control-Allow-Origin"]
-              pat))))
+    [ring.middleware.defaults :refer [site-defaults wrap-defaults]]
+    [ring.middleware.cors :refer [wrap-cors]]))
 
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
@@ -18,4 +12,7 @@
         (-> site-defaults
             (assoc-in [:security :anti-forgery] false)
             (assoc-in  [:session :store] (ttl-memory-store (* 60 30)))))
-      (my-wrap-cors "*")))
+      (wrap-cors :access-control-allow-origin #".*"
+                 :access-control-allow-methods #{:get :post :put :delete}
+                 :access-control-allow-headers #{"Content-Type"
+                                                 "Accept"})))
