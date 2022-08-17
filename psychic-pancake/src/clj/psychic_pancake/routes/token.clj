@@ -19,9 +19,9 @@
    {:swagger {:tags ["user" "login"]}}
    [""
     {:post
-     {:parameters {:form specs.user/user-login-shape}
+     {:parameters {:body specs.user/user-login-shape}
       :responses {200 {:body {:token string?}}}
-      :handler (fn [{{{uid :uid pwd :password} :form} :parameters}]
+      :handler (fn [{{{uid :uid pwd :password} :body} :parameters}]
                  (let [user (orm.user/get-by-id uid)]
                    (if (:valid (h/verify pwd (.getPassword_digest user)))
                      (ok {:token (str "Token " (jwt/sign {:uid uid} secret))}))))}}]

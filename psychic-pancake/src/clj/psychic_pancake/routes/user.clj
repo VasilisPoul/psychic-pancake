@@ -15,9 +15,9 @@
    {:swagger {:tags ["user"]}}
    [""
     {:post
-     {:parameters {:form specs.user/user-registration-shape}
+     {:parameters {:body specs.user/user-registration-shape}
       :responses {200 {:body specs.user/user-registration-shape}}
-      :handler (fn [{{params :form} :parameters}]
+      :handler (fn [{{params :body} :parameters}]
                  (ok
                   (orm/obj->map
                    (orm.user/create!
