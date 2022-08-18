@@ -33,12 +33,15 @@ export default function Signup() {
           .then(
             function (response) {
               console.log(JSON.stringify(response.data));
-              // navigate("/request-sent")
+              navigate("/request-sent")
 
             }
           )
           .catch(function (error) {
-            console.log(error);
+            console.log(`${error}`);
+            if (error.response.status === 409){
+              alert(error.response.data.reason)
+            }
           });
       }
     }

@@ -40,12 +40,13 @@ export default function Login(props) {
                 navigate("/")
               })
           }
+        ).catch (
+          function (error){
+            alert('Could not login, check your credentials.')
+          }
         )
     }
     catch { }
-
-
-
   }
 
   const HandleCancel = () => {
