@@ -1,6 +1,7 @@
 (ns psychic-pancake.orm.listing
   (:require [psychic-pancake.orm.core :as orm]
-            [psychic-pancake.specs.common :refer [parse-time]])
+            [psychic-pancake.specs.common :refer [parse-time]]
+            [psychic-pancake.orm.query-builder :refer [str->query]])
   (:import (psychic_pancake User Listing Category)))
 
 (defn create! [params]
@@ -31,3 +32,4 @@
     (orm/with-transaction
       (let [l (orm/find! Listing id)]
         (orm/remove! l))))))
+

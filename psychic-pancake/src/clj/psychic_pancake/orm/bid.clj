@@ -8,11 +8,7 @@
     (let [bid (orm/with-transaction
                 (orm/merge!
                  (orm/hash-map->obj params Bid)))]
-          (orm/with-transaction
-            (orm/merge!
-             (doto (orm/find! Listing (:listing params))
-               (.setCurrently (:amount params)))))
-          bid)))
+      bid)))
 
 (defn get-by-id [id]
   (orm/with-session

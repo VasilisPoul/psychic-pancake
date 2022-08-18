@@ -4,9 +4,8 @@
   (:import
    org.hibernate.SessionFactory
    org.hibernate.cfg.Configuration
-   com.fasterxml.jackson.databind.ObjectMapper               
-   com.fasterxml.jackson.annotation.PropertyAccessor         
-   com.fasterxml.jackson.annotation.JsonAutoDetect$Visibility))
+   [com.fasterxml.jackson.databind ObjectMapper DeserializationFeature]
+   [com.fasterxml.jackson.annotation PropertyAccessor JsonAutoDetect$Visibility]))
 
 (defprotocol java->clj
   (->clj [this]))
@@ -84,9 +83,9 @@
   (.refresh *session* ent))
 
 (def DefaultObjectMapper
-  (let [om (ObjectMapper.)]
-    (.setVisibility om PropertyAccessor/FIELD JsonAutoDetect$Visibility/ANY)
-    om))
+  (doto (ObjectMapper.)
+    (.setVisibility PropertyAccessor/FIELD JsonAutoDetect$Visibility/ANY)
+    (.configure DeserializationFeature/FAIL_ON_UNKNOWN_PROPERTIES false)))
 
 (defn- convertValue [obj cls]
   (.convertValue DefaultObjectMapper obj cls))
@@ -100,8 +99,3 @@
 (defn hash-map->obj
   ([map cls] (convertValue (stringify-keys map) cls))
   ([map] (hash-map->obj map (-> map meta :class))))
-
-(import '[psychic_pancake User Listing])
-
-
-

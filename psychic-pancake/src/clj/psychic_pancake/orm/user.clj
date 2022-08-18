@@ -1,7 +1,9 @@
 (ns psychic-pancake.orm.user
   (:require
    [psychic-pancake.orm.core :as orm]
-   [psychic-pancake.orm.country :as country])
+   [psychic-pancake.orm.country :as country]
+   [psychic-pancake.orm.query-builder :refer [str->query]]
+   [clojure.set :refer [union]])
   (:import [psychic_pancake User User$Role Message Country]))
 
 (defn map->user [map]
@@ -39,6 +41,48 @@
                              :to receiver)
                       Message)]
         (orm/merge! message)))))
+
+(def uid->uids-i-sold-to
+  (comp
+   set
+   (str->query
+    (str "select b.bidder.uid from User u "
+         "left join Bid b on b.bidder = u "
+         "left join Listing l on b.listing = l "
+         "where l.seller.uid=:uid "
+         "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)"))
+   (partial hash-map :uid)))
+
+(def uid->uids-that-bought-from-me
+  (comp
+   set
+   (str->query
+    (str "select l.seller.uid from User u "
+         "left join Bid b on b.bidder = u "
+         "left join Listing l on b.listing = l "
+         "where b.bidder.uid=:uid "
+         "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)"))
+   (partial hash-map :uid)))
+
+(def uid->uids-that-i-can-message
+  (comp
+   (partial apply union)
+   (juxt uid->uids-i-sold-to uid->uids-that-bought-from-me)))
+
+(def can-message?
+  (comp
+   not
+   empty?
+   (str->query
+    (str "select l.seller.uid from User u "
+         "left join Bid b on b.bidder = u "
+         "left join Listing l on b.listing = l "
+         "where ((b.bidder.uid=:uid1 "
+         "and l.seller.uid=:uid2) "
+         "or (b.bidder.uid=:uid2 "
+         "and l.seller.uid=:uid1)) "
+         "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)"))
+   (fn [u1 u2] {:uid1 u1 :uid2 u2})))
 
 ;; (create!
 ;;  {:role (name :admin),
