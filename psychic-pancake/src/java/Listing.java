@@ -56,7 +56,7 @@ public class Listing implements Serializable {
     }
 
     @JsonGetter("currently")
-    private double currently() {
+    public double getCurrently() {
 	Bid current = current_bid();
 	return (current == null) ?
 	    first_bid : current.getAmount();
