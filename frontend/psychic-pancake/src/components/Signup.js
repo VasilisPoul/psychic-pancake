@@ -11,36 +11,39 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-      axios.post("/api/user", { 
-        uid, 
-        password, 
-        role, 
-        email, 
-        country ,
-        last_name: surname,
-        first_name: name,
-        SSN: vat,
-        phone_num: phoneNumber
-      }, {
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(
-          function (response) {
-            console.log(JSON.stringify(response.data));
-            // navigate("/request-sent")
-
+      if (password !== reenteredPassword)
+        alert('Passwords do not match')
+      else {
+        axios.post("/api/user", {
+          uid,
+          password,
+          role,
+          email,
+          country,
+          last_name: surname,
+          first_name: name,
+          VAT: vat,
+          phone_num: phoneNumber
+        }, {
+          headers: {
+            'accept': 'application/json',
+            'Content-Type': 'application/json'
           }
-        )
-        .catch(function (error) {
-          console.log(error);
-        });
-        
+        })
+          .then(
+            function (response) {
+              console.log(JSON.stringify(response.data));
+              // navigate("/request-sent")
+
+            }
+          )
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
     }
-    catch (error) { 
-      console.log("eroror"+ error)
+    catch (error) {
+      console.log("eroror" + error)
     }
 
   }
