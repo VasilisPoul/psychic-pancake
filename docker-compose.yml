@@ -41,7 +41,6 @@ services:
     ports:
       - 3323:3323
       - 3324:3324
-      - 443:443
 
 # networks:
 #   default:

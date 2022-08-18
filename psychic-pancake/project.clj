@@ -29,6 +29,7 @@
                  [ring/ring-core "1.9.5"]
                  [ring/ring-defaults "0.3.3"]
                  [selmer "1.12.50"]
+                 [org.clojure/data.csv "1.0.1"]
                  ;; jpa
                  [org.hibernate/hibernate-core "6.1.1.Final"]
                  [org.postgresql/postgresql "42.4.0"]
