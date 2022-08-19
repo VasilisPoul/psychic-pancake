@@ -44,7 +44,8 @@
          "and (l.country.name = :country or :country = NULL) "
          "and (:seller_rating = NULL or l.seller.rating >= :seller_rating) "
          "and (:today < l.ends or :only_active = FALSE) "
-         "and (c.name in :categories)")
+         "and (c.name in :categories or coalesce(:categories) IS NULL) "
+         "and (l.seller.uid = :seller_uid or :seller_uid = NULL)")
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
                  "else (select max(b.amount) from Bid b where b.listing = l) end)"))
@@ -55,8 +56,6 @@
                    :price_max nil
                    :seller_rating nil
                    :categories nil
+                   :seller_uid nil
                    :only_active true
                    :today (java.util.Date.)})))
-
-
-;; (orm/->clj (search-listings {}))

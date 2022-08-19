@@ -109,6 +109,7 @@
    (ds/opt :price_max) (st/spec {:spec :item/price
                                  :description "Maximum Price in dollars"})
    (ds/opt :country) :usr/country
+   (ds/opt :seller_uid) :usr/uid
    (ds/opt :seller_rating) :usr/rating
    :only_active boolean?})
 
@@ -123,4 +124,3 @@
   (->> listing-post-shape
        (map (juxt (comp ds/opt first) second))
        (into {})))
-
