@@ -24,7 +24,6 @@ export default function Login(props) {
       })
         .then(
           function (response) {
-            console.log(JSON.stringify(response.data.token));
             localStorage.setItem("AuthToken", response.data.token)
             axios.get("/api/token/check", {
               headers: {
@@ -33,7 +32,6 @@ export default function Login(props) {
               }
             })
               .then(function (get_response) {
-                console.log(`GET: ${get_response.data.uid}`);
                 setUser({ 'username': get_response.data.uid, 'role': get_response.data.role });
                 navigate("/")
               })

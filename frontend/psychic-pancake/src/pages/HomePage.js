@@ -147,7 +147,7 @@ export default function HomePage(props) {
     }
   }
 
-  const [isActive, setIsActive] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [country, setCountry] = useState('');
   const [name, setName] = useState('');
   const [minPrice, setMinPrice] = useState(null);

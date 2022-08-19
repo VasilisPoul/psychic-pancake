@@ -33,7 +33,6 @@ const auctionsList = [
 export default function UserAuctions() {
 
   const { user, setUser } = useContext(UserContext);
-  console.log("role", user['role'])
   return (
     <>
       <Navbar />

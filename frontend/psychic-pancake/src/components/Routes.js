@@ -39,7 +39,6 @@ export default function RoutesComponent() {
     )
   }, [localStorage.getItem('AuthToken')])
   
-  console.log("localStorage: ", localStorage.getItem('AuthToken'))
   isLoggedIn = localStorage.getItem('AuthToken');
   if (typeof user !== 'undefined' && user){
     isAdmin = user['role'] === 'admin';
