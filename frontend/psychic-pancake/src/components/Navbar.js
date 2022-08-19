@@ -1,13 +1,14 @@
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { UserContext } from './UserContext';
+import axios from '../api/axios';
 
 export default function Navbar() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
     const HandleLogOut = () => {
         localStorage.removeItem('AuthToken')
-        setUser({});    
+        setUser({});
         navigate('/')
     }
 
@@ -27,13 +28,9 @@ export default function Navbar() {
                             <Link className="nav-link" to="/my-auctions">My Auctions</Link>
                         </li>
                     </ul>
-                    <form className="d-flex">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                    <button className="btn btn-light ml-4" onClick={HandleLogOut} >Logout</button>
                 </div>
             </div>
+            <button className="btn btn-light ml-4 col" onClick={HandleLogOut} >Logout</button>
         </nav>
     );
 }
