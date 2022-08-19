@@ -24,11 +24,9 @@
             :swagger/example "Shoes"}))
 
 (s/def :item/price
-  (st/spec {:spec double?
+  (st/spec {:spec number?
             :description "Price in dollars"
             :swagger/example 12.21}))
-
-
 
 
 (s/def :bid/bidder
