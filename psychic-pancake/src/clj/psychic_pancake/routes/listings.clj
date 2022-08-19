@@ -16,7 +16,6 @@
       (assoc :location "test")))
 
 
-
 (def routes
   ["/listings"
    [""

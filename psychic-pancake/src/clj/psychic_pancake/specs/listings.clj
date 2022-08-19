@@ -4,7 +4,8 @@
    [spec-tools.core :as st]
    [spec-tools.data-spec :as ds]
    [psychic-pancake.specs.decoders.bid :as dec.b]
-   [psychic-pancake.specs.decoders.listings :as dec.l]))
+   [psychic-pancake.specs.decoders.listings :as dec.l]
+   [clojure.string :as string]))
 
 (s/def :item/id
   (st/spec {:spec int?
@@ -101,10 +102,8 @@
 
 (def listings-filters-shape
   {(ds/opt :name) :item/name
-   (ds/opt :categories) (st/spec {:spec (ds/spec :categories [:item/category])
-                                  :swagger/collectionFormat "multi"
-                                  :swagger/type "array"
-                                  :swagger/items {:swagger/type "string"}})
+   (ds/opt :categories) (st/spec {:spec (s/coll-of :item/category)
+                                  :decode/string #(string/split %2 #",")})
    (ds/opt :price_min) (st/spec {:spec :item/price
                                  :description "Minimum Price in dollars"})
    (ds/opt :price_max) (st/spec {:spec :item/price
@@ -124,3 +123,4 @@
   (->> listing-post-shape
        (map (juxt (comp ds/opt first) second))
        (into {})))
+

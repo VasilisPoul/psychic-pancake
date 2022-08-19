@@ -44,7 +44,7 @@
          "and (l.country.name = :country or :country = NULL) "
          "and (:seller_rating = NULL or l.seller.rating >= :seller_rating) "
          "and (:today < l.ends or :only_active = FALSE) "
-         "and (:categories = NULL or c in :categories)")
+         "and (c.name in :categories)")
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
                  "else (select max(b.amount) from Bid b where b.listing = l) end)"))
