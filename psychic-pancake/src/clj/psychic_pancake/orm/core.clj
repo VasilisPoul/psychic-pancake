@@ -13,6 +13,9 @@
 (declare obj->map)
 
 (extend-protocol java->clj
+  java.util.Set
+  (->clj [this]
+    (into #{} this))
   java.util.Map
   (->clj [this] (into
                    {}

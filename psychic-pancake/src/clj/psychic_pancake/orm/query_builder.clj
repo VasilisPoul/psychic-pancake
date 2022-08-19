@@ -60,33 +60,4 @@
      (with-session (str->query query-string params))))
   ([^String query-string]
    (partial str->query query-string)))
- 
-;; (->
-;;  (with-session
-;;    (str->query
-;;                (str "select b.bidder.uid from User u "
-;;                     "left join Bid b on b.bidder = u "
-;;                     "left join Listing l on b.listing = l "
-;;                     "where l.seller.uid=:uid "
-;;                     "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)")))
- 
-;;  query->unbound-params)
 
-(str->query
-          (str "select b.bidder.uid from User u "
-               "left join Bid b on b.bidder = u "
-               "left join Listing l on b.listing = l "
-               "where l.seller.uid=:uid "
-               "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)")
-          {:uid "user_name"})
-
-
-(let [f (str->query
-          (str "select b.bidder.uid from User u "
-               "left join Bid b on b.bidder = u "
-               "left join Listing l on b.listing = l "
-               "where l.seller.uid=:uid "
-               "and b.amount = (select max(b_.amount) from Bid b_ where b_.listing = l)"))]
-  (f {:uid "user_name"}))
-
-;; (bound? #'*session*)
