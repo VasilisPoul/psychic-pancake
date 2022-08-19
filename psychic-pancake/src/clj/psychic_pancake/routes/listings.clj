@@ -16,6 +16,7 @@
       (assoc :location "test")))
 
 
+
 (def routes
   ["/listings"
    [""
@@ -23,8 +24,9 @@
                :security [{:apiAuth []}]}
      :get {:parameters {:query
                         specs.listings/listings-filters-shape}
-           :handler (constantly (ok))
-           :responses {200 {:body [:item/id]}}}  ;get all listings with filters
+           :handler (comp
+                     ok (partial apply vector) orm.listing/search-listings :query :parameters)
+           :responses {200 {:body [:listing/ref]}}}  ;get all listings with filters
      :post {:fetch! [{:key :user-ref
                       :req->id (comp :uid :identity)
                       :type :user}]

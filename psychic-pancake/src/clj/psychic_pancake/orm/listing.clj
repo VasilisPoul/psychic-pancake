@@ -37,12 +37,14 @@
   (comp
    (->
     (str "select l from Listing l "
+         "left join l.categories c "
          "where (l.name like :name or :name = NULL) "
          "and (%1$s >= :price_min or :price_min = NULL) "
          "and (%1$s <= :price_max or :price_max = NULL) "
          "and (l.country.name = :country or :country = NULL) "
          "and (:seller_rating = NULL or l.seller.rating >= :seller_rating) "
-         "and (:today < l.ends or :only_active = FALSE)")
+         "and (:today < l.ends or :only_active = FALSE) "
+         "and (:categories = NULL or c in :categories)")
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
                  "else (select max(b.amount) from Bid b where b.listing = l) end)"))
@@ -52,6 +54,7 @@
                    :price_min nil
                    :price_max nil
                    :seller_rating nil
+                   :categories nil
                    :only_active true
                    :today (java.util.Date.)})))
 
