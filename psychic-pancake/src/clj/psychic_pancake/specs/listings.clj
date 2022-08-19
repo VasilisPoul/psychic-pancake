@@ -3,7 +3,8 @@
    [clojure.spec.alpha :as s]
    [spec-tools.core :as st]
    [spec-tools.data-spec :as ds]
-   [psychic-pancake.specs.decoders.bid :as dec.b]))
+   [psychic-pancake.specs.decoders.bid :as dec.b]
+   [psychic-pancake.specs.decoders.listings :as dec.l]))
 
 (s/def :item/id
   (st/spec {:spec int?
@@ -25,14 +26,7 @@
 (s/def :item/price
   (st/spec {:spec double?
             :description "Price in dollars"
-            :swagger/example 12.21
-            :decode/json
-            #((comp
-               parse-double
-               second
-               (partial re-matches
-                        #"\$((([123456789]\d*)|0)(\.\d+)?)"))
-              %2)}))
+            :swagger/example 12.21}))
 
 
 
@@ -82,7 +76,7 @@
   (st/spec {:spec string?
             :description "Item ID"
             :swagger/example "/api/listings/<id>"
-            :decode/response #(str "/api/listings/" %2)}))
+            :decode/response #(dec.l/this->ListingRef %2)}))
 
 (s/def :listing/bid
   (ds/spec {:bidder :usr/ref
@@ -109,16 +103,17 @@
 
 (def listings-filters-shape
   {(ds/opt :name) :item/name
-   (ds/opt :categories) [:item/category]
-   (ds/opt :price-min) (st/spec {:spec :item/price
+   (ds/opt :categories) (st/spec {:spec (ds/spec :categories [:item/category])
+                                  :swagger/collectionFormat "multi"
+                                  :swagger/type "array"
+                                  :swagger/items {:swagger/type "string"}})
+   (ds/opt :price_min) (st/spec {:spec :item/price
                                  :description "Minimum Price in dollars"})
-   (ds/opt :price-max) (st/spec {:spec :item/price
+   (ds/opt :price_max) (st/spec {:spec :item/price
                                  :description "Maximum Price in dollars"})
-   (ds/opt :location) :usr/location
    (ds/opt :country) :usr/country
-   (ds/opt :started) :listing/started
-   (ds/opt :ends) :listing/ends
-   (ds/opt :seller-rating) :usr/rating})
+   (ds/opt :seller_rating) :usr/rating
+   :only_active boolean?})
 
 (def listing-post-shape
   {:name :item/name
