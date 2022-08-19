@@ -13,8 +13,6 @@ export default function Login(props) {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-
-
   const LogInUser = (e) => {
     e.preventDefault();
     try {
@@ -86,7 +84,7 @@ export default function Login(props) {
             <button type="submit" className="btn btn-primary">
               Submit
             </button>
-            {!frontPage && <button type="submit" className="btn btn-grey" onClick={HandleCancel}>
+            {!frontPage && <button type="cancel" className="btn btn-grey" onClick={HandleCancel}>
               Cancel
             </button>}
           </div>
