@@ -3,98 +3,19 @@ import Navbar from '../components/Navbar';
 import auction from '../resources/auction.webp';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react'
-const ItemsList = [
-  {
-    "title": "Item #1",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #2",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #3",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #4",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #5",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #6",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #7",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #8",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #9",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #10",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #11",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #12",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #13",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #14",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #15",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #16",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #17",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #18",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #19",
-    "desc": "blah blah"
-  },
-  {
-    "title": "Item #20",
-    "desc": "blah blah"
-  },
-];
+
 
 function CardListing(props) {
   const listing_url = props.url;
   const item = props.item;
 
-  const [itemData, setItemData] = useState({})
+  const [itemData, setItemData] = useState({});
+  const [ loading, setLoading ] = useState(true);
   useEffect(() => {
     axios.get(item).then(
       function (response) {
-        setItemData(response.data)
+        setItemData(response.data);
+        setLoading(false);
       }
     ).catch()
   }, [])
@@ -102,17 +23,19 @@ function CardListing(props) {
   const linkTo = '/auction/'+item_id
 
   return (
-
-    <div className='col-sm-3 mb-3'>
+    <>
+    {!loading && <div className='col-sm-3 mb-3'>
       <div className="card" style={{ "width": "18rem;" }}>
         <img src='' className="card-img-top" alt="..." />
         <div className="card-body">
           <h5 className="card-title">{itemData.name}</h5>
           <p className="card-text">{itemData.description}</p>
+          <div><span>{itemData.currently}$</span></div>
           <Link to={linkTo} className="btn btn-light">See more</Link>
         </div>
       </div>
-    </div>
+    </div>}
+    </>
   )
 }
 

@@ -35,10 +35,13 @@ export default function Auction() {
           <img style={{ height: "50vh", objectFit: "cover", objectPosition: "50% 50%" }} className="card-img-top" src={auction} alt="Card image cap" />
           <div className='container mt-2'>
             <div className='row'>
-              <div className='col-sm-2'>
+              <div className="col">
+                <span>Latest Bid: {listing.currently}$</span>
+              </div>
+              <div className='col'>
                 {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
               </div>
-              <div className='col-sm-2'>
+              <div className='col'>
                 {user['role'] === 'buyer' && <SendMessageModal listing={listing} />}
               </div>
             </div>
