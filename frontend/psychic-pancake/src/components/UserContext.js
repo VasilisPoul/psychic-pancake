@@ -11,7 +11,6 @@ function UserContextComponent(props) {
         authorization: localStorage.getItem('AuthToken')
       }
     }).then(function (response) {
-      console.log(`GET: ${JSON.parse(response)}`);
       setUser({ 'username': response.data.uid, 'role': response.data.role })
     })
     currentUser = JSON.parse(localStorage.getItem("user"));

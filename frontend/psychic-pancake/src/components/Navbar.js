@@ -27,6 +27,9 @@ export default function Navbar() {
                         <li className="nav-item">
                             <Link className="nav-link" to="/my-auctions">My Auctions</Link>
                         </li>
+                        <li className="nav-item">
+                            <Link className="nav-link" to="/messages">Messages</Link>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -55,7 +55,7 @@ export default function RoutesComponent() {
         <Route path="/request-sent" element={(isAdmin || isLoggedIn) ? <Navigate to="/" /> : <RequestPending />} />
         <Route path="/install" element={<SetupAdmin />} />
         <Route path="/my-auctions" element={isLoggedIn ? <UserAuctions/> : <span>Not Authorized.</span>} />
-        <Route path="/auction" element={<Auction />} />
+        <Route path="/auction/:id" element={<Auction />} />
         <Route path="/messages" element={<Messages />} />
       </Routes>
     </BrowserRouter>

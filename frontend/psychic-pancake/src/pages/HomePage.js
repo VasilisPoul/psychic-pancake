@@ -1,6 +1,7 @@
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
 import auction from '../resources/auction.webp';
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 const ItemsList = [
   {
@@ -97,16 +98,18 @@ function CardListing(props) {
       }
     ).catch()
   }, [])
+  const item_id = item.split('/')[3]
+  const linkTo = '/auction/'+item_id
 
   return (
 
     <div className='col-sm-3 mb-3'>
       <div className="card" style={{ "width": "18rem;" }}>
-        {/* <img src={auction} className="card-img-top" alt="..." /> */}
+        <img src='' className="card-img-top" alt="..." />
         <div className="card-body">
           <h5 className="card-title">{itemData.name}</h5>
           <p className="card-text">{itemData.description}</p>
-          {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
+          <Link to={linkTo} className="btn btn-light">See more</Link>
         </div>
       </div>
     </div>
@@ -160,7 +163,7 @@ export default function HomePage(props) {
       <Navbar />
       <div className='container mt-3'>
         <form className="row mr-2" onSubmit={HandleSubmit}>
-          <div className="dropdown col">
+          <div className="dropdown col" style={{paddingLeft: "0px"}}>
             <button className="btn btn-light w-100 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {isActive ? 'Active Only' : 'All'}
             </button>

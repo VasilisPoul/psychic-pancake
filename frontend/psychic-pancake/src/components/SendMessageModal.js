@@ -17,19 +17,13 @@ export default function SendMessageModal() {
                 <form className="Auth-form">
                   <div className="Auth-form-content">
                     <div className="form-group mt-3">
-                      {/* <label>Title</label>
-                      <input
-                        type="text"
-                        className="form-control mt-1"
-                        placeholder="Enter Auction Title"
-                      />*/}
                     </div> 
                     <div className="form-group mt-3">
                       <label>Message</label>
                       <textarea
                         type="text"
                         className="form-control mt-1"
-                        placeholder="Enter Auction Description"
+                        placeholder="Enter Message"
                       />
                     </div>
                     <div className="d-grid gap-2 mt-3">
