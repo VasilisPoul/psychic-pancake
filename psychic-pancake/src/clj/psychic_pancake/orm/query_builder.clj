@@ -1,9 +1,13 @@
 (ns psychic-pancake.orm.query-builder
   (:require
-   [psychic-pancake.orm.core :as orm :refer [*session* with-session]])
+   [psychic-pancake.orm.core :as orm :refer
+    [*session* with-session with-transaction]])
   (:import
    [org.hibernate Session]
-   [javax.persistence.criteria CriteriaQuery CriteriaBuilder]))
+   [javax.persistence.criteria CriteriaQuery CriteriaBuilder]
+   [javax.persistence Query]
+   [java.lang IllegalStateException]
+   [org.hibernate.query.sqm.internal QuerySqmImpl]))
 
 ;; (def ^:dynamic *builder*)
 ;; (def ^:dynamic *query*)
@@ -50,14 +54,22 @@
     (.setParameter q (name k) v))
   q)
 
+(defn execute! [^QuerySqmImpl q]
+  (try
+    (.getResultList q)
+    (catch IllegalStateException e
+      (with-transaction (.executeUpdate q)))))
+
+
 (defn str->query
   ([^String query-string params]
    (if (bound? #'*session*)
      (-> *session*
          (.createQuery query-string)
          (query-bind-params params)
-         .getResultList)
-     (with-session (str->query query-string params))))
+         execute!)
+     (with-session
+       (str->query query-string params))))
   ([^String query-string]
    (partial str->query query-string)))
 

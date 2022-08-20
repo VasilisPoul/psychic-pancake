@@ -26,9 +26,12 @@
       :parameters {}
       :handler (fn [req]
                  (ok
-                  (map
-                   (fn [^Message msg] (.getMsg_id msg))
-                    (-> req :identity :uid orm.user/get-by-id getter))))}}])
+                  (->> req
+                       :identity
+                       :uid
+                       orm.user/get-by-id
+                       getter
+                       (map (fn [^Message msg] (.getMsg_id msg))))))}}])
 
 
 (def routes
@@ -57,25 +60,40 @@
                                    (assoc :to
                                           (-> req :db :to))))]
                    (-> msg .getMsg_id ((fn [x] {:url x})) ok)))}}]
-   (mailbox-route "/inbox" (fn [^User u] (.getInbox u)))
-   (mailbox-route "/outbox" (fn [^User u] (.getOutbox u)))
+   (mailbox-route "/inbox" orm.message/get-inbox)
+   (mailbox-route "/outbox" orm.message/get-outbox)
    ["/:id"
     {:conflicting true
+     :parameters {:path {:id int?}}
+     :fetch! [{:key :msg
+               :req->id (comp :id :path :parameters)
+               :type :message
+               :must-own true}]
      :get
-     {:parameters {:path {:id int?}}
-      :fetch! [{:key :msg
-                :req->id (comp :id :path :parameters)
-                :type :message
-                :must-own true}]
-      :responses {200 {:body message-shape}}
+     {:responses {200 {:body message-shape}}
       :handler
       (fn [{{me :uid} :identity
           {msg :msg} :db}]
         (-> msg
             orm/obj->map
             (clojure.set/rename-keys {:msg_id :self})
-            ok)
-          )}}]])
+            ok))}
+     :delete
+     {:responses {200 {}}
+      :handler (fn [{{me :uid} :identity
+                    {msg :msg} :db}]
+                 (let [message (orm/->clj msg)]
+                   (do
+                     (cond
+                       (= (:from message) me)
+                       (-> message
+                           :id
+                           orm.message/delete-from)
+                       (= (:to message) me)
+                       (-> message
+                           :id
+                           orm.message/delete-from))
+                     (ok {}))))}}]])
 
 ;; (.setTo
 ;;  (orm/hash-map->obj
@@ -100,3 +118,4 @@
 
 ;; (orm/hash-map->obj
 ;;  {:from (orm.user/get-by-id "user_name")} Message)
+(.setSender_deleted (Message.) false)

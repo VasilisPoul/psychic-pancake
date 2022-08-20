@@ -1,9 +1,17 @@
 (ns psychic-pancake.orm.message
   (:require
    [psychic-pancake.orm.core :as orm]
-   [psychic-pancake.orm.user :as orm.user])
-  (:import psychic_pancake.User
-           psychic_pancake.Message))
+   [psychic-pancake.orm.user :as orm.user]
+   [psychic-pancake.orm.query-builder :refer [str->query]])
+  (:import [psychic_pancake User Message]
+           [org.hibernate.query IllegalSelectQueryException]))
+
+
+(def Message->from
+  (memfn ^Message getFrom))
+
+(def Message->to
+  (memfn ^Message getTo))
 
 
 (defn create! [msg]
@@ -20,6 +28,38 @@
   (orm/with-session
     (orm/with-transaction
       (orm/find! Message uid))))
+
+(def get-outbox 
+  (comp
+   (str->query
+    (str "select m from Message m "
+         "where m.sender = :uid "
+         "and m.sender_deleted = false"))
+   (partial hash-map :uid)))
+
+(def get-inbox
+ (comp
+  (str->query
+   (str "select m from Message m "
+        "where m.from = :uid "
+        "and m.receiver_deleted = false"))
+  (partial hash-map :uid)))
+
+
+(def delete-from
+  (juxt
+   (comp
+    (str->query
+     (str "update Message m "
+          "set m.receiver_deleted = true "
+          "where m.id=:id"))
+    (partial hash-map :id))
+   (comp
+    (str->query
+     (str "update Message m "
+          "set m.sender_deleted = true "
+          "where m.id=:id"))
+    (partial hash-map :id))))
 
 ;; (create!
 ;;  {:from "user_name",

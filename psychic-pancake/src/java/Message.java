@@ -44,4 +44,9 @@ public class Message implements Serializable {
     private String subject;
     @NotNull
     private String body;
+
+    @Column(columnDefinition="boolean DEFAULT false", nullable=false)
+    private boolean sender_deleted;
+    @Column(columnDefinition="boolean DEFAULT false", nullable=false)
+    private boolean receiver_deleted;
 }

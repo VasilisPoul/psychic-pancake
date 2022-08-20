@@ -60,10 +60,10 @@
 
 (defmacro with-transaction [& body]
   `(let [trx# (.getTransaction *session*)]
-       (let [ret# (do ~@body)]
-         (.begin trx#)
-         (.commit trx#)
-         ret#)))
+     (.begin trx#)
+     (let [ret# (do ~@body)]
+       (.commit trx#)
+       ret#)))
 
 (defn merge! [ent]
   (.merge *session* ent))

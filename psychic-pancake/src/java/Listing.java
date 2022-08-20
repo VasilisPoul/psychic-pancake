@@ -37,7 +37,7 @@ public class Listing implements Serializable {
     private Double first_bid;
 
     @JsonGetter("current_bid")
-    private Bid current_bid() {
+    public Bid current_bid() {
 	Bid current = null;
 	double max = first_bid;
 	for(Bid b : bids) {
@@ -56,7 +56,7 @@ public class Listing implements Serializable {
     }
 
     @JsonGetter("currently")
-    public double getCurrently() {
+    private double currently() {
 	Bid current = current_bid();
 	return (current == null) ?
 	    first_bid : current.getAmount();
