@@ -16,7 +16,8 @@ import HomePage from '../pages/HomePage';
 import SetupAdmin from './SetupAdmin';
 import UserAuctions from '../pages/UserAuctions';
 import Auction from '../pages/Auction';
-import Messages from '../pages/Messages';
+import SentMessages from '../pages/SentMessages';
+import ReceivedMessages from '../pages/ReceivedMessages';
 import axios from '../api/axios';
 
 export default function RoutesComponent() {
@@ -32,7 +33,6 @@ export default function RoutesComponent() {
         authorization: localStorage.getItem('AuthToken')
       }
     }).then(function (response) {
-      // console.log(`GET: ${JSON.parse(response)}`);
       setUser({ 'username': response.data.uid, 'role': response.data.role })
     }).catch(
       setUser({})
@@ -56,7 +56,8 @@ export default function RoutesComponent() {
         <Route path="/install" element={<SetupAdmin />} />
         <Route path="/my-auctions" element={isLoggedIn ? <UserAuctions/> : <span>Not Authorized.</span>} />
         <Route path="/auction/:id" element={<Auction />} />
-        <Route path="/messages" element={<Messages />} />
+        <Route path="/sent-messages" element={<SentMessages />} />
+        <Route path="/received-messages" element={<ReceivedMessages />} />
       </Routes>
     </BrowserRouter>
   );

@@ -28,7 +28,22 @@ export default function Navbar() {
                             <Link className="nav-link" to="/my-auctions">My Auctions</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link" to="/messages">Messages</Link>
+
+                            <div className="dropdown">
+                                <button className="btn btn-light w-100 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Messages
+                                </button>
+                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <div className="dropdown-item" >
+                                    <Link className="nav-link" to="/sent-messages">Sent</Link>
+                                    </div>
+                                    <div className="dropdown-item" >
+                                    <Link className="nav-link" to="/received-messages">Received</Link>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
                         </li>
                     </ul>
                 </div>
