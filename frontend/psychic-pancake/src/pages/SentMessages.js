@@ -1,5 +1,3 @@
-// If Buyer list bought products
-// If seller list auctions, and let him add new auctions (modal?)
 import { useContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
@@ -67,13 +65,13 @@ const MessageInstance = (props) => {
                       <span>{' ' + message.subject}</span>
                     </div>
 
-                    <div className="form-group mt-3 border-bottom">
+                    <div className="form-group mt-3 border-bottom " style={{whiteSpace: 'pre-wrap', overflowWrap: 'break-word'}}>
                       <small>Message</small>
                       <span>{' ' + message.body}</span>
                     </div>
                     <div className="d-grid gap-2 mt-3">
                       
-                      <button type="submit" className="btn btn-light" data-bs-dismiss="modal" >
+                      <button type="submit" className="btn btn-light" data-bs-dismiss="modal" onClick={(e) => e.preventDefault()} >
                         Done
                       </button>
                     </div>

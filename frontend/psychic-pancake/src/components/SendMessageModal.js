@@ -1,4 +1,37 @@
-export default function SendMessageModal() {
+import { useState } from "react";
+import axios from "../api/axios";
+
+export default function SendMessageModal(props) {
+  const listing = props.listing;
+
+  const HandleSubmit = (e) => {
+    try {
+      e.preventDefault()
+      axios.post('/api/messages',
+        {
+          to: listing.seller.split('/')[3],
+          subject,
+          body
+        },
+        {
+          headers: {
+            'authorization': localStorage.getItem('AuthToken')
+          }
+        }
+      )
+      .then(
+        function (response){
+          window.location.reload(false)
+        }
+      )
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+  const [subject, setSubject] = useState('');
+  const [body, setBody] = useState('');
+
   return (
     <>
       <button type="button" className=" btn btn-light mb-3" data-bs-toggle="modal" data-bs-target="#msgModal">New Message</button>
@@ -14,23 +47,33 @@ export default function SendMessageModal() {
                 </button>
               </div>
               <div className="modal-body">
-                <form className="Auth-form">
+                <form className="Auth-form" onSubmit={HandleSubmit}>
                   <div className="Auth-form-content">
                     <div className="form-group mt-3">
-                    </div> 
+                    </div>
+                    <div className="form-group mt-3">
+                      <label>Subject</label>
+                      <input
+                        type="text"
+                        className="form-control mt-1"
+                        placeholder="Enter Subject"
+                        onChange={(e) => { setSubject(e.target.value) }}
+                      />
+                    </div>
                     <div className="form-group mt-3">
                       <label>Message</label>
                       <textarea
                         type="text"
                         className="form-control mt-1"
                         placeholder="Enter Message"
+                        onChange={(e) => { setBody(e.target.value) }}
                       />
                     </div>
                     <div className="d-grid gap-2 mt-3">
-                      <button type="submit" className="btn btn-primary">
+                      <button type="submit" className="btn btn-primary" >
                         Submit
                       </button>
-                      <button type="submit" className="btn btn-grey" data-bs-dismiss="modal" >
+                      <button type="" className="btn btn-grey" data-bs-dismiss="modal" onClick={(e) => e.preventDefault()} >
                         Cancel
                       </button>
                     </div>

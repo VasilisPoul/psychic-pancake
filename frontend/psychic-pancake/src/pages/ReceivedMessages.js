@@ -1,5 +1,3 @@
-// If Buyer list bought products
-// If seller list auctions, and let him add new auctions (modal?)
 import { useContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';

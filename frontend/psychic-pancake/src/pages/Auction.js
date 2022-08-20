@@ -15,11 +15,13 @@ export default function Auction() {
   const auctionId = useParams().id
   console.log(auctionId)
   const [listing, setListing] = useState({})
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     axios.get(`/api/listings/${auctionId}`)
       .then(
         function (response) {
           setListing(response.data)
+          setLoading(false)
         }
       )
       .catch()
@@ -27,25 +29,27 @@ export default function Auction() {
 
   return (
     <>
-      {isLoggedIn ? <Navbar /> : <InitialNavbar />}
-      <div className="card">
-        <img style={{ height: "50vh", objectFit: "cover", objectPosition: "50% 50%" }} className="card-img-top" src={auction} alt="Card image cap" />
-        <div className='container mt-2'>
-          <div className='row'>
-            <div className='col-sm-2'>
-              {user['role'] === 'buyer' && <AddBidModal />}
-            </div>
-            <div className='col-sm-2'>
-              {user['role'] === 'buyer' && <SendMessageModal />}
+      {!loading && <div>
+        {(isLoggedIn) ? <Navbar /> : <InitialNavbar />}
+        <div className="card">
+          <img style={{ height: "50vh", objectFit: "cover", objectPosition: "50% 50%" }} className="card-img-top" src={auction} alt="Card image cap" />
+          <div className='container mt-2'>
+            <div className='row'>
+              <div className='col-sm-2'>
+                {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
+              </div>
+              <div className='col-sm-2'>
+                {user['role'] === 'buyer' && <SendMessageModal listing={listing} />}
+              </div>
             </div>
           </div>
+          <div className="card-body container">
+            <h5 className="card-title">{listing.name}</h5>
+            <p className="card-text">{listing.description}</p>
+          </div>
         </div>
-        <div className="card-body container">
-          <h5 className="card-title">{listing.name}</h5>
-          <p className="card-text">{listing.description}</p>
-        </div>
-      </div>
 
+      </div>}
     </>
   );
 }
