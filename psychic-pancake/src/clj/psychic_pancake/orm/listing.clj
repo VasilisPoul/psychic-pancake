@@ -12,9 +12,8 @@
         (-> params
          (update :categories
                  (fn [cats]
-                   (map #(orm/with-transaction
-                           (orm/merge!
-                            (Category. %)))
+                   (map #(orm/merge!
+                          (Category. %))
                         cats)))
          ;; (update :started parse-time)
          (update :ends parse-time))
