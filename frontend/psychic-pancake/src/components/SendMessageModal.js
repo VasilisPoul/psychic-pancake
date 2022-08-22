@@ -2,14 +2,14 @@ import { useState } from "react";
 import axios from "../api/axios";
 
 export default function SendMessageModal(props) {
-  const listing = props.listing;
+  const to = props.to;
 
   const HandleSubmit = (e) => {
     try {
       e.preventDefault()
       axios.post('/api/messages',
         {
-          to: listing.seller.split('/')[3],
+          to,
           subject,
           body
         },

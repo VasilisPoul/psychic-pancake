@@ -42,7 +42,7 @@ export default function Auction() {
                 {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
               </div>
               <div className='col'>
-                {user['role'] === 'buyer' && <SendMessageModal listing={listing} />}
+                {user['role'] === 'buyer' && <SendMessageModal to={listing.seller.split('/')[3]} />}
               </div>
             </div>
           </div>
