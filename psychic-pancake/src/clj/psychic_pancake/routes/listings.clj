@@ -15,7 +15,6 @@
       (update :country :name)
       (assoc :location "test")))
 
-
 (def routes
   ["/listings"
    [""

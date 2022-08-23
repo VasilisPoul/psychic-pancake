@@ -39,6 +39,7 @@
       <mapping class="psychic_pancake.Location"/>
       <mapping class="psychic_pancake.Message"/>
       <mapping class="psychic_pancake.User"/>
-
+      <mapping class="psychic_pancake.Image"/>
+      
    </session-factory>
 </hibernate-configuration>

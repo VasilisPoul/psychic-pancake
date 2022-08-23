@@ -19,7 +19,4 @@ public class Country implements Serializable {
     @Id
     private String name;
     private double latitude, longitude;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="country")
-    Set<User> users;
 }

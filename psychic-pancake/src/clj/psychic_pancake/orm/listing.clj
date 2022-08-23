@@ -2,7 +2,7 @@
   (:require [psychic-pancake.orm.core :as orm]
             [psychic-pancake.specs.common :refer [parse-time]]
             [psychic-pancake.orm.query-builder :refer [str->query]])
-  (:import (psychic_pancake User Listing Category)))
+  (:import (psychic_pancake User Listing Category Image)))
 
 (defn create! [params]
   (orm/with-session
@@ -10,13 +10,15 @@
       (orm/merge!
        (orm/hash-map->obj
         (-> params
-         (update :categories
-                 (fn [cats]
-                   (map #(orm/merge!
-                          (Category. %))
-                        cats)))
-         ;; (update :started parse-time)
-         (update :ends parse-time))
+            (update :categories
+                    (partial map #(orm/merge! (Category. %))))
+            (update :images
+                    (partial map
+                             #(->> %
+                                   (Image. nil (:seller params))
+                                   orm/merge!)))
+            ;; (update :started parse-time)
+            (update :ends parse-time))
         Listing)))))
 
 (defn get-by-id [^Long id]

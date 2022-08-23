@@ -4,6 +4,7 @@
    [psychic-pancake.orm.user :as user]
    [psychic-pancake.orm.message :as message]
    [psychic-pancake.orm.listing :as listing]
+   [psychic-pancake.orm.image :as image]
    [psychic-pancake.orm.bid :as bid]
    [psychic-pancake.ownership :refer [owns?]]))
 
@@ -11,7 +12,8 @@
   {:user user/get-by-id
    :message message/get-by-id
    :listing listing/get-by-id
-   :bid bid/get-by-id})
+   :bid bid/get-by-id
+   :image image/get-by-id})
 
 (def type->404-msg
   {:user #(str

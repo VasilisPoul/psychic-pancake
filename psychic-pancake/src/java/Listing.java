@@ -87,4 +87,11 @@ public class Listing implements Serializable {
     private User seller;
     @NotNull
     private String description;
+
+    @OneToMany
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+		      property = "id",
+		      scope = Listing.class)
+    @JsonIdentityReference(alwaysAsId=true)
+    private List<Image> images;
 }

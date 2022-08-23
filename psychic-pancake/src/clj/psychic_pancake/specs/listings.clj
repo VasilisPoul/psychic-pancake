@@ -97,7 +97,8 @@
     :ends :common/time
     :seller :usr/ref
     :description string?
-    :active boolean?})
+    :active boolean?
+    :images (s/coll-of :common/image-ref)})
 
 
 (def listings-filters-shape
@@ -116,9 +117,10 @@
 (def listing-post-shape
   {:name :item/name
    :description string?
-   :categories (s/coll-of :item/category)
+   :categories [:item/category]
    :first_bid :item/price
-   :ends :listing/ends})
+   :ends :listing/ends
+   :images [:common/image]})
 
 (def listing-update-shape
   (->> listing-post-shape
