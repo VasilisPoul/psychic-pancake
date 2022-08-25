@@ -33,7 +33,7 @@
   (comp
    (str->query
     (str "select m from Message m "
-         "where m.sender = :uid "
+         "where m.from = :uid "
          "and m.sender_deleted = false"))
    (partial hash-map :uid)))
 
@@ -41,7 +41,7 @@
  (comp
   (str->query
    (str "select m from Message m "
-        "where m.from = :uid "
+        "where m.to = :uid "
         "and m.receiver_deleted = false"))
   (partial hash-map :uid)))
 
