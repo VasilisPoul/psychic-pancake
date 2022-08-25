@@ -47,19 +47,23 @@
 
 
 (def delete-from
-  (juxt
-   (comp
-    (str->query
-     (str "update Message m "
-          "set m.receiver_deleted = true "
-          "where m.id=:id"))
-    (partial hash-map :id))
-   (comp
-    (str->query
-     (str "update Message m "
-          "set m.sender_deleted = true "
-          "where m.id=:id"))
-    (partial hash-map :id))))
+  (let [args->map #(hash-map :uid %1 :id %2)
+        str->query #(-> % str->query (comp args->map))]
+    (juxt
+     (str->query
+      (str "update Message m "
+           "set m.receiver_deleted = true "
+           "where m.msg_id=:id and m.to.uid=:uid"))
+     (str->query
+      (str "update Message m "
+           "set m.sender_deleted = true "
+           "where m.msg_id=:id and m.from.uid=:uid"))
+     (str->query
+      (str "delete Message m "
+           "where m.sender_deleted = true "
+           "and m.receiver_deleted = true "
+           "and m.msg_id=:id "
+           "and ((:uid = m.from.uid) or (:uid = m.to.uid))")))))
 
 ;; (create!
 ;;  {:from "user_name",

@@ -15,9 +15,6 @@
   (:import
    (psychic_pancake Message User)))
 
-
-
-
 (defn mailbox-route [path getter]
   [path
    {:conflicting true
@@ -82,17 +79,9 @@
      {:responses {200 {}}
       :handler (fn [{{me :uid} :identity
                     {msg :msg} :db}]
-                 (let [message (orm/->clj msg)]
+                 (let [message_id (-> msg orm/->clj :msg_id)]
                    (do
-                     (cond
-                       (= (:from message) me)
-                       (-> message
-                           :id
-                           orm.message/delete-from)
-                       (= (:to message) me)
-                       (-> message
-                           :id
-                           orm.message/delete-from))
+                     (orm.message/delete-from me message_id)
                      (ok {}))))}}]])
 
 ;; (.setTo
@@ -118,4 +107,3 @@
 
 ;; (orm/hash-map->obj
 ;;  {:from (orm.user/get-by-id "user_name")} Message)
-(.setSender_deleted (Message.) false)
