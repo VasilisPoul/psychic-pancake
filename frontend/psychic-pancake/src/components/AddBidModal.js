@@ -4,9 +4,9 @@ import axios from "../api/axios";
 export default function AddBidModal(props) {
   const listing = props.listing;
   const [ amount, setAmount ] = useState('');
-  // const [ success, setSuccess ] = useState(false);
   
   const HandleSubmit = (e) => {
+    console.log(amount)
     try {
       e.preventDefault();
       axios.post(`/api/listings/${listing.item_id}/bids`, 
@@ -25,6 +25,7 @@ export default function AddBidModal(props) {
         .catch(
           function (error) {
             alert('You have to bid higher than the current highest bid.')
+            console.log(amount)
             window.location.reload(false)
           }
         )
@@ -58,7 +59,7 @@ export default function AddBidModal(props) {
                         type="text"
                         className="form-control mt-1"
                         placeholder="Enter Bid"
-                        onChange={(e) => {setAmount(parseFloat(e.target.value))}}
+                        onChange={(e) => {setAmount(parseFloat(e.target.value));}}
                       />
                     </div>
                     <div className="d-grid gap-2 mt-3">

@@ -87,7 +87,7 @@ const MessageInstance = (props) => {
       })
         .then(
           function ( response ) {
-            // window.location.reload(false)
+            window.location.reload(false)
           }
         )
     }

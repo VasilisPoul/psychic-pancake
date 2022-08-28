@@ -16,28 +16,37 @@ export default function Auction() {
   console.log(auctionId)
   const [listing, setListing] = useState({})
   const [loading, setLoading] = useState(true);
+  const [images, setImages] = useState([]);
+  let images_array = [];
   useEffect(() => {
     axios.get(`/api/listings/${auctionId}`)
       .then(
         function (response) {
-          setListing(response.data)
-          setLoading(false)
+          setListing(response.data);
+          for (let i = 0; i < response.data.images.length; i++) {
+            axios.get(response.data.images[i]).then(
+              function (response) {
+                images_array.push(response.data.image)
+                setImages(oldArray => [...oldArray, response.data.image])
+              }
+            )
+          }
+
+          setLoading(false);
+
         }
       )
       .catch()
   }, [])
-
+  !loading && console.log("images", images)
   return (
     <>
-      {!loading && <div>
-        {(isLoggedIn) ? <Navbar /> : <InitialNavbar />}
-        <div className="card">
-          <img style={{ height: "50vh", objectFit: "cover", objectPosition: "50% 50%" }} className="card-img-top" src={auction} alt="Card image cap" />
-          <div className='container mt-2'>
-            <div className='row'>
-              <div className="col">
-                <span>Latest Bid: {listing.currently}$</span>
-              </div>
+      {!loading &&
+        <div>
+          {(isLoggedIn) ? <Navbar /> : <InitialNavbar />}
+          <div className="container mt-3">
+            <div className="row">
+              <h1>{listing.name}</h1>
               <div className='col'>
                 {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
               </div>
@@ -45,14 +54,37 @@ export default function Auction() {
                 {user['role'] === 'buyer' && <SendMessageModal to={listing.seller.split('/')[3]} />}
               </div>
             </div>
-          </div>
-          <div className="card-body container">
-            <h5 className="card-title">{listing.name}</h5>
-            <p className="card-text">{listing.description}</p>
-          </div>
-        </div>
 
-      </div>}
+            <div className='row'>
+              <div className='col'>
+
+                {
+                  images.map((image) => {
+                    return (
+                      <img src={image} className=" w-100 mb-2" alt="alt" />
+                    );
+                  })
+                }
+
+
+              </div>
+              <div className="col">
+
+                <div className="row">
+                  <h4>Latest Bid:</h4>
+                  <span> {listing.currently}$</span>
+                </div>
+                <div>
+                  <h4>Description:</h4>
+                  <span> {listing.description}</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+        </div>}
     </>
   );
 }
