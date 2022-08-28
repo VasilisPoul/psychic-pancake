@@ -74,25 +74,3 @@
 ;; (get-by-id 1)
 
 ;; (orm/obj->map (get-by-id 1))
-
-(deftype my-type
-    [x
-     y]
-  java.util.Map
-  (java.util.Map/entrySet [this] #{[:x (. this x)]
-                                   [:y (. this y)]})
-  (java.util.Map/get
-    [this ^clojure.lang.Keyword k] (case k
-               :x (. this x)
-               :y (. this y)))
-  (java.util.Map/get
-    [this k] nil)
-  (java.util.Map/keys
-    [this] '(:x :y))
-
-  clojure.lang.IFn
-  (clojure.lang.IFn/invoke [this k] (.get this k)))
-
-( :y)
-(:x (psychic_pancake.User.))
-(keys (->my-type 1 2))

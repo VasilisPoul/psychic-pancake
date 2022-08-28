@@ -11,6 +11,7 @@
    [java.lang IllegalStateException]
    [java.util Map List]))
 
+
 ;; (def ^:dynamic *builder*)
 ;; (def ^:dynamic *query*)
 ;; (def ^:dynamic *root*)
@@ -37,36 +38,6 @@
 ;;   (.get *root* field))
 
 ;; (import [psychic_pancake User])
-
-(defn query_invoke_impl [this & params]
-  (let [pos-cnt (-> this
-                    positional-parameters
-                    count)
-        positional (take pos-cnt params)
-        named (apply hash-map (drop pos-cnt params))]
-    (-> this
-        (bind positional named)
-        :query_internal
-        execute!)))
-
-(defn- query-invoke-fn [n]
-  (let [vars (map (comp symbol (partial str "v")) (range 1 (inc n)))
-        p (apply vector 'this vars)]
-    `(clojure.lang.IFn/invoke ~p (~'query_invoke_impl ~'this ~@vars))))
-
-(defn query-invoke-last-fn [n]
-  (let [vars (map (comp symbol (partial str "v")) (range 1 n))
-        p (conj (apply vector 'this vars) '& 'more)]
-    `(clojure.lang.IFn/invoke ~p (~'apply ~'query_invoke_impl ~'this ~@vars ~'more))))
-
-(defmacro query-record-def [name fields & opts+specs]
-  (concat
-   (apply list
-          'defrecord name
-          fields
-          'clojure.lang.IFn
-          (map query-invoke-fn (range 1 (inc 20))))
-   (conj opts+specs)))
 
 (defn query->param-names [q]
   (->> q
@@ -178,17 +149,6 @@
                         ->query))
     Query
     (->query [this] (query. this))))
-
-(defn do-query!
-  ([this & params]
-  (let [pos-cnt (-> this
-                    positional-parameters
-                    count)
-        positional (take pos-cnt params)
-        named (apply hash-map (drop pos-cnt params))]
-    
-    ((bind this positional named))))
-  ([this] (partial do-query! this)))
 
 (defn bind [^query this & params]
   (let [pos-cnt (-> this
