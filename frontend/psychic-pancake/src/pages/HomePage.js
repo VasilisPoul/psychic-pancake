@@ -11,22 +11,28 @@ function CardListing(props) {
 
   const [itemData, setItemData] = useState({});
   const [ loading, setLoading ] = useState(true);
+  const [img, setImg] = useState('')
   useEffect(() => {
     axios.get(item).then(
       function (response) {
         setItemData(response.data);
         setLoading(false);
+        axios.get(response.data.images[0]).then(
+          function(response) {
+            console.log(response.data)
+            setImg(response.data.image)
+          }
+        )
       }
     ).catch()
   }, [])
   const item_id = item.split('/')[3]
   const linkTo = '/auction/'+item_id
-
   return (
     <>
     {!loading && <div className='col-sm-3 mb-3'>
       <div className="card" style={{ "width": "18rem;" }}>
-        <img src='' className="card-img-top" alt="..." />
+       { itemData.images && <img src={img} className="card-img-top" alt="..." />}
         <div className="card-body">
           <h5 className="card-title">{itemData.name}</h5>
           <p className="card-text">{itemData.description}</p>

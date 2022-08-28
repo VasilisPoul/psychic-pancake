@@ -7,6 +7,7 @@ import SendMessageModal from '../components/SendMessageModal';
 const MessageModal = (props) => {
   const message = props.message;
   const msgModal = props.msgModal;
+  const from = props.from;
 
   return (
 
@@ -25,8 +26,8 @@ const MessageModal = (props) => {
                 <div className="form-group mt-3">
                 </div>
                 <div className="form-group mt-3 border-bottom">
-                  <small>To</small>
-                  <span>{' ' + message.to}</span>
+                  <small>From</small>
+                  <span>{' ' + from}</span>
                 </div>
 
                 <div className="form-group mt-3 border-bottom">
@@ -72,16 +73,35 @@ const MessageInstance = (props) => {
         }
       )
   }, [])
-  console.log(message)
+
   const [currentMessage, setCurrentMessage] = useState('');
   const msgModal = `#msgModal${idx}`
-  console.log(msgModal)
+  console.log(messageUrl)
+  const HandleDelete = (e) => {
+    try {
+      e.preventDefault();
+      axios.delete(messageUrl, {
+        headers: {
+          'authorization': localStorage.getItem('AuthToken')
+        }
+      })
+        .then(
+          function ( response ) {
+            // window.location.reload(false)
+          }
+        )
+    }
+    catch (error) {
+
+    }
+  }
+
   return (
     <div className='row border-bottom justify-content-center align-items-center'>
-      <div className='col-sm-10'>
+      <div className='col-sm-9'>
         <div className='row justify-content-center align-items-center' style={{ cursor: 'pointer' }} data-bs-toggle="modal" data-bs-target={msgModal} onClick={(e) => { setCurrentMessage(message) }}>
           <div className='col-sm-2 text-truncate'>
-            <small>from:{' '}</small>
+            <small>From:{' '}</small>
             {from}
           </div>
           <div className='col-sm-4 text-truncate'>
@@ -96,9 +116,10 @@ const MessageInstance = (props) => {
             {message.timestamp}
           </div>
         </div>
-        <MessageModal message={currentMessage} msgModal={msgModal} />
+        <MessageModal message={currentMessage} msgModal={msgModal} from={from} />
       </div>
       <div className='col-sm-2 mt-3' ><SendMessageModal to={from}/></div>
+      <div className='col-sm-1'><button className='btn btn-danger' onClick={HandleDelete} >Delete</button></div>
     </div>
   );
 }
