@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
+import SendMessageModal from '../components/SendMessageModal';
 
 const MessageModal = (props) => {
   const message = props.message;
@@ -69,32 +70,54 @@ const MessageInstance = (props) => {
         }
       )
   }, [])
-  console.log(message)
   const [currentMessage, setCurrentMessage] = useState('');
   const msgModal = `#msgModal${idx}`
-  console.log(msgModal)
+
+  const HandleDelete = (e) => {
+    try {
+      e.preventDefault();
+      axios.delete(messageUrl, {
+        headers: {
+          'authorization': localStorage.getItem('AuthToken')
+        }
+      })
+        .then(
+          function ( response ) {
+            window.location.reload(false)
+          }
+        )
+    }
+    catch (error) {
+
+    }
+  }
+
   return (
     <>
-      <div className='row border-bottom' style={{ cursor: 'pointer' }} data-bs-toggle="modal" data-bs-target={msgModal} onClick={(e) => { setCurrentMessage(message) }}>
-        <div className='col-sm-2 text-truncate'>
-          <small>To:{' '}</small>
-          {message.to}
-        </div>
-        <div className='col-sm-4 text-truncate'>
+      <div className='row border-bottom justify-content-center align-items-center'>
+      <div className='col-sm-9'>
+        <div className='row justify-content-center align-items-center' style={{ cursor: 'pointer' }} data-bs-toggle="modal" data-bs-target={msgModal} onClick={(e) => { setCurrentMessage(message) }}>
+          <div className='col-sm-2 text-truncate'>
+            <small>To:{' '}</small>
+            {message.to}
+          </div>
+          <div className='col-sm-4 text-truncate'>
           <small>Subject:{' '}</small>
-          {message.subject}
-        </div>
-        <div className='col-sm-4 text-truncate'>
+            {message.subject}
+          </div>
+          <div className='col-sm-4 text-truncate'>
           <small>Message:{' '}</small>
-          {message.body}
+            {message.body}
+          </div>
+          <div className='col-sm-2 text-truncate'>
+            {message.timestamp}
+          </div>
         </div>
-        <div className='col-sm-2 text-truncate'>
-          {message.timestamp}
-        </div>
+        <MessageModal message={currentMessage} msgModal={msgModal} />
       </div>
-
-      <MessageModal message={currentMessage} msgModal={msgModal} />
-
+      <div className='col-sm-2 mt-3' ><SendMessageModal to={message.to}/></div>
+      <div className='col-sm-1'><button className='btn btn-danger' onClick={HandleDelete} >Delete</button></div>
+    </div>
     </>
   );
 }
