@@ -2,7 +2,7 @@
   (:require
    [clojure.walk :as w :refer [keywordize-keys stringify-keys]])
   (:import
-   org.hibernate.SessionFactory
+   [org.hibernate SessionFactory Session]
    org.hibernate.cfg.Configuration
    [com.fasterxml.jackson.databind ObjectMapper DeserializationFeature]
    [com.fasterxml.jackson.annotation PropertyAccessor JsonAutoDetect$Visibility]))
@@ -65,25 +65,42 @@
        (.commit trx#)
        ret#)))
 
-(defn merge! [ent]
-  (.merge *session* ent))
+(fn [^Session a & rest]
+  (.find a ))
 
-(defn persist! [ent]
-  (.persist *session* ent))
+(memfn .find a b)
 
-(defn remove! [ent]
-  (.remove *session* ent))
+(with-session (partial  *session*))
 
-(defn save! [ent]
-  (with-session
-    (with-transaction
-      (merge! ent))))
+(defmacro def-orm-fn [fname method params]
+  `(defn 
+     ~fname
+     ~params
+     (let [func# (memfn ^Session ~method ~@params)]
+       (if (bound? #'*session*)
+         (func# *session* ~@params)
+         (with-session
+           (with-transaction
+             (func# *session* ~@params)))))))
 
-(defn find! [cls id]
-  (.find *session* cls id))
+
+
+
+(def-orm-fn merge! merge [ent])
+(def-orm-fn persist! persist [ent])
+(def-orm-fn remove! remove [ent])
+(def-orm-fn find! find [cls ent])
 
 (defn refresh! [ent]
-  (.refresh *session* ent))
+  (if (bound? #'*session*)
+    (do
+      (.refresh *session* ent)
+      ent)
+    (with-session
+      (with-transaction
+        (refresh! ent)))))
+
+(def save! merge!)
 
 (def DefaultObjectMapper
   (doto (ObjectMapper.)

@@ -1,11 +1,13 @@
 (ns psychic-pancake.middleware.orm
   (:require
    [ring.util.http-response :refer :all]
+   [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.user :as user]
    [psychic-pancake.orm.message :as message]
    [psychic-pancake.orm.listing :as listing]
    [psychic-pancake.orm.image :as image]
    [psychic-pancake.orm.bid :as bid]
+   [psychic-pancake.orm.notifications :as notification]
    [psychic-pancake.ownership :refer [owns?]]))
 
 (def type->db-fn
@@ -13,27 +15,14 @@
    :message message/get-by-id
    :listing listing/get-by-id
    :bid bid/get-by-id
-   :image image/get-by-id})
+   :image image/get-by-id
+   :notification notification/get-by-id})
 
 (def type->404-msg
-  {:user #(str
-           "Referenced user ids"
-           " ["
-           (clojure.string/join ", " %)
-           "] do not correspond to"
-           " existing users")
-   :message #(str
-              "Referenced message ids"
-              " ["
-              (clojure.string/join ", " %)
-              "] do not correspond to"
-              " existing messages")
-   :listing #(str
-              "Referenced listing ids"
-              " ["
-              (clojure.string/join ", " %)
-              "] do not correspond to"
-              " existing listings")})
+  (fn [t]
+    #(str "Resources with ids "
+          (clojure.string/join ", " %)
+          " of type '" (name t) "' do not exist.")))
 
 (defn- assoc-fetches [req fetches]
   (reduce

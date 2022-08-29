@@ -88,9 +88,6 @@
     [this positional named]
     [this positional-or-named]))
 
-(defprotocol query-execution
-  (execute! [this & params] ""))
-
 (do
   (defrecord query
       [^Query query_internal]
@@ -167,4 +164,8 @@
         (partial bind))))
 
 
+
+(with-session
+  (.getSingleResult
+   (.createNativeQuery *session* "SELECT u.uid FROM main.user u")))
 

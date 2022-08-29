@@ -14,4 +14,6 @@
   java.util.Map
   (this->UserRef [u-map] (-> u-map
                              :uid
-                             this->UserRef)))
+                             this->UserRef))
+  nil
+  (this->UserRef [_] nil))

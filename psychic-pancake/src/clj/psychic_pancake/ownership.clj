@@ -1,8 +1,6 @@
 (ns psychic-pancake.ownership
-  (:import psychic_pancake.User
-           psychic_pancake.Message
-           psychic_pancake.Listing
-           psychic_pancake.Bid))
+  (:import [psychic_pancake
+            User Message Listing Bid Notification]))
 
 (defn ^String User->uid [^User u]
   (.getUid u))
@@ -21,6 +19,9 @@
 (defmethod owner Message [^Message thing]
   [(.getFrom thing)
    (.getTo thing)])
+
+(defmethod owner Notification [^Notification thing]
+  (.getUser thing))
 
 (defmethod owner :default [thing]
   nil)

@@ -8,6 +8,8 @@
    [psychic-pancake.specs.user :as specs.user]
    [psychic-pancake.orm.user :as orm.user]
    [psychic-pancake.orm.message :as orm.message]
+   [psychic-pancake.orm.notifications :refer [notify-new-message
+                                              mark-seen!]]
    [psychic-pancake.orm.core :as orm]
    [buddy.hashers :as h]
    [psychic-pancake.specs.message :refer [message-shape]]
@@ -56,7 +58,12 @@
                                           (-> req :db :from))
                                    (assoc :to
                                           (-> req :db :to))))]
-                   (-> msg .getMsg_id ((fn [x] {:url x})) ok)))}}]
+                   (do
+                     (notify-new-message msg)
+                     (->> msg
+                          .getMsg_id
+                          (hash-map :url)
+                          ok))))}}]
    (mailbox-route "/inbox" orm.message/get-inbox)
    (mailbox-route "/outbox" orm.message/get-outbox)
    ["/:id"
@@ -71,16 +78,19 @@
       :handler
       (fn [{{me :uid} :identity
           {msg :msg} :db}]
-        (-> msg
+        (do
+          (mark-seen! msg)
+          (-> msg
             orm/obj->map
             (clojure.set/rename-keys {:msg_id :self})
-            ok))}
+            ok)))}
      :delete
      {:responses {200 {}}
       :handler (fn [{{me :uid} :identity
                     {msg :msg} :db}]
                  (let [message_id (-> msg orm/->clj :msg_id)]
                    (do
+                     (mark-seen! msg)
                      (orm.message/delete-from me message_id)
                      (ok {}))))}}]])
 

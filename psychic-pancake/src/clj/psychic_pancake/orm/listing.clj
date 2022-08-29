@@ -5,21 +5,20 @@
   (:import (psychic_pancake User Listing Category Image)))
 
 (defn create! [params]
-  (orm/with-session
-    (orm/with-transaction
-      (orm/merge!
-       (orm/hash-map->obj
-        (-> params
-            (update :categories
-                    (partial map #(orm/merge! (Category. %))))
-            (update :images
-                    (partial map
-                             #(->> %
-                                   (Image. nil (:seller params))
-                                   orm/merge!)))
-            ;; (update :started parse-time)
-            (update :ends parse-time))
-        Listing)))))
+  (-> params
+      (update :categories
+              (partial map #(orm/merge! (Category. %))))
+      (update :images
+              (partial map
+                       #(->> %
+                             (Image. nil (:seller params))
+                             orm/merge!)))
+      ;; (update :started parse-time)
+      (update :ends parse-time)
+      (assoc :bids [])
+      (orm/hash-map->obj Listing)
+      orm/merge!
+      orm/refresh!))
 
 (defn get-by-id [^Long id]
   (->

@@ -3,6 +3,7 @@
    [ring.util.http-response :refer :all]
    [psychic-pancake.specs.listings :as specs.listings]
    [psychic-pancake.orm.listing :as orm.listing]
+   [psychic-pancake.orm.notifications :refer [notify-new-bid]]
    [psychic-pancake.orm.bid :as orm.bid]
    [psychic-pancake.orm.core :as orm]
    [clojure.spec.alpha :as s]
@@ -26,14 +27,17 @@
                           db :db}]
                        (if (> (:amount body)
                               (.getCurrently ^psychic_pancake.Listing (:listing db)))
-                         (assoc-in
-                          (ok {})
-                          [:body :bid]
-                          (-> body
-                              (merge db)
-                              (select-keys
-                               [:amount :listing :bidder])
-                              orm.bid/create!))
+                         (let [bid
+                               (-> body
+                                   (merge db)
+                                   (select-keys
+                                    [:amount :listing :bidder])
+                                   orm.bid/create!)]
+                           (do
+                             (notify-new-bid bid)
+                             (ok {:bid bid})))
+
+
                          {:status 402
                           :body {:reason "Bidding amount must be higher than current price"
                                  :info (str "Tried to bid "
@@ -49,8 +53,7 @@
                                    :bidder :usr/ref
                                    :listing :listing/ref
                                    :time :common/time
-                                   :self :bid/ref}}
-                       }
+                                   :self :bid/ref}}}
            :handler
            (fn [{{bid :bid
                  listing :listing} :db}]

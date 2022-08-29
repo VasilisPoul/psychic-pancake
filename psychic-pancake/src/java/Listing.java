@@ -50,13 +50,13 @@ public class Listing implements Serializable {
     }
 
     @JsonGetter("active")
-    private boolean getActive() {
+    public boolean getActive() {
 	return (new Date()).before(ends)
 	    && (new Date()).after(started);
     }
 
     @JsonGetter("currently")
-    private double currently() {
+    public double getCurrently() {
 	Bid current = current_bid();
 	return (current == null) ?
 	    first_bid : current.getAmount();

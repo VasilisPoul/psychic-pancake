@@ -4,11 +4,9 @@
   (:import (psychic_pancake Bid Listing)))
 
 (defn create! [params]
-  (orm/with-session
-    (let [bid (orm/with-transaction
-                (orm/merge!
-                 (orm/hash-map->obj params Bid)))]
-      bid)))
+  (-> params
+      (orm/hash-map->obj Bid)
+      (orm/merge!)))
 
 (defn get-by-id [id]
   (orm/with-session

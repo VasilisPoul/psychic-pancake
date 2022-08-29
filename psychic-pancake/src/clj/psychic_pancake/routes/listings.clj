@@ -4,6 +4,8 @@
    [psychic-pancake.routes.listings.bids :as routes.bids]
    [psychic-pancake.specs.listings :as specs.listings]
    [psychic-pancake.orm.listing :as orm.listing]
+   [psychic-pancake.orm.notifications :refer
+    [notify-listing-ends mark-seen!]]
    [psychic-pancake.orm.core :as orm]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [postwalk]]
@@ -23,26 +25,31 @@
      :get {:parameters {:query
                         specs.listings/listings-filters-shape}
            :handler (comp
-                     ok (partial apply vector) orm.listing/search-listings :query :parameters)
+                     ok
+                     (partial apply vector)
+                     orm.listing/search-listings
+                     :query
+                     :parameters)
            :responses {200 {:body [:listing/ref]}}}  ;get all listings with filters
      :post {:fetch! [{:key :user-ref
                       :req->id (comp :uid :identity)
                       :type :user}]
-            :responses {200 {:body {:listing :listing/ref}}}
+            :responses {200 {:body map?}}
             :parameters {:body
                          specs.listings/listing-post-shape}
             :handler
             (fn [{{body :body} :parameters
                  {usr :user-ref} :db}]
-              (ok
-               {:listing
-                (.getItem_id
-                 (-> body
-                     (assoc :seller usr)
-                     (assoc :location (.getLocation usr))
-                     (assoc :country (.getCountry usr))
-                     orm.listing/create!))}))} ;create a new listing
-     }]
+              (let [listing
+                    (-> body
+                        (assoc :seller usr)
+                        (assoc :location (.getLocation usr))
+                        (assoc :country (.getCountry usr))
+                        orm.listing/create!
+                        )]
+                (do
+                  (notify-listing-ends listing)
+                  (ok {:listing listing}))))}}]
    ["/:listing-id"
     {:swagger {:tags ["listing"]}
      :parameters {:path {:listing-id pos-int?}}
@@ -52,17 +59,25 @@
     [""
      {:put {:parameters {:body
                         specs.listings/listing-update-shape}
-           :responses {200 {:body specs.listings/listing-shape}}
+            :responses {200 {:body specs.listings/listing-shape}
+                        409 {:body {:reason string?
+                                    :info string?}}}
            :handler (fn [{{listing :listing} :db
                          {params :body
                           {id :listing-id} :path} :parameters}]
-                      (-> listing
+                      (if (empty? (.getBids listing))
+                        (-> listing
                           orm/obj->map
                           (merge params)
                           orm.listing/create!
                           orm/obj->map
                           transform-listing
-                          ok))}
+                          ok)
+                        (conflict
+                         {:reason "Cannot edit listing"
+                          :info (str "Cannot edit a listing "
+                                     "after bids have been "
+                                     "placed.")})))}
      :delete {:responses {200 {:body {:deleted :listing/ref}}}
               :handler
               (fn [{{{id :listing-id} :path} :parameters}]
@@ -72,8 +87,10 @@
      :get {:responses {200 {:body specs.listings/listing-shape}}
            :handler
            (fn [{{listing :listing} :db}]
-             (-> listing
+             (do
+               (mark-seen! listing)
+               (-> listing
                  orm/obj->map
                  transform-listing
-                 ok))}}]
+                 ok)))}}]
     routes.bids/routes]])
