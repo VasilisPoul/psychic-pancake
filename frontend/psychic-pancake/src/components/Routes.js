@@ -47,7 +47,8 @@ export default function RoutesComponent() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={isAdmin ? <Navigate to="users" /> : (isLoggedIn ? <HomePage /> : <WelcomePage />)} />
+        <Route path="/" element={isAdmin ? <Navigate to="users" /> : (isLoggedIn ? <Navigate to="/auctions" /> : <WelcomePage />)} />
+        <Route path="/auctions" element={<HomePage />} />
         <Route path="/signup" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Signup />)} />
         <Route path="/login" element={isAdmin ? <Navigate to="/" /> : (isLoggedIn ? <Navigate to="/" /> : <Login />)} />
         <Route path="/users" element={isAdmin ? <AdminUsersPage /> : <span>Not Authorized.</span>} />

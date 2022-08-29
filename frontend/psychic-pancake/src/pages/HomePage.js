@@ -1,8 +1,9 @@
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
 import auction from '../resources/auction.webp';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
+import InitialNavbar from '../components/InitialNavbar';
 
 
 function CardListing(props) {
@@ -28,16 +29,20 @@ function CardListing(props) {
   }, [])
   const item_id = item.split('/')[3]
   const linkTo = '/auction/'+item_id
+  const navigate = useNavigate()
+  const HandleClick = (e) => {
+    navigate(linkTo);
+  }
   return (
     <>
     {!loading && <div className='col-sm-3 mb-3'>
-      <div className="card" style={{ "width": "18rem;" }}>
+      <div className="card" style={{ "width": "18rem;", cursor:"pointer" }} onClick={HandleClick}>
        { itemData.images && <img src={img} className="card-img-top" alt="..." />}
         <div className="card-body">
           <h5 className="card-title">{itemData.name}</h5>
           <p className="card-text">{itemData.description}</p>
-          <div><span>{itemData.currently}$</span></div>
-          <Link to={linkTo} className="btn btn-light">See more</Link>
+          <div><span><small>Highest bid:</small>{itemData.currently}$</span></div>
+          <div className='text-truncate'><small>Ends: </small> {itemData.ends}</div>
         </div>
       </div>
     </div>}
@@ -89,7 +94,7 @@ export default function HomePage(props) {
 
   return (
     <>
-      <Navbar />
+      {localStorage.getItem('AuthToken') ? <Navbar /> : <InitialNavbar/>}
       <div className='container mt-3'>
         <form className="row mr-2" onSubmit={HandleSubmit}>
           <div className="dropdown col" style={{paddingLeft: "0px"}}>

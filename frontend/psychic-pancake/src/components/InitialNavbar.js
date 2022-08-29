@@ -12,6 +12,9 @@ export default function InitialNavbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
 
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+              <Link className="nav-link" aria-current="page" to="/auctions">Auctions</Link>
+            </li>
             <li className="nav-item">
               <Link className="nav-link" aria-current="page" to="/login">Log In</Link>
             </li>
