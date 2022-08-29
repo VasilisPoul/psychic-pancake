@@ -35,15 +35,19 @@ function CardListing(props) {
   }
   return (
     <>
-    {!loading && <div className='col-sm-3 mb-3'>
-      <div className="card" style={{ "width": "18rem;", cursor:"pointer" }} onClick={HandleClick}>
-       { itemData.images && <img src={img} className="card-img-top" alt="..." />}
+    {!loading && <div className='card mb-3' style={{"height": "10px;", cursor:"pointer"}}>
+      <div className="g-0 row"  onClick={HandleClick}>
+        <div className='col-md-4'>
+          <img width={"173px"} height={"173px"} src={img} className="card-img-top embed-responsive-item" style={{ width: "100%;", cursor:"pointer", height: "15vw;","object-fit":"cover"}} alt="..." />
+        </div>
+        <div className='col-md-8'>
         <div className="card-body">
           <h5 className="card-title">{itemData.name}</h5>
-          <p className="card-text">{itemData.description}</p>
+          <p className="card-text text-truncate">{itemData.description}</p>
           <div><span><small>Highest bid:</small>{itemData.currently}$</span></div>
           <div className='text-truncate'><small>Ends: </small> {itemData.ends}</div>
         </div>
+      </div>
       </div>
     </div>}
     </>
