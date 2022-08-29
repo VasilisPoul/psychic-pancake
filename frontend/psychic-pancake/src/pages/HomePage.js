@@ -122,16 +122,18 @@ export default function HomePage(props) {
           />
           <input
             className="form-control col "
-            type="search"
+            type="number"
             placeholder="Min Price"
             aria-label="min-price"
+            step="0.01"
             onChange={(e) => { setMinPrice(e.target.value) }}
           />
           <input
             className="form-control col "
-            type="search"
+            type="number"
             placeholder="Max Price"
             aria-label="max-price"
+            step="0.01"
             onChange={(e) => { setMaxPrice(e.target.value) }}
           />
           <input

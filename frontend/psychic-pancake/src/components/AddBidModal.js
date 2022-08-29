@@ -44,9 +44,8 @@ export default function AddBidModal(props) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">New Bid</h5>
-                <button type="button" className="close" data-bs-dismiss="modal" aria-label="Close">
-                  <span aria-bs-hidden="true">&times;</span>
-                </button>
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                  
               </div>
               <div className="modal-body">
                 <form className="Auth-form" onSubmit={HandleSubmit}>
@@ -56,9 +55,10 @@ export default function AddBidModal(props) {
                     <div className="form-group mt-3">
                       <label>New Bid</label>
                       <input
-                        type="text"
+                        type="number"
                         className="form-control mt-1"
                         placeholder="Enter Bid"
+                        step="0.01"
                         onChange={(e) => {setAmount(parseFloat(e.target.value));}}
                       />
                     </div>
@@ -66,7 +66,7 @@ export default function AddBidModal(props) {
                       <button type="submit" className="btn btn-primary">
                         Submit
                       </button>
-                      <button type="cancel" className="btn btn-grey" data-bs-dismiss="modal" >
+                      <button type='button' className="btn btn-grey" data-bs-dismiss="modal" aria-label="Close" >
                         Cancel
                       </button>
                     </div>
