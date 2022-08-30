@@ -2,7 +2,7 @@
   (:require
    [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.country :as country]
-   [psychic-pancake.orm.query-builder :refer [strs->dbfn]]
+   [psychic-pancake.orm.query-builder :refer [strs->dbfn ->query bind str->query]]
    [clojure.set :refer [union]])
   (:import [psychic_pancake User User$Role Message Country]))
 
@@ -85,6 +85,23 @@
     "and b.amount ="
     "(select max(b_.amount) from Bid b_"
     "where b_.listing = l)")))
+
+(def get-all-users
+  (strs->dbfn
+   "select u from User u"))
+
+(def get-pending-users
+  (strs->dbfn
+   "select u from User u"
+   "where u.pending = true"))
+
+(def pending-uid->respond!
+  (strs->dbfn
+   "update User u"
+   "set u.pending = :accept"
+   "where u.uid=:uid"))
+
+
 
 ;; (create!
 ;;  {:role (name :admin),
