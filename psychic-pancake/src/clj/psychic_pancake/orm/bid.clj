@@ -3,9 +3,19 @@
             [psychic-pancake.specs.common :refer [parse-time]])
   (:import (psychic_pancake Bid Listing)))
 
+
+(orm/hash-map->obj (orm/obj->map (orm/find! Listing 1)))
+
+
+(orm/obj->map
+ (doto (orm/hash-map->obj {:id 2} Bid)
+   (.setListing (orm/find! Listing 1))))
+
 (defn create! [params]
   (-> params
+      (dissoc :listing)
       (orm/hash-map->obj Bid)
+      (doto (.setListing (:listing params)))
       (orm/merge!)))
 
 (defn get-by-id [id]

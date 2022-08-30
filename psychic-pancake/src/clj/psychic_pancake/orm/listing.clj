@@ -1,7 +1,8 @@
 (ns psychic-pancake.orm.listing
   (:require [psychic-pancake.orm.core :as orm]
             [psychic-pancake.specs.common :refer [parse-time]]
-            [psychic-pancake.orm.query-builder :refer [str->query]])
+            [psychic-pancake.orm.query-builder :refer
+             [str->query strs->dbfn]])
   (:import (psychic_pancake User Listing Category Image)))
 
 (defn create! [params]
@@ -59,3 +60,12 @@
                    :seller_uid nil
                    :only_active true
                    :today (java.util.Date.)})))
+
+(def get-by-winner
+  (strs->dbfn
+   "SELECT lst FROM Listing lst"
+   "RIGHT JOIN Bid b ON"
+   "amount = "
+   "(SELECT MAX(b.amount) FROM Bid b WHERE b.listing = lst)"
+   "WHERE b.bidder.uid=?1"
+   "AND (NOW() > lst.ends or :show_active = TRUE)"))
