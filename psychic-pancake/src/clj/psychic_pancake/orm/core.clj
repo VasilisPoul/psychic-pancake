@@ -65,6 +65,15 @@
        (.commit trx#)
        ret#)))
 
+(defn wrap-session [f]
+  #(if (bound? #'*session*)
+     (apply f %&)
+     (with-session (apply f %&))))
+
+(defn wrap-transaction [f]
+  (wrap-session
+   #(with-transaction (apply f %&))))
+
 (fn [^Session a & rest]
   (.find a ))
 
@@ -89,7 +98,7 @@
 (def-orm-fn merge! merge [ent])
 (def-orm-fn persist! persist [ent])
 (def-orm-fn remove! remove [ent])
-(def-orm-fn find! find [cls ent])
+(def-orm-fn find! find [cls id])
 
 (defn refresh! [ent]
   (if (bound? #'*session*)
