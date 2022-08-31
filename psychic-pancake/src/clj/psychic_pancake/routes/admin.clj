@@ -1,6 +1,7 @@
 (ns psychic-pancake.routes.admin
   (:require
    [ring.util.http-response :refer :all]
+   [clojure.spec.alpha :as s]
    [psychic-pancake.orm.user :as orm.user :refer :all]
    [psychic-pancake.orm.core :as orm]))
 
@@ -10,15 +11,16 @@
    {:swagger {:tags ["admin"]}}
    ["/users"
     ["/pending"
-     {:responses {200 {:body [:usr/ref]}}
-      :get
-      {:handler
+     {:get
+      {:responses {200 {:body (s/coll-of :usr/ref)}}
+       :handler
        (comp
         ok
         orm/->clj
-        get-pending-users)}
+        (fn [& _] (get-pending-users)))}
       :post
-      {:handler (comp
+      {:parameters {:body {:uid :usr/uid :accept boolean?}}
+       :handler (comp
                  ok
                  #(({true pending-uid->accept!
                      false uid->delete!} (:accept %))
