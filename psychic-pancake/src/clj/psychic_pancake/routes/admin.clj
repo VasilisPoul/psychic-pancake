@@ -20,7 +20,9 @@
       :post
       {:handler (comp
                  ok
-                 pending-uid->respond!
+                 #(({true pending-uid->accept!
+                     false uid->delete!} (:accept %))
+                   (:uid %))
                  #(select-keys % [:uid :accept])
                  :body
                  :parameters)}}]]])

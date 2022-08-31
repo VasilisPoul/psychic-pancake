@@ -95,13 +95,18 @@
    "select u from User u"
    "where u.pending = true"))
 
-(def pending-uid->respond!
+(def pending-uid->accept!
   (strs->dbfn
    "update User u"
-   "set u.pending = :accept"
-   "where u.uid=:uid"))
+   "set u.pending = FALSE"
+   "where u.uid=?1 and u.pending = TRUE"))
 
-
+(def uid->delete!
+  (orm/wrap-session
+   (orm/wrap-transaction
+    (comp
+     orm/remove!
+     (partial orm/find! User)))))
 
 ;; (create!
 ;;  {:role (name :admin),

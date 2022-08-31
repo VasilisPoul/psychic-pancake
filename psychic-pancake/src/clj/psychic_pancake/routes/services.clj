@@ -18,6 +18,7 @@
     [psychic-pancake.routes.messages :as messages]
     [psychic-pancake.routes.images :as images]
     [psychic-pancake.routes.notifications :as notifications]
+    [psychic-pancake.routes.admin :as admin]
     [buddy.auth.middleware]
     [buddy.auth.backends.token]
     [spec-tools.core :as st]
@@ -94,6 +95,7 @@
    messages/routes
    images/routes
    notifications/routes
+   admin/routes
 
    ["/test"
     {:swagger {:tags ["default"]}

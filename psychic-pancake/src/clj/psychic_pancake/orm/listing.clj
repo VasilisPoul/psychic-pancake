@@ -69,3 +69,4 @@
    "(SELECT MAX(b.amount) FROM Bid b WHERE b.listing = lst)"
    "WHERE b.bidder.uid=?1"
    "AND (NOW() > lst.ends or :show_active = TRUE)"))
+
