@@ -4,13 +4,6 @@
   (:import (psychic_pancake Bid Listing)))
 
 
-(orm/hash-map->obj (orm/obj->map (orm/find! Listing 1)))
-
-
-(orm/obj->map
- (doto (orm/hash-map->obj {:id 2} Bid)
-   (.setListing (orm/find! Listing 1))))
-
 (defn create! [params]
   (-> params
       (dissoc :listing)
@@ -28,3 +21,4 @@
 ;;  {:amount 12.37
 ;;   :listing (psychic-pancake.orm.listing/get-by-id 6)
 ;;   :bidder (psychic-pancake.orm.user/get-by-id "user_name")})
+
