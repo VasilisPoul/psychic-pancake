@@ -8,12 +8,11 @@ import SendMessageModal from "../components/SendMessageModal";
 import AddBidModal from "../components/AddBidModal";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
-
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 export default function Auction() {
   const { user, setUser } = useContext(UserContext);
   const isLoggedIn = (typeof user['role'] === 'undefined') ? false : true;
   const auctionId = useParams().id
-  console.log(auctionId)
   const [listing, setListing] = useState({})
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
@@ -38,9 +37,12 @@ export default function Auction() {
       )
       .catch()
   }, [])
-  !loading && console.log("images", images)
   return (
     <>
+      <head><link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+   integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+   crossorigin=""/><link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+      </head>
       {!loading &&
         <div>
           {(isLoggedIn) ? <Navbar /> : <InitialNavbar />}
@@ -78,7 +80,14 @@ export default function Auction() {
                   <h4>Description:</h4>
                   <span> {listing.description}</span>
                 </div>
-
+                <div id="map " style={{width: "80%", height: "100vh;"}}>
+                  {/* <MapContainer center={[45.4, -75.7]} zoom={12} scrollWheelZoom={false}>
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                  </MapContainer> */}
+                </div>
               </div>
             </div>
 
