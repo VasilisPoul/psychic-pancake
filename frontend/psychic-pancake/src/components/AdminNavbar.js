@@ -1,6 +1,15 @@
-import { Link, Route, Router, Routes } from 'react-router-dom'
+import { Link, Route, Router, Routes, useNavigate } from 'react-router-dom'
+import { UserContext } from './UserContext';
+import { useContext } from 'react';
 
 export default function AdminNavbar() {
+    const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
+    const HandleLogOut = () => {
+        localStorage.removeItem('AuthToken')
+        setUser({});
+        navigate('/')
+    }
     return (
             <nav className="navbar navbar-expand-lg bg-light">
                 <div className="container-fluid">
@@ -17,11 +26,9 @@ export default function AdminNavbar() {
                                 <Link to="/pending">Pending Users</Link>
                             </li>
                         </ul>
-                        <a>
-                            <span>Logout</span>
-                        </a>
                     </div>
                 </div>
+                <button className="btn btn-light ml-4 col" onClick={HandleLogOut} >Logout</button>
             </nav>
     );
 }

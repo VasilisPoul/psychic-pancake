@@ -40,9 +40,8 @@ export default function RoutesComponent() {
   }, [localStorage.getItem('AuthToken')])
   
   isLoggedIn = localStorage.getItem('AuthToken');
-  if (typeof user !== 'undefined' && user){
-    isAdmin = user['role'] === 'admin';
-  }
+
+    isAdmin = isLoggedIn && (user['role'] === 'admin');
 
   return (
     <BrowserRouter>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import axios from "../api/axios";
 import AdminNavbar from "../components/AdminNavbar";
 
 export default function AdminPendingPagePanel() {
@@ -16,6 +17,15 @@ export default function AdminPendingPagePanel() {
             email: 'bar@test.com'
         }
     ];
+
+    // useEffect(() => {
+    //     try{
+    //         axios.get();
+    //     }
+    //     catch (error) {
+
+    //     }
+    // }, [])
 
     return (
         <>
