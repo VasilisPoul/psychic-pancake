@@ -2,31 +2,90 @@ import { useState, useEffect } from "react";
 import axios from "../api/axios";
 import AdminNavbar from "../components/AdminNavbar";
 
+const UserInstance = (props) => {
+
+    const HandleYes = (e) => {
+        e.preventDefault();
+        try {
+            axios.post('/api/admin/users/pending', {uid: userData.uid, accept: true}, {
+                headers: {
+                    'authorization': localStorage.getItem('AuthToken')
+                }
+            }).then(
+                function (response) {
+                    window.location.reload(false);
+                }
+            ).catch()
+        }
+        catch (error) {
+
+        }
+    }
+
+    const HandleNo = (e) => {
+        e.preventDefault();
+        try {
+            axios.post('/api/admin/users/pending', {uid: userData.uid, accept: false}, {
+                headers: {
+                    'authorization': localStorage.getItem('AuthToken')
+                }
+            }).then(
+                function (response) {
+                    window.location.reload(false);
+                }
+            ).catch()
+        }
+        catch (error) {
+
+        }
+    }
+
+    const [userData, setUserData] = useState({});
+    
+    useEffect(() => {
+        
+        axios.get(props.item, {
+            headers: {
+                'authorization': localStorage.getItem('AuthToken')
+            }
+        }).then(function (response) {
+            setUserData(response.data)
+        }).catch();
+    }, [])
+    return (
+        <>
+        {userData.uid !== 'admin' && <tr>
+            {/* <th scope="row">{userData.id}</th> */}
+            <td>{userData.uid}</td>
+            <td>{userData.first_name}</td>
+            <td>{userData.last_name}</td>
+            <td>{userData.role}</td>
+            <td>
+                <span className="fw-bold" style={{ cursor: "pointer" }} onClick={HandleYes}>yes</span>&nbsp;<span style={{ cursor: "pointer" }} className="fw-bold" onClick={HandleNo}>no</span>
+            </td>
+        </tr>}
+        </>
+    )
+}
+
 export default function AdminPendingPagePanel() {
 
-
-    const users = [
-        {
-            id: 0,
-            username: 'foo',
-            email: 'foo@test.com'
-        },
-        {
-            id: 1,
-            username: 'bar',
-            email: 'bar@test.com'
+    const [users, setUsers] = useState([])
+    useEffect(() => {
+        try {
+            
+            axios.get('/api/admin/users/pending', {
+                headers: {
+                    'authorization': localStorage.getItem('AuthToken')
+                }
+            }).then(function (response) {
+                setUsers(response.data);
+            }).catch();
         }
-    ];
+        catch (error) {
 
-    // useEffect(() => {
-    //     try{
-    //         axios.get();
-    //     }
-    //     catch (error) {
-
-    //     }
-    // }, [])
-
+        }
+    }, [])
     return (
         <>
             <AdminNavbar />
@@ -35,23 +94,20 @@ export default function AdminPendingPagePanel() {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th scope="col">Id</th>
                             <th scope="col">Username</th>
-                            <th scope="col">Email</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Role</th>
                             <th scope="col">Response</th>
+
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((item) => {
                             return (
-                                <tr>
-                                    <th scope="row">{item.id}</th>
-                                    <td>{item.username}</td>
-                                    <td>{item.email}</td>
-                                    <td>
-                                        <span className="fw-bold" style={{cursor:"pointer"}}>yes</span>&nbsp;<span style={{cursor:"pointer"}} className="fw-bold">no</span>
-                                    </td>
-                                </tr>
+                                
+                                    <UserInstance item={item} />
+                                
                             );
                         })}
                     </tbody>

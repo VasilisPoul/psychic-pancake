@@ -25,24 +25,11 @@ export default function RoutesComponent() {
   let isAdmin = false;
   let isLoggedIn = false;
   
-  useEffect(() => {
-   
-    axios.get("/api/token/check", {
-      headers: {
-        accept: 'application/json',
-        authorization: localStorage.getItem('AuthToken')
-      }
-    }).then(function (response) {
-      setUser({ 'username': response.data.uid, 'role': response.data.role })
-    }).catch(
-      setUser({})
-    )
-  }, [localStorage.getItem('AuthToken')])
-  
+
   isLoggedIn = localStorage.getItem('AuthToken');
 
-    isAdmin = isLoggedIn && (user['role'] === 'admin');
-
+  isAdmin = isLoggedIn && (user['role'] === 'admin');
+    
   return (
     <BrowserRouter>
       <Routes>
