@@ -20,17 +20,18 @@
 
 
 ;; create countries in db
-;; (with-open [reader (reader (resource "countries.csv"))]
-;;   (let [keys (map keyword (-> reader read-csv first))]
-;;     (doseq [country (->> reader
-;;                          read-csv
-;;                          (drop 1)
-;;                          (map (comp #(rename-keys % {:country :name})
-;;                                     #(update % :longitude parse-double)
-;;                                     #(update % :latitude parse-double)
-;;                                     #(select-keys % [:country :latitude :longitude])
-;;                                     (partial into {})
-;;                                     (partial map vector keys))))]
-;;       (create! country))))
+(with-open [reader (reader (resource "countries.csv"))]
+  (let [keys (map keyword (-> reader read-csv first))]
+    (doseq [country (->> reader
+                         read-csv
+                         (drop 1)
+                         (map (comp #(rename-keys % {:country :name})
+                                    #(update % :longitude parse-double)
+                                    #(update % :latitude parse-double)
+                                    #(select-keys % [:country :latitude :longitude])
+                                    (partial into {})
+                                    (partial map vector keys))))]
+      (orm/merge!
+       (orm/hash-map->obj country Country)))))
 
 

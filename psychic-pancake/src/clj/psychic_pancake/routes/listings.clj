@@ -45,8 +45,7 @@
                         (assoc :seller usr)
                         (assoc :location (.getLocation usr))
                         (assoc :country (.getCountry usr))
-                        orm.listing/create!
-                        )]
+                        orm.listing/create!)]
                 (do
                   (notify-listing-ends listing)
                   (ok {:listing listing}))))}}]
