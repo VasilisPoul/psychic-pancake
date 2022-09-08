@@ -8,6 +8,7 @@
     (when-let [obj (some-> req req->id id->obj)]
       (handler (assoc-in req [:fetched key] obj)))))
 
+
 (def check-auth-middleware
   {:name ::check-auth-middleware
    :compile (fn [route-data opts]

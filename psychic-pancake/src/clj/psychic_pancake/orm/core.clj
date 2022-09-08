@@ -46,10 +46,14 @@
 ;;     entity-test
 ;;     [^{:tag int Id {}} id])
 
+
+(defn make-session-factory! []
+  (-> (Configuration.)
+      .configure
+      .buildSessionFactory))
+
 (def session-factory
-    (-> (Configuration.)
-        .configure
-        .buildSessionFactory))
+  (make-session-factory!))
 
 (def ^:dynamic *session*)
 
@@ -77,9 +81,6 @@
 (fn [^Session a & rest]
   (.find a ))
 
-(memfn .find a b)
-
-(with-session (partial  *session*))
 
 (defmacro def-orm-fn [fname method params]
   `(defn 

@@ -22,3 +22,11 @@
                    {:spec string?
                     :swagger/example "Not Found"})
           :info (s/coll-of string?)}})
+
+
+(def status-503-shape
+  {:body {:reason
+          (st/spec
+           {:spec string?
+            :swagger/example "The service is not installed properly"})
+          :info string?}})

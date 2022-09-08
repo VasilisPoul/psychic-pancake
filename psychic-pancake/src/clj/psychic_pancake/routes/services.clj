@@ -10,6 +10,7 @@
     [psychic-pancake.middleware.formats :as formats]
     [psychic-pancake.middleware.util :as util]
     [psychic-pancake.middleware.orm :as mw.orm]
+    [psychic-pancake.middleware.install :refer [wrap-installed?]]
     [ring.util.http-response :refer :all]
     [clojure.java.io :as io]
     [psychic-pancake.routes.user :as user]
@@ -19,6 +20,7 @@
     [psychic-pancake.routes.images :as images]
     [psychic-pancake.routes.notifications :as notifications]
     [psychic-pancake.routes.admin :as admin]
+    [psychic-pancake.routes.install :as install]
     [buddy.auth.middleware]
     [buddy.auth.backends.token]
     [spec-tools.core :as st]
@@ -49,7 +51,8 @@
                                               :name "authorization"
                                               :in "header"}}}
     :responses {401 specs.responses/status-401-shape
-                404 specs.responses/status-404-shape}
+                404 specs.responses/status-404-shape
+                503 specs.responses/status-503-shape}
     :middleware [;; query-params & form-params
                  parameters/parameters-middleware
                  ;; content-negotiation
@@ -70,6 +73,7 @@
                    %
                    (buddy.auth.backends.token/jws-backend
                     {:secret token/secret}))
+                 wrap-installed?
                  util/check-auth-middleware
                  mw.orm/db-fetch-middleware]}
    
@@ -96,6 +100,7 @@
    images/routes
    notifications/routes
    admin/routes
+   install/routes
 
    ["/test"
     {:swagger {:tags ["default"]}
