@@ -9,19 +9,31 @@
       (handler (assoc-in req [:fetched key] obj)))))
 
 
+(defn auth-matches? [required request]
+  (case required
+    true (contains? req :identity)
+    :buyer (some-> req :identity :role #(= "buyer" %))
+    :seller (some-> req :identity :role #(= "seller" %))
+    :admin (some-> req :identity :role #(= "admin" %))))
+
 (def check-auth-middleware
   {:name ::check-auth-middleware
    :compile (fn [route-data opts]
               (when (:auth? route-data)
                 (fn [handler]
                   (fn [req]
-                    (if (contains? req :identity)
+                    (if (auth-matches? (:auth? route-data) req)
                       (handler req)
                       (unauthorized
-                       {:reason "Invalid token"
-                        :info (str
-                               "Get a valid auth token using the "
-                               "/api/token endpoint and use it "
-                               "in the 'Authorization' "
-                               "header.")}))))))})
+                       {:reason "Invalid token or insufficient privileges."
+                        :info (if (contains? req :identity)
+                                (str
+                                 "This endpoint requires a token of a(n) '"
+                                 (:auth? route-data)
+                                 "' account.")
+                                (str
+                                 "Get a valid auth token using the "
+                                 "/api/token endpoint and use it "
+                                 "in the 'Authorization' "
+                                 "header."))}))))))})
 
