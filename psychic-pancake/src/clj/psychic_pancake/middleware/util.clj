@@ -9,7 +9,7 @@
       (handler (assoc-in req [:fetched key] obj)))))
 
 
-(defn auth-matches? [required request]
+(defn auth-matches? [required req]
   (case required
     true (contains? req :identity)
     :buyer (some-> req :identity :role #(= "buyer" %))
