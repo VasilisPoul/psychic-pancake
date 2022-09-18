@@ -46,6 +46,7 @@
          "and (:seller_rating = NULL or l.seller.rating >= :seller_rating) "
          "and (:today < l.ends or :only_active = FALSE) "
          "and (c.name in :categories or coalesce(:categories) IS NULL) "
+         "and (l.seller.rating >= :seller_rating or :seller_rating = NULL)"
          "and (l.seller.uid = :seller_uid or :seller_uid = NULL)")
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
@@ -58,6 +59,7 @@
                    :seller_rating nil
                    :categories nil
                    :seller_uid nil
+                   :seller_rating nil
                    :only_active true
                    :today (java.util.Date.)})))
 

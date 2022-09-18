@@ -31,6 +31,7 @@
     (-> params
         (assoc :role User$Role/admin)
         (assoc :password_digest (-> :password params derive))
+        (assoc :rating 10000)
         (update :country (partial orm/find! Country))
         (orm/hash-map->obj User)
         orm/persist!)))

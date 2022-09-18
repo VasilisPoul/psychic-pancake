@@ -16,7 +16,8 @@
         (let [country (orm/find! Country (:country map))
             user (map->user
                   (assoc map
-                         :country country))]
+                         :country country
+                         :rating 0))]
           (orm/persist! user)
           user)))))
 

@@ -49,6 +49,7 @@ public class User implements Serializable {
     @NotNull
     private boolean pending;
     @NotNull
+    @Column(columnDefinition="bigint DEFAULT 0", nullable=false)
     private Long rating;
 
     @OrderBy ("timestamp DESC")
