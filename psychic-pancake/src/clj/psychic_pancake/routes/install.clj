@@ -30,6 +30,7 @@
     (create-countries!)
     (-> params
         (assoc :role User$Role/admin)
+        (assoc :password_digest (-> :password params derive))
         (update :country (partial orm/find! Country))
         (orm/hash-map->obj User)
         orm/persist!)))

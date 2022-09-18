@@ -12,9 +12,9 @@
 (defn auth-matches? [required req]
   (case required
     true (contains? req :identity)
-    :buyer (some-> req :identity :role #(= "buyer" %))
-    :seller (some-> req :identity :role #(= "seller" %))
-    :admin (some-> req :identity :role #(= "admin" %))))
+    :buyer (some-> req :identity :role (= "buyer"))
+    :seller (some-> req :identity :role (= "seller"))
+    :admin (some-> req :identity :role (= "admin"))))
 
 (def check-auth-middleware
   {:name ::check-auth-middleware

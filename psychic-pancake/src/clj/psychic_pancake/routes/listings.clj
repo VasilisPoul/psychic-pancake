@@ -7,6 +7,7 @@
    [psychic-pancake.orm.notifications :refer
     [notify-listing-ends mark-seen!]]
    [psychic-pancake.orm.core :as orm]
+   [psychic-pancake.middleware.formats :as fmt]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [postwalk]]
    [spec-tools.data-spec :as ds]))
@@ -83,11 +84,12 @@
                 (do
                   (orm.listing/delete-by-id id)
                   (ok {:deleted id})))}
-     :get {:responses {200 {:body specs.listings/listing-shape}}
+      :get {:responses {200 {:body specs.listings/listing-shape}}
+            :muuntaja fmt/instance-with-xml
            :handler
            (fn [{{listing :listing} :db}]
              (do
-               (mark-seen! listing)
+               ;; (mark-seen! listing)
                (-> listing
                  orm/obj->map
                  transform-listing

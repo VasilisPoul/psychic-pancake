@@ -8,7 +8,8 @@
 
 (def routes
   ["/admin"
-   {:swagger {:tags ["admin"]}}
+   {:swagger {:tags ["admin"]}
+    :auth? :admin}
    ["/users"
     ["/pending"
      {:get

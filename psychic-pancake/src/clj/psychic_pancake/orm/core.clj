@@ -124,7 +124,8 @@
 (defn obj->map [obj]
   (with-meta
     (->clj (into {} (convertValue obj java.util.HashMap)))
-    {:class (class obj)}))
+    {:class (class obj)
+     :original obj}))
 
 (defn hash-map->obj
   ([map cls] (convertValue (stringify-keys map) cls))
