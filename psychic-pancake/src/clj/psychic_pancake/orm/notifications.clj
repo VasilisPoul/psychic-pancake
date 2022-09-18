@@ -64,29 +64,31 @@
   ((strs->dbfn
     "UPDATE Notification AS n"
     "SET is_seen = TRUE"
-    "WHERE n.message_ref=?1"
+    "WHERE n.message_ref.msg_id=?1"
     "AND n.displayAt < NOW()")
-   msg))
+   (.getMsg_id msg)))
 
 (defmethod mark-seen! Bid [^Bid bid]
   ((strs->dbfn
     "UPDATE Notification AS n"
     "SET is_seen = TRUE"
-    "WHERE n.bid_ref=?1"
+    "WHERE n.bid_ref.id=?1"
     "AND n.displayAt < NOW()")
-   bid))
+   (.getId bid)))
 
 (defmethod mark-seen! Listing [^Listing listing]
-  (do
-    ((strs->dbfn
-      "UPDATE Notification AS n"
-      "SET is_seen = TRUE"
-      "WHERE n.listing_ref=?1"
-      "AND n.diaplayAt < NOW()")
-     listing)
-    ((strs->dbfn
-      "UPDATE Notification AS n"
-      "SET is_seen = TRUE"
-      "WHERE n.bid_ref.listing=?1"
-      "AND n.diaplayAt < NOW()")
-     listing)))
+  ((juxt
+    (strs->dbfn
+     "UPDATE Notification n"
+     "SET is_seen = TRUE"
+     "WHERE n.listing_ref.item_id=?1")
+    (strs->dbfn
+     "UPDATE Notification n"
+     "SET is_seen = TRUE"
+     "WHERE n.bid_ref.id in"
+     "(SELECT b.id FROM Bid b"
+     "WHERE b.listing.item_id=?1)"))
+   (.getItem_id listing)))
+
+
+

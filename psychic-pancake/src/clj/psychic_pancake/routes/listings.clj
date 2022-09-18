@@ -89,7 +89,7 @@
            :handler
            (fn [{{listing :listing} :db}]
              (do
-               ;; (mark-seen! listing)
+               (mark-seen! listing)
                (-> listing
                  orm/obj->map
                  transform-listing
