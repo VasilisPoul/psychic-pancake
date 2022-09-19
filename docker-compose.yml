@@ -35,6 +35,8 @@ services:
     container_name: production_nginx
     volumes:
       - './nginx/nginx.conf:/etc/nginx/conf.d/default.conf'
+      - './nginx/example.crt:/etc/nginx/example.crt'
+      - './nginx/example.key:/etc/nginx/example.key'
               # - /star_xx_com.pem:/etc/nginx/cert/star_xx_com.pem
               # - /star_xx_com.key:/etc/nginx/cert/star_xx_com.key
               # - /star_xx_com.crt:/etc/nginx/cert/star_xx_com.crt

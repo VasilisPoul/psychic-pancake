@@ -59,7 +59,6 @@
                    :seller_rating nil
                    :categories nil
                    :seller_uid nil
-                   :seller_rating nil
                    :only_active true
                    :today (java.util.Date.)})))
 
