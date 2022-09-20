@@ -11,13 +11,14 @@ import axios from "../api/axios";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 export default function Auction() {
   const { user, setUser } = useContext(UserContext);
-  const isLoggedIn = (typeof user['role'] === 'undefined') ? false : true;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const auctionId = useParams().id
   const [listing, setListing] = useState({})
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   let images_array = [];
   useEffect(() => {
+    
     axios.get(`/api/listings/${auctionId}`)
       .then(
         function (response) {
@@ -37,6 +38,7 @@ export default function Auction() {
       )
       .catch()
   }, [])
+
   return (
     <>
       <head><link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"

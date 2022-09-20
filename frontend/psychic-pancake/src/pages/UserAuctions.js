@@ -1,6 +1,6 @@
 // If Buyer list bought products
 // If seller list auctions, and let him add new auctions (modal?)
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { UserContext } from '../components/UserContext';
 import auction from '../resources/auction.webp';
@@ -31,13 +31,22 @@ const auctionsList = [
 ];
 
 export default function UserAuctions() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
 
   const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    setIsLoggedIn(localStorage.getItem('AuthToken')? true : false);
+    setIsSeller(user['role'] == 'seller')
+  }, [user])
+  console.log(user['role'] === 'seller')
+  
   return (
     <>
       <Navbar />
       <div className='container mt-3'>
-        {user['role'] === 'seller' && <AddAuctionModal />}
+        { user['role'] === 'seller' && <AddAuctionModal />}
 
         <div className='row mb-2'>
           {auctionsList.map((item, idx) => {
