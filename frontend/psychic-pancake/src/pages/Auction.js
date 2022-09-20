@@ -47,7 +47,7 @@ export default function Auction() {
       </head>
       {!loading &&
         <div>
-          {(isLoggedIn) ? <Navbar /> : <InitialNavbar />}
+          {(localStorage.getItem('AuthToken')) ? <Navbar /> : <InitialNavbar />}
           <div className="container mt-3">
             <div className="row">
               <h1>{listing.name}</h1>
@@ -82,7 +82,7 @@ export default function Auction() {
                   <h4>Description:</h4>
                   <span> {listing.description}</span>
                 </div>
-                <div id="map " style={{width: "80%", height: "100vh;"}}>
+                <div id="map" style={{width: "80%", height: "100vh", zIndex: '1'}}>
                   {/* <MapContainer center={[45.4, -75.7]} zoom={12} scrollWheelZoom={false}>
                     <TileLayer
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
