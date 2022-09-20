@@ -36,7 +36,7 @@ export default function AddBidModal(props) {
   }
   return (
     <>
-      <button type="button" className=" btn btn-light mb-3" data-bs-toggle="modal" data-bs-target="#bidModal">New Bid</button>
+      <button type="button" className=" btn btn-outline-dark mb-3 w-100" data-bs-toggle="modal" data-bs-target="#bidModal">New Bid</button>
 
       <div className="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="Auth-form-container">

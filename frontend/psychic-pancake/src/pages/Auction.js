@@ -52,17 +52,12 @@ export default function Auction() {
           {(localStorage.getItem('AuthToken')) ? <Navbar /> : <InitialNavbar />}
           <div className="container mt-3">
             <div className="row">
-              <h1>{listing.name}</h1>
-              <div className='col'>
-                {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
-              </div>
-              <div className='col'>
-                {user['role'] === 'buyer' && <SendMessageModal to={listing.seller.split('/')[3]} />}
-              </div>
+              
+              
             </div>
 
             <div className='row'>
-              <div className='col'>
+              <div className='col mb-2'>
 
                 {
                   images.map((image) => {
@@ -77,14 +72,21 @@ export default function Auction() {
               <div className="col">
 
                 <div className="row">
+                <h1 className='mb-4'>{listing.name}</h1>
+                <div className='col'>
+                {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
+              </div>
+              <div className='col'>
+                {user['role'] === 'buyer' && <SendMessageModal to={listing.seller.split('/')[3]} />}
+              </div>
                   <h4>Latest Bid:</h4>
-                  <span> {listing.currently}$</span>
+                  <p className='lead flex-shrink-0'> {listing.currently}$</p>
                 </div>
                 <div>
                   <h4>Description:</h4>
-                  <span> {listing.description}</span>
+                  <p className='lead flex-shrink-0'> {listing.description}</p>
                 </div>
-                <div id="map mt-4" style={{width: "80%", height: "100vh", zIndex: '1'}}>
+                <div id="map d-flex align-items-center jusify-content-center mt-4" style={{width: "80%", height: "100vh", zIndex: '1'}}>
                 <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

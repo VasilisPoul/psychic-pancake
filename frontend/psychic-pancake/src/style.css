@@ -35,6 +35,9 @@ label {
 }
 
 .leaflet-container {
-  width: 500px;
+  flex: content;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   height: 500px;
 }
