@@ -1,16 +1,70 @@
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext } from './UserContext';
 import axios from '../api/axios';
+
+const NotificationView = ({ item }) => {
+    const [notification, setNotification] = useState({})
+    useEffect(() => {
+        try {
+            axios.get(item, {
+                headers: {
+                    'authorization': localStorage.getItem('AuthToken')
+                }
+            })
+                .then((response) => {
+                    setNotification(response.data)
+                }).catch((error) => console.log(error))
+        }
+        catch (error) {
+
+        }
+    }, [])
+    console.log(notification)
+    let sender = null; 
+    if (notification.type === 'message-notification'){
+        sender = notification.from.split('/')[3]
+    }
+
+    return (
+        <>
+            {notification.type === 'message-notification' && <div className="dropdown-item" >
+                <Link className="nav-link" to="/received-messages">New message from {sender}</Link>
+            </div>}
+            {notification.type ==='bid-notification'&& <div className="dropdown-item" >
+                <Link className="nav-link">New bid <small>{notification.when}</small></Link>
+            </div>}
+            {notification.type ==='listing-notification'&& <div className="dropdown-item" >
+                <Link className="nav-link">Your Auction just ended <small>{notification.when}</small></Link>
+            </div>} 
+        </>
+    );
+}
 
 export default function Navbar() {
     const { user, setUser } = useContext(UserContext);
     const navigate = useNavigate();
+    const [notifications, setNotifications] = useState([]);
     const HandleLogOut = () => {
         localStorage.removeItem('AuthToken')
         setUser({});
         navigate('/')
     }
+    useEffect(() => {
+        try {
+            axios.get('/api/notifications', {
+                headers: {
+                    'authorization': localStorage.getItem('AuthToken')
+                }
+            })
+                .then((response) => {
+                    setNotifications(response.data)
+                })
+        }
+        catch (error) {
+
+        }
+    }, [])
 
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -35,15 +89,34 @@ export default function Navbar() {
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <div className="dropdown-item" >
-                                    <Link className="nav-link" to="/sent-messages">Sent</Link>
+                                        <Link className="nav-link" to="/sent-messages">Sent</Link>
                                     </div>
                                     <div className="dropdown-item" >
-                                    <Link className="nav-link" to="/received-messages">Received</Link>
+                                        <Link className="nav-link" to="/received-messages">Received</Link>
                                     </div>
                                 </div>
                             </div>
 
-                            
+
+                        </li>
+
+                        <li className="nav-item">
+
+                            <div className="dropdown">
+                                <button className="btn btn-light w-100 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Notifications ({notifications.length})
+                                </button>
+                                <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {notifications.map((item) => {
+                                        console.log(item)
+                                        return <NotificationView item={item} />
+
+                                    })}
+
+                                </div>
+                            </div>
+
+
                         </li>
                     </ul>
                 </div>
