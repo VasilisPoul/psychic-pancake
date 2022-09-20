@@ -56,8 +56,10 @@
           {:responses {200 {:body {:role :usr/role
                                    :self :usr/ref
                                    :uid :usr/uid
-                                   :first_name :usr/first_name
-                                   :last_name :usr/last_name}}}
+                                   :first_name (s/nilable
+                                                :usr/first_name)
+                                   :last_name (s/nilable
+                                               :usr/last_name)}}}
            :handler user-get-handler}}]
     ["/items-bought"
      {:get
