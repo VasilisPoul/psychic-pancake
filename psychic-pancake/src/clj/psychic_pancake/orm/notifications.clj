@@ -13,8 +13,8 @@
    (strs->dbfn
    "SELECT n.id FROM Notification n"
    "WHERE n.displayAt < NOW()"
-   "AND :user = n.user OR n.user = NULL"
-   "AND :show_all = TRUE OR n.is_seen = FALSE")))
+   "AND (:user = n.user OR n.user = NULL)"
+   "AND (:show_all = TRUE OR n.is_seen = FALSE)")))
 
 (def listing->notification
   (strs->dbfn
