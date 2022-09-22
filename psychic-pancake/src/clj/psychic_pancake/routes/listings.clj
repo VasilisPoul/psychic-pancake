@@ -15,8 +15,7 @@
 
 (defn transform-listing [listing]
   (-> listing
-      (update :country :name)
-      (assoc :location "test")))
+      (update :country :name)))
 
 (def routes
   ["/listings"

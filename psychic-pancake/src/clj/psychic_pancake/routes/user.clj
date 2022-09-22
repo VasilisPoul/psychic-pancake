@@ -11,7 +11,7 @@
    [psychic-pancake.orm.core :as orm]
    [clojure.set :refer [rename-keys]]
    [buddy.hashers :as h])
-  (:import [jakarta.persistence EntityExistsException]
+  (:import [jakarta.persistence EntityExistsException PersistenceException]
            [psychic_pancake User]))
 
 
@@ -41,7 +41,7 @@
                            {:password :password_digest})
                           (assoc :pending true)
                           orm.user/create!)})
-                    (catch EntityExistsException e
+                    (catch PersistenceException e
                       (conflict
                        {:reason
                         "A user with this id already exists"}))))}}]
