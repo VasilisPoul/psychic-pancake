@@ -23,11 +23,25 @@
       :responses {200 {:body {:token string?}}}
       :handler (fn [{{{uid :uid pwd :password} :body} :parameters}]
                  (let [user (orm.user/get-by-id uid)]
-                   (if (:valid (h/verify pwd (.getPassword_digest user)))
-                     (ok {:token (str "Token " (jwt/sign {:uid uid :role (-> user .getRole str)} secret))})
+                   (cond
+                     (not (or
+                           (nil? user)
+                           (:valid (h/verify pwd (.getPassword_digest user)))))
                      (unauthorized
                       {:reason "Invalid username or password"
-                       :info "Create an account or check your credentials"}))))}}]
+                       :info "Create an account or check your credentials"})
+                     (.getPending user)
+                     (unauthorized
+                      {:reason "Account under review"
+                       :info
+                       (str
+                        "Your account information needs to be reviewed by the"
+                        " administrator before you are allowed access.")})
+                     :else
+                     (ok {:token
+                          (str "Token " (jwt/sign {:uid uid
+                                                   :role (-> user .getRole str)}
+                                                  secret))}))))}}]
    ["/check"
     {:get
      {:swagger {:tags ["login"] :security [{:apiAuth []}]}
