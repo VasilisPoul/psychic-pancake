@@ -8,7 +8,9 @@
    [psychic-pancake.orm.core :as orm]
    [clojure.spec.alpha :as s]
    [spec-tools.data-spec :as ds]
-   [clojure.set :refer [rename-keys]]))
+   [clojure.set :refer [rename-keys]])
+  (:import
+   [psychic_pancake Listing]))
 
 
 (def routes
@@ -25,8 +27,10 @@
             :responses {200 {:bid :bid/ref}}
             :handler (fn [{{body :body} :parameters
                           db :db}]
-                       (if (> (:amount body)
-                              (.getCurrently ^psychic_pancake.Listing (:listing db)))
+                       (if (and
+                            (.getActive ^Listing (:listing db))
+                            (> (:amount body)
+                               (.getCurrently ^Listing (:listing db))))
                          (let [bid
                                (-> body
                                    (merge db)
