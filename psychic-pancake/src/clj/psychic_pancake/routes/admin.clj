@@ -11,6 +11,9 @@
    {:swagger {:tags ["admin"]}
     :auth? :admin}
    ["/users"
+    [""
+     {:get {:responses {200 {:body (s/coll-of :usr/ref)}}}
+      :handler (comp ok orm->clj (fn [& _] (get-pending-users :pending? false)))}]
     ["/pending"
      {:get
       {:responses {200 {:body (s/coll-of :usr/ref)}}
@@ -18,7 +21,7 @@
        (comp
         ok
         orm/->clj
-        (fn [& _] (get-pending-users)))}
+        (fn [& _] (get-pending-users :pending? true)))}
       :post
       {:parameters {:body {:uid :usr/uid :accept boolean?}}
        :handler (comp

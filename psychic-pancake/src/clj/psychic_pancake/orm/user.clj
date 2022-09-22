@@ -94,7 +94,7 @@
 (def get-pending-users
   (strs->dbfn
    "select u from User u"
-   "where u.pending = true"))
+   "where u.pending = :pending?"))
 
 (def pending-uid->accept!
   (strs->dbfn
