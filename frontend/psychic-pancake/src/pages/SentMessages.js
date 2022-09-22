@@ -83,7 +83,7 @@ const MessageInstance = (props) => {
           function ( response ) {
             window.location.reload(false)
           }
-        )
+        ).catch()
     }
     catch (error) {
 

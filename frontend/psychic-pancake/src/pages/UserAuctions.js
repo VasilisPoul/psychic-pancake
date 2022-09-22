@@ -3,18 +3,20 @@
 import { useContext, useEffect, useState } from 'react';
 import Navbar from '../components/Navbar';
 import { UserContext } from '../components/UserContext';
-import auction from '../resources/auction.webp';
 import AddAuctionModal from '../components/AddAuctionModal';
 import axios from '../api/axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import EditAuctionModal from '../components/EditAuctionModal';
 
-const ListingView = (item) => {
+
+
+const ListingView = (props) => {
   const [listing, setListing] = useState({});
   const [img, setImg] = useState('')
 
   useEffect(() => {
     try {
-      axios.get(item.item).then(
+      axios.get(props.item).then(
         function (response) {
           setListing(response.data)
           axios.get(response.data.images[0]).then(
@@ -30,24 +32,28 @@ const ListingView = (item) => {
     }
 
   }, [])
-  const item_id = item.item.split('/')[3]
+  const item_id = props.item.split('/')[3]
   const linkTo = '/auction/'+item_id
   const navigate = useNavigate()
   const HandleClick = (e) => {
     navigate(linkTo);
   }
-  console.log(listing)
+
   return (
-    <div className="card mb-3" onClick={HandleClick} style={{cursor: "pointer"}}>
+    <div className="card mb-3">
       <div className="row g-0">
         <div className="col-md-4">
           <img src={img} className="img-fluid rounded-start" alt="..." />
         </div>
         <div className="col-md-8">
-          <div className="card-body">
-            <h5 className="card-title">{listing.name}</h5>
-            <p className="card-text">{listing.description}</p>
-            <p className="card-text"><small className="text-muted">Ending date: {listing.ends}</small></p>
+          <div className='row'>
+            <div className='col-sm-12 border-end' onClick={HandleClick} style={{cursor: "pointer"}}>
+              <div className="card-body">
+                <h5 className="card-title">{listing.name}</h5>
+                <p className="card-text">{listing.description}</p>
+                <p className="card-text"><small className="text-muted">Ending date: {listing.ends}</small></p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -56,8 +62,6 @@ const ListingView = (item) => {
 }
 
 export default function UserAuctions() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSeller, setIsSeller] = useState(false);
   const [list, setList] = useState([])
   const { user, setUser } = useContext(UserContext);
 
