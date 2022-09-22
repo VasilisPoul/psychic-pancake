@@ -38,7 +38,9 @@
      :when (:displayAt m)
      :bidder (:bidder bid)
      :bidder_uid (-> bid :bidder :uid)
-     :amount (:amount bid)}))
+     :amount (:amount bid)
+     :bid bid
+     :listing (:listing bid)}))
 
 
 
