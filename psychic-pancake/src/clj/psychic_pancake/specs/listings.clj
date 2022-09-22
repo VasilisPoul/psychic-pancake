@@ -120,7 +120,8 @@
    :categories [:item/category]
    :first_bid :item/price
    :ends :listing/ends
-   :images [:common/image]})
+   :images [:common/image]
+   :location :usr/location})
 
 (def listing-update-shape
   (->> listing-post-shape
