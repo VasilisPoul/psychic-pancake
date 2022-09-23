@@ -13,7 +13,7 @@
    ["/users"
     [""
      {:get {:responses {200 {:body (s/coll-of :usr/ref)}}}
-      :handler (comp ok orm->clj (fn [& _] (get-pending-users :pending? false)))}]
+      :handler (comp ok orm/->clj (fn [& _] (get-pending-users :pending? false)))}]
     ["/pending"
      {:get
       {:responses {200 {:body (s/coll-of :usr/ref)}}

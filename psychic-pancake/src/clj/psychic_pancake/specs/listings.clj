@@ -112,7 +112,10 @@
    (ds/opt :country) :usr/country
    (ds/opt :seller_uid) :usr/uid
    (ds/opt :seller_rating) :usr/rating
-   :only_active boolean?})
+   (ds/opt :radius) (s/nilable number?)
+   (ds/opt :position_lon) number?
+   (ds/opt :position_lat) number?
+   (ds/opt :only_active) boolean?})
 
 (def listing-post-shape
   {:name :item/name
