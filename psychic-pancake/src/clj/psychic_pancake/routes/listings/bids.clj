@@ -27,10 +27,16 @@
             :responses {200 {:bid :bid/ref}}
             :handler (fn [{{body :body} :parameters
                           db :db}]
-                       (if (and
-                            (.getActive ^Listing (:listing db))
-                            (> (:amount body)
-                               (.getCurrently ^Listing (:listing db))))
+                       (cond
+                         (not (.getActive ^Listing (:listing db)))
+                         (not-acceptable {:reason "Invalid bid attempted"
+                                          :info "The listing is not currently active"})
+                         (<= (:amount body)
+                             (.getCurrently ^Listing (:listing db)))
+                         {:status 402
+                          :body {:reason "Invalid bid attempted"
+                                 :info "Bidding amount must be higher than current price"}}
+                         :else
                          (let [bid
                                (-> body
                                    (merge db)
@@ -39,15 +45,7 @@
                                    orm.bid/create!)]
                            (do
                              (notify-new-bid bid)
-                             (ok {:bid bid})))
-
-
-                         {:status 402
-                          :body {:reason "Bidding amount must be higher than current price"
-                                 :info (str "Tried to bid "
-                                            (:amount body)
-                                            " on a listing with a current price of "
-                                            (.getCurrently ^psychic_pancake.Listing (:listing db)))}}))}}]
+                             (ok {:bid bid})))))}}]
    ["/:bid-id"
     {:parameters {:path {:bid-id pos-int?}}
      :fetch! [{:type :bid
