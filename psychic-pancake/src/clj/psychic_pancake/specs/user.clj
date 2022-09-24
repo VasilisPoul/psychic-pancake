@@ -53,7 +53,7 @@
   (ds/spec
    {:spec {:name string?
            :latitude number?
-           :longitide number?}
+           :longitude number?}
     :name ::location
     :swagger/example {:name "Bob's House" :longitude 10.2221 :latitude 32.822222222221}}))
 

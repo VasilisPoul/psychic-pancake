@@ -20,5 +20,5 @@
     (orm/with-transaction
       (orm/remove! (orm/find! Location name)))))
 
-;; (create! {:name "foo" :latitude 1.2 :longitude 1.3})
+;; (create! {:name "string" :latitude 1.2 :longitude 1.3})
 ;; (get-by-name "foo")
