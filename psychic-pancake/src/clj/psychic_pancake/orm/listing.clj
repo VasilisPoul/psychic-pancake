@@ -50,8 +50,9 @@
          "and (c.name in :categories or coalesce(:categories) IS NULL) "
          "and (l.seller.rating >= :seller_rating or :seller_rating = NULL) "
          "and (l.seller.uid = :seller_uid or :seller_uid = NULL) "
-         "and (:radius = NULL or SQRT(POWER(:position_lon - l.location.longitude, 2) "
+         #_("and (:radius = NULL or (POWER(:position_lon - l.location.longitude, 2) "
          " + POWER(:position_lat - l.location.latitude, 2)) * 111 <= :radius)")
+         )
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
                  "else (select max(b.amount) from Bid b where b.listing = l) end)"))
@@ -64,9 +65,10 @@
                    :categories nil
                    :seller_uid nil
                    :only_active true
-                   :radius nil
-                   :position_lon nil
-                   :position_lat nil})))
+                   ;; :radius nil
+                   ;; :position_lon nil
+                   ;; :position_lat nil
+                   })))
 
 (def get-by-winner
   (strs->dbfn

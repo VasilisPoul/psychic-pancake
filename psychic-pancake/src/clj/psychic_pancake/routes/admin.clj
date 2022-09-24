@@ -3,7 +3,9 @@
    [ring.util.http-response :refer :all]
    [clojure.spec.alpha :as s]
    [psychic-pancake.orm.user :as orm.user :refer :all]
-   [psychic-pancake.orm.core :as orm]))
+   [psychic-pancake.orm.core :as orm :refer [->clj]]
+   [psychic-pancake.orm.listing :as orm.listing]
+   [psychic-pancake.middleware.formats :refer [->XML instance-with-xml]]))
 
 
 (def routes
@@ -31,5 +33,14 @@
                    (:uid %))
                  #(select-keys % [:uid :accept])
                  :body
-                 :parameters)}}]]])
-
+                 :parameters)}}]]
+   ["/listings"
+    {:muuntaja instance-with-xml
+     :get
+     {:responses {200 (comp not nil?)}
+      :handler
+      (fn [req]
+        (ok 
+         (vary-meta
+          (->clj (orm.listing/search-listings {:only_active false}))
+           merge {:name :Items})))}}]])

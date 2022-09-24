@@ -33,9 +33,9 @@
   Boolean
   (->clj [this] this)
   Object
-  (->clj [this] (-> this
-                    obj->map
-                    ->clj))
+  (->clj [this]
+    (let [m (obj->map this)]
+      (with-meta (->clj m) (meta m))))
   nil
   (->clj [this] this))
 

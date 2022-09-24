@@ -21,9 +21,9 @@
          :formats
          #(select-keys % ["application/json"])))))
 
-(defn- try-meta [obj meta]
+(defn- try-meta [obj meta_]
   (try
-    (with-meta obj meta)
+    (vary-meta obj (partial merge-with first) meta_)
     (catch Exception e obj)))
 
 (defn- with-xml-root
@@ -104,13 +104,20 @@
   List
   (->XML [this]
     (let [name (-> this meta (:name :List))]
-      (->> this
-           (map ->XML)
-           (map (partial xml/element name {})))))
+      (xml/element
+       name
+       {}
+       (map ->XML this))))
+  Long
+  (->XML [this] (str this))
+  Double
+  (->XML [this] (str this))
   String
   (->XML [this] this)
   nil
-  (->XML [this] nil))
+  (->XML [this] nil)
+  Object
+  (->XML [this] (str this)))
 
 
 (defn str->ByteArrayInputStream [s]
@@ -149,4 +156,3 @@
 ;; (xml/emit-str (->XML {:foo :bar}))
 
 ;; (xml/element :foo :bar)
-
