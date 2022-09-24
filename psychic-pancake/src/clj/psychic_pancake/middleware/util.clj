@@ -19,7 +19,7 @@
 (def check-auth-middleware
   {:name ::check-auth-middleware
    :compile (fn [route-data opts]
-              (when (:auth? route-data)
+              (when (contains? route-data :auth?)
                 (fn [handler]
                   (fn [req]
                     (if (auth-matches? (:auth? route-data) req)

@@ -15,11 +15,11 @@ import lombok.*;
 public class Location implements Serializable {
     @Id
     private String name;
-    private double latitude, longitude;
+    private Double latitude, longitude;
 
     public Location() {}
 
-    public Location(User owner, String name, double lat, double lon) {
+    public Location(String name, double lat, double lon) {
 	this.name = name;
 	this.latitude = lat;
 	this.longitude = lon;
