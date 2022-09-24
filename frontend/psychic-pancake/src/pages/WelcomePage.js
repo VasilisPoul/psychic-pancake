@@ -2,10 +2,35 @@ import Login from '../components/Login'
 import Footer from '../components/Footer'
 import auction from '../resources/auction.webp';
 import InitialNavbar from '../components/InitialNavbar';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from '../api/axios';
 
 export default function WelcomePage() {
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    try {
+      axios.get('/api/install')
+      .then((response) => {
+        if(!response.data.installed){
+          setLoading(false)
+          console.log(!response.data.installed)
+          navigate('/install')
+        }
+        else {
+          setLoading(false);
+        }
+      })
+    } catch (error) {
+
+    }
+  }, []);
   return (
     <>
+   {!loading && <div>
+
+   
       <InitialNavbar/>
       <br /><br />
       <br /><br />
@@ -32,6 +57,7 @@ export default function WelcomePage() {
         </div>
       </div>
       <Footer />
+      </div>}
     </>
   );
 }

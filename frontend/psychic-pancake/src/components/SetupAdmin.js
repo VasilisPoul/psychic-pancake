@@ -1,25 +1,24 @@
-import { useContext, useState } from "react";
-import { Navigate, useNavigate, Link } from "react-router-dom";
-import { UserContext } from "./UserContext";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import '../style.css'
-import classNames from "classnames";
 import axios from "../api/axios";
 
 export default function SetupAdmin(props) {
-  const frontPage = props.frontPage;
-  // const { user, setUser } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [uid, setUid] = useState('');
   const [password, setPassword] = useState('');
   const [country, setCountry] = useState('')
   const navigate = useNavigate();
-
+  const [loading, setLoading] = useState(false)
   const HandleSubmit = (e) => {
     e.preventDefault();
     try{
+      setLoading(true)
       axios.post('/api/install', {uid, email, password, country})
-      .then(
+      .then((response) => {
+        
         navigate("/")
+      }
       )
       .catch()
     } catch (error) {
@@ -77,8 +76,10 @@ export default function SetupAdmin(props) {
               Submit
             </button>
           </div>
+          {loading && <span>Loading...</span>}
         </div>
       </form>
+     
     </div>
   );
 }

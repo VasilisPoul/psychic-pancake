@@ -128,7 +128,7 @@ export default function Auction() {
                             {bidsArray.map((bid_url) => {
                               return(
                                 <>
-                                  <BidView bid_url={bid_url} />
+                                  {/* <BidView bid_url={bid_url} /> */}
                                 </>
                               );
                             })}

@@ -7,7 +7,7 @@ function UserContextComponent(props) {
   const [user, setUser] = useState({});
   useEffect(()=> {
     try {
-      axios.get("/api/token/check", {
+      axios.get("/api/user/me", {
         headers: {
           accept: 'application/json',
           authorization: localStorage.getItem('AuthToken')

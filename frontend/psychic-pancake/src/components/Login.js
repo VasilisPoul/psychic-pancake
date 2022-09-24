@@ -25,7 +25,7 @@ export default function Login(props) {
         .then(
           function (response) {
             localStorage.setItem("AuthToken", response.data.token)
-            axios.get("/api/token/check", {
+            axios.get("/api/user/me", {
               headers: {
                 accept: 'application/json',
                 authorization: localStorage.getItem('AuthToken')

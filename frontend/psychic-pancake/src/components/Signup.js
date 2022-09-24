@@ -20,6 +20,8 @@ export default function Signup() {
           role,
           email,
           country,
+          //TODO: fix this
+          location: {name: 'spiti', latitude: 0, longitude: 0},
           last_name: surname,
           first_name: name,
           VAT: vat,
