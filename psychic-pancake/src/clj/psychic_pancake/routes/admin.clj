@@ -8,12 +8,12 @@
 
 (def routes
   ["/admin"
-   {:swagger {:tags ["admin"]}
+   {:swagger {:tags ["admin"] :security [{:apiAuth []}]}
     :auth? :admin}
    ["/users"
     [""
-     {:get {:responses {200 {:body (s/coll-of :usr/ref)}}}
-      :handler (comp ok orm/->clj (fn [& _] (get-pending-users :pending? false)))}]
+     {:get {:responses {200 {:body (s/coll-of :usr/ref)}}
+            :handler (comp ok orm/->clj (fn [& _] (get-pending-users :pending false)))}}]
     ["/pending"
      {:get
       {:responses {200 {:body (s/coll-of :usr/ref)}}
@@ -21,7 +21,7 @@
        (comp
         ok
         orm/->clj
-        (fn [& _] (get-pending-users :pending? true)))}
+        (fn [& _] (get-pending-users :pending true)))}
       :post
       {:parameters {:body {:uid :usr/uid :accept boolean?}}
        :handler (comp

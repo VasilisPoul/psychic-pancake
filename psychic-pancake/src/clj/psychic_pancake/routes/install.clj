@@ -51,4 +51,4 @@
                    {:reason "Installation already in place"
                     :info "This application is already installed. Try accessing the other endpoints."})))}
     :get
-    {:handler (constantly (ok {:installed (installed?)}))}}])
+    {:handler (fn [& _] (ok {:installed (installed?)}))}}])

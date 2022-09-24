@@ -41,7 +41,7 @@
                            {:password :password_digest})
                           (assoc :pending true)
                           orm.user/create!)})
-                    (catch PersistenceException e
+                    (catch EntityExistsException e
                       (conflict
                        {:reason
                         "A user with this id already exists"}))))}}]

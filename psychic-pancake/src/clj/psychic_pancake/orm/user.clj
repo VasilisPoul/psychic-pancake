@@ -2,6 +2,7 @@
   (:require
    [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.country :as country]
+   [psychic-pancake.orm.location :as location]
    [psychic-pancake.orm.query-builder :refer [strs->dbfn]]
    [clojure.set :refer [union]])
   (:import [psychic_pancake User User$Role Message Country]))
@@ -14,10 +15,11 @@
     (orm/with-session
       (orm/with-transaction
         (let [country (orm/find! Country (:country map))
-            user (map->user
-                  (assoc map
-                         :country country
-                         :rating 0))]
+              location (location/create! (:location map))
+              user (map->user
+                    (assoc map
+                           :country country
+                           :rating 0))]
           (orm/persist! user)
           user)))))
 
@@ -94,7 +96,7 @@
 (def get-pending-users
   (strs->dbfn
    "select u from User u"
-   "where u.pending = :pending?"))
+   "where u.pending = :pending"))
 
 (def pending-uid->accept!
   (strs->dbfn

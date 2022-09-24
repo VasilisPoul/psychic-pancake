@@ -30,7 +30,7 @@
                      (unauthorized
                       {:reason "Invalid username or password"
                        :info "Create an account or check your credentials"})
-                     (.getPending user)
+                     (.isPending user)
                      (unauthorized
                       {:reason "Account under review"
                        :info

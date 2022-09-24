@@ -1,5 +1,4 @@
-
-(ns psychic-pancake.orm.country
+(ns psychic-pancake.orm.location
   (:require
    [psychic-pancake.orm.core :as orm])
   (:import psychic_pancake.Location))
@@ -7,7 +6,7 @@
 (defn create! [map]
   (orm/save!
    (Location.
-    (:owner map)
+    nil
     (:name map)
     (:latitude map)
     (:longitude map))))
