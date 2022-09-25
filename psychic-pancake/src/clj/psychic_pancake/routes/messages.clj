@@ -26,7 +26,7 @@
       :parameters {}
       :handler (fn [{{me :me} :db}]
                  (let [messages (getter me)]
-                   (ok messages)))}}])
+                   (ok (apply vector messages))))}}])
 
 
 (def routes
