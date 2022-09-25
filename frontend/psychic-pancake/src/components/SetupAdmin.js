@@ -18,7 +18,22 @@ export default function SetupAdmin(props) {
     e.preventDefault();
     try {
       setLoading(true)
-      axios.post('/api/install', { uid, email, password, country})
+      axios.post('/api/install', {
+        uid,
+        email,
+        password,
+        country,
+        phone_num: '0',
+        VAT: '0',
+        location: {
+          name: '',
+          latitude: 0,
+          longitude: 0
+        },
+        last_name: 'admin',
+        first_name: 'admin',
+        role: 'admin'
+      })
         .then((response) => {
           navigate("/")
         }
@@ -28,7 +43,7 @@ export default function SetupAdmin(props) {
 
     }
   }
-  
+
   useEffect(() => {
     Papa.parse(countries_csv, {
       download: true,
@@ -75,9 +90,9 @@ export default function SetupAdmin(props) {
               <button class="btn btn-light dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 {country ? country : 'Country'}
               </button>
-              <ul class="dropdown-menu w-100" style={{overflowY:'auto', maxHeight:'280px'}} aria-labelledby="dropdownMenuButton1">
+              <ul class="dropdown-menu w-100" style={{ overflowY: 'auto', maxHeight: '280px' }} aria-labelledby="dropdownMenuButton1">
                 {countriesRecords.slice(1).sort().map(item => {
-                  return(<>
+                  return (<>
                     <li onClick={SelectCountry}><a class="dropdown-item" href="#">{item}</a></li>
                   </>)
                 })}
