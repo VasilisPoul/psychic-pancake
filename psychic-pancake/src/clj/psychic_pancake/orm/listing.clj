@@ -21,6 +21,7 @@
       ;; (update :started parse-time)
       (update :ends parse-time)
       (assoc :bids [])
+      (assoc :activated false)
       (orm/hash-map->obj Listing)
       orm/merge!
       orm/refresh!))
