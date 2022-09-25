@@ -2,6 +2,7 @@
   (:require
    [ring.util.http-response :refer :all]
    [clojure.spec.alpha :as s]
+   [psychic-pancake.specs.user :refer [user-registration-shape]]
    [psychic-pancake.orm.user :as orm.user :refer :all]
    [psychic-pancake.orm.country :refer [create-countries!]]
    [psychic-pancake.orm.core :as orm]
@@ -31,19 +32,13 @@
     (-> params
         (assoc :role User$Role/admin)
         (assoc :password_digest (-> :password params derive))
-        (assoc :rating 10000)
-        (update :country (partial orm/find! Country))
-        (orm/hash-map->obj User)
-        orm/persist!)))
+        orm.user/create!)))
 
 (def routes
   ["/install"
    {:swagger {:tags ["install"]}
     :post
-    {:parameters {:body {:uid :usr/uid
-                         :password :usr/password
-                         :email :usr/email
-                         :country :usr/country}}
+    {:parameters {:body (dissoc user-registration-shape :role)}
      :handler (fn [{{body :body} :parameters}]
                 (if (not (installed?))
                   (do (install! body) (ok))
