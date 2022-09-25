@@ -5,6 +5,7 @@ import WelcomePage from '../pages/WelcomePage'
 import Login from './Login';
 import Signup from './Signup'
 import { UserContext } from './UserContext';
+import User from '../pages/User';
 import {
   BrowserRouter,
   Routes,
@@ -42,6 +43,7 @@ export default function RoutesComponent() {
         <Route path="/install" element={<SetupAdmin  />} />
         <Route path="/my-auctions" element={ (isLoggedIn ? <UserAuctions/> : <span>Not Authorized.</span>)} />
         <Route path="/auction/:id" element={ <Auction />} />
+        <Route path="/user/:id" element={<User />} />
         <Route path="/sent-messages" element={ <SentMessages />} />
         <Route path="/received-messages" element={ <ReceivedMessages />} />
       </Routes>

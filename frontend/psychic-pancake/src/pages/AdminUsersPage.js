@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import AdminNavbar from "../components/AdminNavbar";
 import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminUsersPagePanel() {
-
-    const UserView = (user_link) => {
+    const navigate = useNavigate();
+    const UserView = ({user_link}) => {
+        console.log({user_link})
         const [user, setUser] = useState({}); 
         useEffect(() => {
             axios.get(user_link, 
@@ -17,13 +19,13 @@ export default function AdminUsersPagePanel() {
                 (response) => {
                     setUser(response.data)
                 }
-            )
-    })
-
+            ).catch((error) => {console.log(error)})
+    }, [])
+    console.log(user)
     return (
         <>
-            <tr>
-                <th scope="row">{user.id}</th>
+            <tr style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${user.uid}`)}}>
+                <th scope="row">{user.uid}</th>
                 <td>{user.uid}</td>
                 <td>{user.email}</td>
 
