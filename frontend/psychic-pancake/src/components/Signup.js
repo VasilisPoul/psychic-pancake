@@ -5,23 +5,28 @@ import axios from '../api/axios';
 import countries_csv from '../assets/countries.csv';
 import Papa from 'papaparse';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvents } from 'react-leaflet'
 import '../../node_modules/leaflet-geosearch/dist/geosearch.css';
 import '../style.css'
 import { map } from 'leaflet';
 
 
 export default function Signup() {
-
+  const [locationData, setLocationData] = useState([]);
+  const handleLocation = (result) => {
+   
+    setLocationData(result.location)
+  }
 
   const SearchField = (props) => {
+    console.log(props)
     const provider = new OpenStreetMapProvider();
 
     // @ts-ignore
 
 
     const map = useMap();
-    console.log({ map })
+    // const mapEvents = useMapEvents();
     useEffect(() => {
 
       const searchControl = new GeoSearchControl({
@@ -29,12 +34,11 @@ export default function Signup() {
         ...props,
       });
 
-      console.log(searchControl._val);
+      // console.log(map['_lastCenter']);
       map.addControl(searchControl);
-      map.invalidateSize()
+      map.on('geosearch/showlocation', handleLocation);
       return () => map.removeControl(searchControl);
     }, []);
-
     return null;
   };
 
@@ -53,8 +57,7 @@ export default function Signup() {
           role,
           email,
           country,
-          //TODO: fix this
-          location: { name: 'spiti', latitude: 0, longitude: 0 },
+          location: { name: locationData.label, latitude: locationData.y, longitude: locationData.x },
           last_name: surname,
           first_name: name,
           VAT: vat,
@@ -67,7 +70,6 @@ export default function Signup() {
         })
           .then(
             function (response) {
-              console.log(JSON.stringify(response.data));
               navigate("/request-sent")
 
             }
@@ -121,6 +123,7 @@ export default function Signup() {
     setCountry(e.target.innerHTML)
   }
 
+  console.log(locationData)
   return (
     <>
       <div className="Auth-form-container">
@@ -253,6 +256,7 @@ export default function Signup() {
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
                     <SearchField
+                       keepResult={true}
                        popupFormat={({ query, result }) => result.label} />
                   </MapContainer>
                   </div>
