@@ -41,7 +41,7 @@
                           {:password :password_digest})
                          (assoc :pending true)
                          orm.user/create!)})
-                   (catch EntityExistsException e
+                   (catch PersistenceException e
                      (conflict
                       {:reason
                        "A user with this id already exists"}))))}}]
@@ -78,7 +78,8 @@
         :handler user-get-handler}}]
     ["/rating"
      {:put
-      {:parameters {:body {:rate (s/and pos-int? #(< % 6))}}
+      {:swagger {:security [{:apiAuth []}]}
+       :parameters {:body {:rate (s/and pos-int? #(< % 6))}}
        :responses {200 {:body {:user :usr/ref
                                :new-rating pos-int?}}}
        :fetch! [{:key :me
