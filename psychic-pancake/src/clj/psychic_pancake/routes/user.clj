@@ -53,13 +53,7 @@
                :type :user}]
      :auth? true}
      ["" {:get
-          {:responses {200 {:body {:role :usr/role
-                                   :self :usr/ref
-                                   :uid :usr/uid
-                                   :first_name (s/nilable
-                                                :usr/first_name)
-                                   :last_name (s/nilable
-                                               :usr/last_name)}}}
+          {:responses {200 {:body specs.user/user-info-shape}}
            :handler user-get-handler}}]
     ["/items-bought"
      {:get
@@ -80,11 +74,7 @@
      [""
       {:get
        {:parameters {}
-        :responses {200 {:body {:role :usr/role
-                                :self :usr/ref
-                                :uid :usr/uid
-                                :first_name :usr/first_name
-                                :last_name :usr/last_name}}}
+        :responses {200 {:body specs.user/user-info-shape}}
         :handler user-get-handler}}]
     ["/rating"
      {:put

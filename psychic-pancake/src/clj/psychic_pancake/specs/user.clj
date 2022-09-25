@@ -112,6 +112,7 @@
    (ds/opt :VAT) :usr/vat
    (ds/opt :phone_num) :usr/phone_num
    (ds/opt :country) :usr/country
+   (ds/opt :location) :usr/location
    (ds/opt :rating) :usr/rating})
 
 
