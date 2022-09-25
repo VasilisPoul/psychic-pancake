@@ -5,7 +5,8 @@
             [psychic-pancake.orm.query-builder :refer
              [str->query strs->dbfn]]
             [psychic-pancake.orm.notifications :refer
-             [notifications-of ends-notification]])
+             [notifications-of ends-notification]]
+            [java-time :as jt])
   (:import (psychic_pancake User Listing Category Image)))
 
 (defn create! [params]
@@ -24,8 +25,6 @@
       orm/merge!
       orm/refresh!))
 
-(orm/find! Listing 2)
-
 (defn update! [current params]
   (let [cmap (orm/->clj current)
         images (.getImages current)
@@ -43,6 +42,15 @@
           (orm/hash-map->obj Listing)
           orm/merge!
           orm/refresh!))))
+
+(defn activate! [listing]
+  (when (.isActivated listing)
+      (-> (doto listing
+            (.setActivated true)
+            (.setStarted (jt/instant)))
+          orm/merge!
+          orm/refresh!
+          orm/with-session)))
 
 (defn get-by-id [^Long id]
    (orm/with-session

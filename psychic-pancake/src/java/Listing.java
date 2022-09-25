@@ -49,10 +49,15 @@ public class Listing implements Serializable {
 	return current;
     }
 
+    @Column(columnDefinition="boolean default false",
+	    nullable=false)
+    private boolean activated;
+
     @JsonGetter("active")
     public boolean getActive() {
 	return (new Date()).before(ends)
-	    && (new Date()).after(started);
+	    && (new Date()).after(started)
+	    && activated;
     }
 
     @JsonGetter("currently")
@@ -77,7 +82,7 @@ public class Listing implements Serializable {
     @NotNull
     @Column(columnDefinition="TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
 	    nullable=false,
-	    updatable=false,
+	    updatable=true,
 	    insertable=false)
     private Date started;
     @NotNull

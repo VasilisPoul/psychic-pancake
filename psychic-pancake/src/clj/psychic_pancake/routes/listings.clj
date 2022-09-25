@@ -82,16 +82,18 @@
              :handler (fn [{{listing :listing} :db
                            {params :body
                             {id :listing-id} :path} :parameters}]
-                        (if (empty? (.getBids listing))
-                          (-> listing
-                              (orm.listing/update! params)
-                              orm/obj->map
-                              ok)
-                          (conflict
-                           {:reason "Cannot edit listing"
-                            :info (str "Cannot edit a listing "
-                                       "after bids have been "
-                                       "placed.")})))}
+                        (if (contains? params :activate)
+                          (orm.listing/activate! listing)
+                          (if (empty? (.getBids listing))
+                            (-> listing
+                                (orm.listing/update! params)
+                                orm/obj->map
+                                ok)
+                            (conflict
+                             {:reason "Cannot edit listing"
+                              :info (str "Cannot edit a listing "
+                                         "after bids have been "
+                                         "placed.")}))))}
        :delete {:fetch! [{:key :listing
                  :req->id (comp :listing-id :path :parameters)
                  :type :listing
