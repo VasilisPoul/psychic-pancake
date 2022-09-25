@@ -128,6 +128,7 @@
    })
 
 (def listing-update-shape
-  (->> listing-post-shape
+  (->> (-> listing-post-shape
+           (dissoc :images))
        (map (juxt (comp ds/opt first) second))
        (into {})))
