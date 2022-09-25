@@ -24,8 +24,11 @@
       orm/merge!
       orm/refresh!))
 
+(orm/find! Listing 2)
+
 (defn update! [current params]
   (let [cmap (orm/->clj current)
+        images (.getImages current)
         new-ends (some-> params :ends parse-time)]
     (do
       (when (not (nil? new-ends))
@@ -36,6 +39,7 @@
           (merge params)
           (#(if new-ends
               (assoc % :ends new-ends) %))
+          (assoc :images images)
           (orm/hash-map->obj Listing)
           orm/merge!
           orm/refresh!))))
