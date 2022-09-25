@@ -14,7 +14,7 @@ export default function SetupAdmin(props) {
     e.preventDefault();
     try{
       setLoading(true)
-      axios.post('/api/install', {uid, email, password, country})
+      axios.post('/api/install', {uid, email, password, country, first_name: 'admin', last_name:"admin"})
       .then((response) => {
         
         navigate("/")
