@@ -1,8 +1,11 @@
 (ns psychic-pancake.orm.listing
   (:require [psychic-pancake.orm.core :as orm]
             [psychic-pancake.specs.common :refer [parse-time]]
+            [psychic-pancake.orm.core :as orm]
             [psychic-pancake.orm.query-builder :refer
-             [str->query strs->dbfn]])
+             [str->query strs->dbfn]]
+            [psychic-pancake.orm.notifications :refer
+             [notifications-of ends-notification]])
   (:import (psychic_pancake User Listing Category Image)))
 
 (defn create! [params]
@@ -21,18 +24,37 @@
       orm/merge!
       orm/refresh!))
 
+(defn update! [current params]
+  (let [cmap (orm/->clj current)
+        new-ends (when (contains? cmap :ends)
+                   (-> :ends parse-time params))]
+    (do
+      (when (not (nil? new-ends))
+        (orm/merge!
+         (doto (ends-notification current)
+           (.setDisplayAt new-ends))))
+      (-> cmap
+          (merge params)
+          (#(if (contains? % :ends) (update :ends parse-time) %))
+          (orm/hash-map->obj Listing)
+          orm/merge!
+          orm/refresh!))))
+
 (defn get-by-id [^Long id]
-  (->
    (orm/with-session
     (orm/with-transaction
-      (orm/find! Listing id)))))
+      (orm/find! Listing id))))
 
 (defn delete-by-id [^Long id]
-  (->
-   (orm/with-session
+  (orm/with-session
     (orm/with-transaction
-      (let [l (orm/find! Listing id)]
-        (orm/remove! l))))))
+      (let [l (orm/find! Listing id)
+            notifs (notifications-of l)]
+        (doseq [n (apply vector notifs)]
+          (orm/remove! n))
+        (orm/remove! l)))))
+
+
 
 
 

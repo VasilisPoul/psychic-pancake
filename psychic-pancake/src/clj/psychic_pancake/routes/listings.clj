@@ -46,49 +46,60 @@
                 (do
                   (notify-listing-ends listing)
                   (ok {:listing listing}))))}}]
+
+
    ["/:listing-id"
     {:swagger {:tags ["listing"]
                :security [{:apiAuth []}]}
-     :parameters {:path {:listing-id pos-int?}}
-     :fetch! [{:key :listing
-               :req->id (comp :listing-id :path :parameters)
-               :type :listing}]}
+     :parameters {:path {:listing-id pos-int?}}}
     [""
-     {:put {:auth? :seller
-            :parameters {:body
-                        specs.listings/listing-update-shape}
-            :responses {200 {:body specs.listings/listing-shape}
-                        409 {:body {:reason string?
-                                    :info string?}}}
-            :handler (fn [{{listing :listing} :db
-                         {params :body
-                          {id :listing-id} :path} :parameters}]
-                      (if (empty? (.getBids listing))
-                        (-> listing
-                          orm/obj->map
-                          (merge params)
-                          orm.listing/create!
-                          orm/obj->map
-                          ok)
-                        (conflict
-                         {:reason "Cannot edit listing"
-                          :info (str "Cannot edit a listing "
-                                     "after bids have been "
-                                     "placed.")})))}
-      :delete {:auth? :seller
-               :responses {200 {:body {:deleted :listing/ref}}}
-               :handler
-               (fn [{{{id :listing-id} :path} :parameters}]
-                 (do
-                   (orm.listing/delete-by-id id)
-                   (ok {:deleted id})))}
-      :get {:responses {200 {:body specs.listings/listing-shape}}
+     {
+      :get {:auth? false
+            :fetch! [{:key :listing
+                      :req->id
+                      (comp :listing-id :path :parameters)
+                      :type :listing}]
+            :responses {200 {:body specs.listings/listing-shape}}
             :handler
             (fn [{{listing :listing} :db}]
               (do
                 (mark-seen! listing)
                 (-> listing
                     orm/obj->map
-                    ok)))}}]
-    routes.bids/routes]])
-
+                    ok)))}}
+     [""
+      {:auth? :seller
+       
+       :put {:fetch! [{:key :listing
+                 :req->id (comp :listing-id :path :parameters)
+                 :type :listing
+                 :must-own true}]
+             :parameters {:body
+                          specs.listings/listing-update-shape}
+             :responses {200 {:body specs.listings/listing-shape}
+                         409 {:body {:reason string?
+                                     :info string?}}}
+             :handler (fn [{{listing :listing} :db
+                           {params :body
+                            {id :listing-id} :path} :parameters}]
+                        (if (empty? (.getBids listing))
+                          (-> listing
+                              (orm.listing/update! params)
+                              orm/obj->map
+                              ok)
+                          (conflict
+                           {:reason "Cannot edit listing"
+                            :info (str "Cannot edit a listing "
+                                       "after bids have been "
+                                       "placed.")})))}
+       :delete {:fetch! [{:key :listing
+                 :req->id (comp :listing-id :path :parameters)
+                 :type :listing
+                 :must-own true}]
+                :responses {200 {:body {:deleted :listing/ref}}}
+                :handler
+                (fn [{{{id :listing-id} :path} :parameters}]
+                  (do
+                    (orm.listing/delete-by-id id)
+                    (ok {:deleted id})))}}]
+     routes.bids/routes]]])

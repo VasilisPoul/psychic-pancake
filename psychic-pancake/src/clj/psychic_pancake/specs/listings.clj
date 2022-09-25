@@ -109,7 +109,7 @@
                                  :description "Minimum Price in dollars"})
    (ds/opt :price_max) (st/spec {:spec :item/price
                                  :description "Maximum Price in dollars"})
-   (ds/opt :country) :usr/country
+   (ds/opt :country) :common/country-name
    (ds/opt :seller_uid) :usr/uid
    (ds/opt :seller_rating) :usr/rating
    (ds/opt :radius) (s/nilable number?)

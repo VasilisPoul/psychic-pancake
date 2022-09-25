@@ -81,14 +81,51 @@
     (strs->dbfn
      "UPDATE Notification n"
      "SET is_seen = TRUE"
-     "WHERE n.listing_ref.item_id=?1")
+     "WHERE n.listing_ref.item_id=?1"
+     "AND n.displayAt < NOW()")
     (strs->dbfn
      "UPDATE Notification n"
      "SET is_seen = TRUE"
      "WHERE n.bid_ref.id in"
      "(SELECT b.id FROM Bid b"
-     "WHERE b.listing.item_id=?1)"))
+     "WHERE b.listing.item_id=?1)"
+     "AND n.displayAt < NOW()"))
    (.getItem_id listing)))
 
 
+(defmulti notifications-of class)
+
+(defmethod notifications-of Listing [^Listing obj]
+  (->>
+   ((juxt
+     (strs->dbfn
+      "SELECT n FROM Notification n"
+      "WHERE n.listing_ref.item_id=?1")
+     (strs->dbfn
+      "SELECT n FROM Notification n"
+      "WHERE n.bid_ref.id in"
+      "(SELECT b.id FROM Bid b"
+      "WHERE b.listing.item_id=?1)"))
+    (.getItem_id obj))
+   (map (partial apply vector))
+   flatten))
+
+(defmethod notifications-of Message [^Message msg]
+  ((strs->dbfn
+    "SELECT n FROM Notification n"
+    "WHERE n.message_ref.msg_id=?1")
+   (.getMsg_id msg)))
+
+(defmethod notifications-of Bid [^Bid bid]
+  ((strs->dbfn
+    "SELECT Notification n"
+    "WHERE n.bid_ref.id=?1")
+   (.getId bid)))
+
+(defn ends-notification [^Listing l]
+  (first
+   ((strs->dbfn
+     "SELECT n FROM Notification n"
+     "WHERE n.listing_ref=?1"
+     "AND n.displayAt = n.listing_ref.ends") l)))
 

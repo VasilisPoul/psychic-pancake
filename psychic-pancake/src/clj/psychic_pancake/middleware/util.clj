@@ -11,6 +11,7 @@
 
 (defn auth-matches? [required req]
   (case required
+    false true
     true (contains? req :identity)
     :buyer (some-> req :identity :role (= "buyer"))
     :seller (some-> req :identity :role (= "seller"))
