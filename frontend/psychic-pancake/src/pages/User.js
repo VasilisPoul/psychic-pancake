@@ -1,20 +1,33 @@
 import AdminNavbar from "../components/AdminNavbar";
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "../api/axios";
+import { UserContext } from "../components/UserContext";
+
+
 
 export default function User() {
     const userId = useParams().id;
-    const [user, setUser] = useState({});
+    const { user, setUser } = useContext(UserContext);
+    const [selectedUser, setSelectedUser] = useState({});
     const [loading, setLoading] = useState(true);
+    const [rating, setRating] = useState(0);
     useEffect(() => {
         axios.get(`/api/user/${userId}`)
             .then((response) => {
-                setUser(response.data)
+                setSelectedUser(response.data)
                 setLoading(false)
             })
     }, [])
-    console.log(user)
+    console.log({rating})
+
+    const HandleSubmit = (e) => {
+        
+        e.preventDefault()
+        axios.put(`/api/user/${userId}/rating`, {rate:rating})
+        .then((response) => alert('Done'))
+    }
+
     return (
         <>
             <AdminNavbar />
@@ -25,28 +38,67 @@ export default function User() {
                     <tbody>
                         <tr>
                             <th>Role</th>
-                            <td>{user.role ? user.role : '-'}</td>
+                            <td>{selectedUser.role ? selectedUser.role : '-'}</td>
                         </tr>
                         <tr>
                             <th>Username</th>
-                            <td>{user.uid ? user.uid : '-'}</td>
+                            <td>{selectedUser.uid ? selectedUser.uid : '-'}</td>
                         </tr>
                         <tr>
                             <th>Email</th>
-                            <td>{user.email ? user.email :'-'}</td>
+                            <td>{selectedUser.email ? selectedUser.email :'-'}</td>
                         </tr>
                         <tr>
                             <th>First Name</th>
-                            <td>{user.first_name ? user.first_name : '-'}</td>
+                            <td>{selectedUser.first_name ? selectedUser.first_name : '-'}</td>
                         </tr>
                         <tr>
                             <th>Last Name</th>
-                            <td>{user.last_name ? user.last_name : '-'}</td>
+                            <td>{selectedUser.last_name ? selectedUser.last_name : '-'}</td>
                         </tr>
 
                     </tbody>
                 </table>
             </div>}
+            {!loading && selectedUser.role==='seller' && user.username !== userId && user.role !== 'admin' &&
+            <div className='container d-flex align-items-center justify-content-center'>
+            <small> Rate Seller: </small>
+            <form className='container d-flex align-items-center justify-content-center' onSubmit={HandleSubmit}>
+            <div className="form-check ms-3">
+              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onClick={()=> setRating(1)}/>
+                <label className="form-check-label" for="flexRadioDefault1">
+                  1
+                </label>
+            </div>
+            <div className="form-check ms-3">
+              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onClick={()=> setRating(2)}/>
+                <label className="form-check-label" for="flexRadioDefault2">
+                  2
+                </label>
+            </div>
+            <div className="form-check ms-3">
+              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault3" onClick={()=> setRating(3)}/>
+                <label className="form-check-label" for="flexRadioDefault3">
+                  3
+                </label>
+            </div>
+            <div className="form-check ms-3">
+              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault4" onClick={()=> setRating(4)}/>
+                <label className="form-check-label" for="flexRadioDefault4">
+                  4
+                </label>
+            </div>
+            <div className="form-check ms-3">
+              <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault5"onClick={()=> setRating(5)}/>
+                <label className="form-check-label" for="flexRadioDefault5">
+                  5
+                </label>
+            </div>
+            <button className='btn' type='submit'>
+                Submit
+            </button>
+            </form>
+          </div>}
         </>
     );
 }

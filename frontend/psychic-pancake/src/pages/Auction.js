@@ -75,24 +75,6 @@ export default function Auction() {
       )
       .catch();
 
-
-    // axios.get(`/api/listings/${auctionId}/bids`)
-    //   .then(
-    //     function (response) {
-    //       setListing(response.data);
-    //       for (let i = 0; i < response.data.images.length; i++) {
-    //         axios.get(response.data.images[i]).then(
-    //           function (response) {
-    //             setBidsArray(response.data)
-    //           }
-    //         )
-    //       }
-
-    //       setLoading(false);
-
-    //     }
-    //   )
-    //   .catch()
   }, [])
   return (
     <>
@@ -100,11 +82,6 @@ export default function Auction() {
         <div>
           {(localStorage.getItem('AuthToken')) ? <Navbar /> : <InitialNavbar />}
           <div className="container mt-3">
-            <div className="row">
-
-
-            </div>
-
             <div className='row'>
               <div className='col mb-2'>
 
@@ -135,11 +112,11 @@ export default function Auction() {
                     <div className="col-sm-6">
                       <div className='ml-5'>
                         <h4>Bids</h4>
-                        <div class="dropdown w-100">
-                          <button class="btn dropdown-toggle w-100 " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div className="dropdown w-100">
+                          <button className="btn dropdown-toggle w-100 " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             {listing.currently}
                           </button>
-                          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                          <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             {listing.bids && listing.bids.map((bid_url) => {
                               return (
                                 <>
@@ -153,8 +130,9 @@ export default function Auction() {
                     </div>
                   </div>
                   <div className="row">
-                   
-                    <Link to={`/user/${sellerUid}`} > <h4>Seller</h4></Link>
+                    <div className='col'>
+                      <Link to={`/user/${sellerUid}`} > <h4>Seller</h4></Link>
+                    </div>
                   </div>
                 </div>
                 <div>
