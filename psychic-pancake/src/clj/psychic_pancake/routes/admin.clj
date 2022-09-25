@@ -26,14 +26,16 @@
         (fn [& _] (get-pending-users :pending true)))}
       :post
       {:parameters {:body {:uid :usr/uid :accept boolean?}}
-       :handler (comp
-                 ok
-                 #(({true pending-uid->accept!
-                     false uid->delete!} (:accept %))
-                   (:uid %))
-                 #(select-keys % [:uid :accept])
-                 :body
-                 :parameters)}}]]
+       :handler (fn [req]
+                  (do
+                    ((comp
+                     #(({true pending-uid->accept!
+                         false uid->delete!} (:accept %))
+                       (:uid %))
+                     #(select-keys % [:uid :accept])
+                     :body
+                     :parameters) req)
+                    ok))}}]]
    ["/listings"
     {:muuntaja instance-with-xml
      :get
