@@ -124,7 +124,8 @@
    :first_bid :item/price
    :ends :listing/ends
    :images [:common/image]
-   :location :usr/location})
+   ;; :location :usr/location
+   })
 
 (def listing-update-shape
   (->> listing-post-shape

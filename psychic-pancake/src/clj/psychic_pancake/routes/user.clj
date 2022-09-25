@@ -84,5 +84,18 @@
                               :uid :usr/uid
                               :first_name :usr/first_name
                               :last_name :usr/last_name}}}
-      :handler user-get-handler}}]])
+      :handler user-get-handler}}
+    ["/rating"
+     {:put
+      {:parameters {:body {:rate (s/and pos-int? #(< % 6))}}
+       :handler
+       (fn [{{user :user-ref} :db
+            {{rate :rate} :body} :parameters}]
+         (let [new-rating (+ (.getRating user) rate)]
+           (do
+             (orm/merge!
+              (doto user (.setRating new-rating)))
+             (ok {:new-rating new-rating}))))}}]]])
+
+
 

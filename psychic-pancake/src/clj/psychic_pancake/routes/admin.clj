@@ -35,7 +35,7 @@
                      #(select-keys % [:uid :accept])
                      :body
                      :parameters) req)
-                    ok))}}]]
+                    (ok)))}}]]
    ["/listings"
     {:muuntaja instance-with-xml
      :get
