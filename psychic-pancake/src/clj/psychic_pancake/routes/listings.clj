@@ -57,7 +57,7 @@
                :req->id (comp :listing-id :path :parameters)
                :type :listing}]}
     [""
-     {:put {:auth? :buyer
+     {:put {:auth? :seller
             :parameters {:body
                         specs.listings/listing-update-shape}
             :responses {200 {:body specs.listings/listing-shape}
@@ -79,7 +79,7 @@
                           :info (str "Cannot edit a listing "
                                      "after bids have been "
                                      "placed.")})))}
-      :delete {:auth? :buyer
+      :delete {:auth? :seller
                :responses {200 {:body {:deleted :listing/ref}}}
                :handler
                (fn [{{{id :listing-id} :path} :parameters}]
