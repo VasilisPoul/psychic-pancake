@@ -12,7 +12,7 @@
    [clojure.set :refer [rename-keys]]
    [buddy.hashers :as h])
   (:import [jakarta.persistence EntityExistsException PersistenceException]
-           [psychic_pancake User]))
+           [psychic_pancake User Rating Rating$RatingId]))
 
 
 (def user-get-handler
@@ -87,15 +87,31 @@
       :handler user-get-handler}}
     ["/rating"
      {:put
-      {:parameters {:body {:rate (s/and pos-int? #(< % 6))}}
+      {:parameters {:body {:rate #{1 2 3 4 5}}}
+       :responses {200 {:body {:user :usr/ref
+                               :new-rating pos-int?}}}
+       :fetch! [{:key :me
+                 :req->id (comp :uid :identity)
+                 :type :user}]
+       :auth? true
        :handler
-       (fn [{{user :user-ref} :db
+       (fn [{{user :user-ref me :me} :db
             {{rate :rate} :body} :parameters}]
-         (let [new-rating (+ (.getRating user) rate)]
+         (let [rate (Integer. rate)
+               rating-id (Rating$RatingId. me user)
+               current-rating (try (->> rating-id
+                                        (orm/find! Rating)
+                                        .getPoints)
+                                   (catch NullPointerException e
+                                     0))
+               new-rating (-> user
+                              .getRating
+                              (+ rate)
+                              (- current-rating))]
            (do
              (orm/merge!
               (doto user (.setRating new-rating)))
-             (ok {:new-rating new-rating}))))}}]]])
-
-
-
+             (orm/merge!
+              (Rating. rating-id rate))
+             (ok {:new-rating new-rating
+                  :user user}))))}}]]])

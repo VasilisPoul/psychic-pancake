@@ -40,6 +40,7 @@
       <mapping class="psychic_pancake.Message"/>
       <mapping class="psychic_pancake.User"/>
       <mapping class="psychic_pancake.Image"/>
+      <mapping class="psychic_pancake.Rating"/>
       <mapping class="psychic_pancake.Notification"/>
    </session-factory>
 </hibernate-configuration>
