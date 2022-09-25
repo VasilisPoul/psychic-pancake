@@ -26,8 +26,7 @@
 
 (defn update! [current params]
   (let [cmap (orm/->clj current)
-        new-ends (when (contains? cmap :ends)
-                   (-> :ends parse-time params))]
+        new-ends (some-> params :ends parse-time)]
     (do
       (when (not (nil? new-ends))
         (orm/merge!
@@ -35,7 +34,8 @@
            (.setDisplayAt new-ends))))
       (-> cmap
           (merge params)
-          (#(if (contains? % :ends) (update :ends parse-time) %))
+          (#(if new-ends
+              (assoc % :ends new-ends) %))
           (orm/hash-map->obj Listing)
           orm/merge!
           orm/refresh!))))
