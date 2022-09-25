@@ -118,16 +118,16 @@
 
 (def user-registration-shape
   "Shape used to validate the registration form"
-  {(ds/req :role) :usr/role
-   (ds/req :uid) :usr/uid
-   (ds/req :first_name) :usr/first_name
-   (ds/req :last_name) :usr/last_name
-   (ds/req :email) :usr/email
-   (ds/req :VAT) :usr/vat
-   (ds/req :phone_num) :usr/phone_num
-   (ds/req :password) :usr/password
-   (ds/req :country) :usr/country
-   (ds/req :location) :usr/location})
+  {:role :usr/role
+   :uid :usr/uid
+   :first_name :usr/first_name
+   :last_name :usr/last_name
+   :email :usr/email
+   :VAT :usr/vat
+   :phone_num :usr/phone_num
+   :password :usr/password
+   :country :usr/country
+   :location :usr/location})
 
 (def user-login-shape
   {:uid :usr/uid
