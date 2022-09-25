@@ -3,14 +3,21 @@ import axios from "../api/axios";
 
 export default function AddBidModal(props) {
   const listing = props.listing;
-  const [ amount, setAmount ] = useState('');
-  
+  const [amount, setAmount] = useState('');
+  const [isSure, setIsSure] = useState(false)
+  const [validation, setValidation] = useState(false)
+
+  const HandleValidation = (e) => {
+    e.preventDefault();
+    setValidation(true);
+  }
+
   const HandleSubmit = (e) => {
     console.log(amount)
     try {
       e.preventDefault();
-      axios.post(`/api/listings/${listing.item_id}/bids`, 
-        {amount},
+      axios.post(`/api/listings/${listing.item_id}/bids`,
+        { amount },
         {
           headers: {
             'authorization': localStorage.getItem('AuthToken')
@@ -44,11 +51,11 @@ export default function AddBidModal(props) {
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLabel">New Bid</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
-                  
+                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
+
               </div>
               <div className="modal-body">
-                <form className="Auth-form" onSubmit={HandleSubmit}>
+                {!validation && <form className="Auth-form" onSubmit={HandleValidation}>
                   <div className="Auth-form-content">
                     <div className="form-group mt-3">
                     </div>
@@ -59,7 +66,7 @@ export default function AddBidModal(props) {
                         className="form-control mt-1"
                         placeholder="Enter Bid"
                         step="0.01"
-                        onChange={(e) => {setAmount(parseFloat(e.target.value));}}
+                        onChange={(e) => { setAmount(parseFloat(e.target.value)); }}
                       />
                     </div>
                     <div className="d-grid gap-2 mt-3">
@@ -71,12 +78,19 @@ export default function AddBidModal(props) {
                       </button>
                     </div>
                   </div>
-                </form>
+                </form>}
+                {validation && <form onSubmit={HandleSubmit}>
+                  <p>Are you sure you want to place a {amount} bid?</p>
+                  <div className="d-grid gap-2 mt-3">
+                    <button type="submit" className="btn btn-primary">
+                      YES
+                    </button>
+                    <button type='button' className="btn btn-grey" onClick={(e) => { e.preventDefault(); setValidation(false) }}>
+                      NO
+                    </button>
+                  </div>
+                </form>}
               </div>
-              {/* <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
-              </div> */}
             </div>
           </div>
         </div>

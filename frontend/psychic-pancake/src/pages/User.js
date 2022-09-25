@@ -21,7 +21,7 @@ export default function User() {
                 setLoading(false)
             })
     }, [])
-    console.log({rating})
+
 
     const HandleSubmit = (e) => {
         
