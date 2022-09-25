@@ -23,14 +23,10 @@
    {:conflicting true
     :get
      {:responses {200 {:body (s/coll-of :msg/ref)}}
-      :parameters {:query {:limit pos-int? (ds/opt :after) pos-int?}}
-      :handler (fn [{{me :me} :db
-                    {{l :limit a :after} :query} :parameters}]
+      :parameters {}
+      :handler (fn [{{me :me} :db}]
                  (let [messages (getter me)]
-                   (ok
-                    {:messages messages
-                     :last-timestamp (.getTimestamp
-                                      (last messages))})))}}])
+                   (ok messages)))}}])
 
 
 (def routes
