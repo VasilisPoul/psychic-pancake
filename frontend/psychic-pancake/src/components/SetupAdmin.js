@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import '../style.css'
 import axios from "../api/axios";
+import countries_csv from '../assets/countries.csv';
+import Papa from 'papaparse';
 
 export default function SetupAdmin(props) {
   const [email, setEmail] = useState('');
@@ -10,25 +12,39 @@ export default function SetupAdmin(props) {
   const [country, setCountry] = useState('')
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
+  const [countriesRecords, setCountiresRecords] = useState([]);
+
   const HandleSubmit = (e) => {
     e.preventDefault();
-    try{
+    try {
       setLoading(true)
-      axios.post('/api/install', {uid, email, password, country, first_name: 'admin', last_name:"admin"})
-      .then((response) => {
-        
-        navigate("/")
-      }
-      )
-      .catch()
+      axios.post('/api/install', { uid, email, password, country})
+        .then((response) => {
+          navigate("/")
+        }
+        )
+        .catch()
     } catch (error) {
 
     }
-
-    
   }
+  
+  useEffect(() => {
+    Papa.parse(countries_csv, {
+      download: true,
+      complete: function (input) {
+        const records = input.data;
+        records.forEach(element => {
+          setCountiresRecords(countriesRecords => [...countriesRecords, element[3]])
+        });
 
+      }
+    });
+  }, [])
 
+  const SelectCountry = (e) => {
+    setCountry(e.target.innerHTML)
+  }
 
   return (
     <div className="Auth-form-container">
@@ -55,12 +71,18 @@ export default function SetupAdmin(props) {
           </div>
           <div className="form-group mt-3">
             <label>Country</label>
-            <input
-              type="text"
-              className="form-control mt-1"
-              placeholder="Enter Country"
-              onChange={(e) => { setCountry(e.target.value) }}
-            />
+            <div class="dropdown">
+              <button class="btn btn-light dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                {country ? country : 'Country'}
+              </button>
+              <ul class="dropdown-menu w-100" style={{overflowY:'auto', maxHeight:'280px'}} aria-labelledby="dropdownMenuButton1">
+                {countriesRecords.slice(1).sort().map(item => {
+                  return(<>
+                    <li onClick={SelectCountry}><a class="dropdown-item" href="#">{item}</a></li>
+                  </>)
+                })}
+              </ul>
+            </div>
           </div>
           <div className="form-group mt-3">
             <label>Password</label>
@@ -79,7 +101,7 @@ export default function SetupAdmin(props) {
           {loading && <span>Loading...</span>}
         </div>
       </form>
-     
+
     </div>
   );
 }

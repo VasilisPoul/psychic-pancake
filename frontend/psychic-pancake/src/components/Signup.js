@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import '../style.css'
 import axios from '../api/axios';
-
+import countries_csv from '../assets/countries.csv';
+import Papa from 'papaparse';
 export default function Signup() {
 
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function Signup() {
           email,
           country,
           //TODO: fix this
-          location: {name: 'spiti', latitude: 0, longitude: 0},
+          location: { name: 'spiti', latitude: 0, longitude: 0 },
           last_name: surname,
           first_name: name,
           VAT: vat,
@@ -41,14 +42,14 @@ export default function Signup() {
           )
           .catch(function (error) {
             console.log(`${error}`);
-            if (error.response.status === 409){
+            if (error.response.status === 409) {
               alert(error.response.data.reason)
             }
           });
       }
     }
     catch (error) {
-      console.log("eroror" + error)
+      console.log("error" + error)
     }
 
   }
@@ -69,6 +70,25 @@ export default function Signup() {
   const [country, setCountry] = useState('');
   const [role, setRole] = useState('buyer');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [countriesRecords, setCountiresRecords] = useState([]);
+
+
+  useEffect(() => {
+    Papa.parse(countries_csv, {
+      download: true,
+      complete: function (input) {
+        const records = input.data;
+        records.forEach(element => {
+          setCountiresRecords(countriesRecords => [...countriesRecords, element[3]])
+        });
+
+      }
+    });
+  }, [])
+
+  const SelectCountry = (e) => {
+    setCountry(e.target.innerHTML)
+  }
 
   return (
     <>
@@ -186,12 +206,18 @@ export default function Signup() {
                 <>
                   <div className="form-group mt-3">
                     <label>Country</label>
-                    <input required
-                      type="text"
-                      name="country"
-                      className="form-control mt-1"
-                      placeholder="Enter Country"
-                      onChange={(e) => { setCountry(e.target.value) }} />
+                    <div class="dropdown">
+                      <button class="btn btn-light dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {country ? country : 'Country'}
+                      </button>
+                      <ul class="dropdown-menu w-100" style={{ overflowY: 'auto', maxHeight: '280px' }} aria-labelledby="dropdownMenuButton1">
+                        {countriesRecords.slice(1).sort().map(item => {
+                          return (<>
+                            <li onClick={SelectCountry}><a class="dropdown-item" href="#">{item}</a></li>
+                          </>)
+                        })}
+                      </ul>
+                    </div>
                   </div>
                   <div className="form-group mt-3">
                     <label>Street name</label>

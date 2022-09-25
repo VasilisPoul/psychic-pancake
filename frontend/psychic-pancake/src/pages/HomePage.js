@@ -4,7 +4,8 @@ import auction from '../resources/auction.webp';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import InitialNavbar from '../components/InitialNavbar';
-
+import countries_csv from '../assets/countries.csv';
+import Papa from 'papaparse';
 
 function CardListing(props) {
   const listing_url = props.url;
@@ -12,6 +13,7 @@ function CardListing(props) {
 
   const [itemData, setItemData] = useState({});
   const [ loading, setLoading ] = useState(true);
+  
   const [img, setImg] = useState('')
   useEffect(() => {
     axios.get(item).then(
@@ -56,7 +58,20 @@ function CardListing(props) {
 
 export default function HomePage(props) {
   const [listings_array, setListings] = useState([])
+  const [countriesRecords, setCountiresRecords] = useState([]);
+
   useEffect(() => {
+    Papa.parse(countries_csv, {
+      download: true,
+      complete: function (input) {
+        const records = input.data;
+        records.forEach(element => {
+          setCountiresRecords(countriesRecords => [...countriesRecords, element[3]])
+        });
+
+      }
+    });
+
     axios.get('/api/listings?only_active=true').then(
       function (response) {
         setListings(response.data)
