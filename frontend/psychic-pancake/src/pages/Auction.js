@@ -38,6 +38,8 @@ export default function Auction() {
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
   const [sellerUid, setSellerUid] = useState('')
+  const [seller, setSeller] = useState({});
+
   const navigate = useNavigate();
   const HandleDelete = (e) => {
     e.preventDefault();
@@ -70,11 +72,14 @@ export default function Auction() {
               }
             )
           }
+          axios.get(response.data.seller)
+          .then((response1) => setSeller(response1.data))
           setLoading(false)
         }
       )
       .catch();
 
+    
   }, [])
   return (
     <>
@@ -133,7 +138,12 @@ export default function Auction() {
                     <div className='col'>
                       <Link to={`/user/${sellerUid}`} > <h4>Seller</h4></Link>
                     </div>
+                    
                   </div>
+                  <div className="row">
+                      <h4>Seller rating</h4>
+                            <span>{seller.rating}</span>
+                    </div>
                 </div>
                 <div>
                   <h4>Description:</h4>

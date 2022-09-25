@@ -23,7 +23,7 @@ export default function EditAuctionModal({ listing_url, listing }) {
         e.preventDefault()
 
         try {
-            axios.put(listing_url, { name, categories, description, first_bid, ends, images }, {
+            axios.put(listing_url, { name, categories, description, first_bid, ends }, {
                 headers: {
                     'accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -146,16 +146,6 @@ export default function EditAuctionModal({ listing_url, listing }) {
                                                 placeholder="Enter Auction Ending Date"
                                                 onChange={HandleEnds}
                                             ></input>
-                                        </div>
-
-                                        <div className="form-group mt-3">
-                                            <label>Photos</label>
-                                            <input
-                                                type="file"
-                                                className="form-control mt-1"
-                                                onChange={HandleImages}
-                                                multiple
-                                            />
                                         </div>
 
                                         <div className="d-grid gap-2 mt-3">

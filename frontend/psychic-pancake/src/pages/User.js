@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import axios from "../api/axios";
 import { UserContext } from "../components/UserContext";
+import InitialNavbar from "../components/InitialNavbar";
+import Navbar from "../components/Navbar";
 
 
 
@@ -24,13 +26,22 @@ export default function User() {
     const HandleSubmit = (e) => {
         
         e.preventDefault()
-        axios.put(`/api/user/${userId}/rating`, {rate:rating})
+        axios.put(`/api/user/${userId}/rating`, {rate:rating}, {
+            headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                'authorization': localStorage.getItem('AuthToken')
+            }
+        })
         .then((response) => alert('Done'))
     }
+    console.log({user})
 
     return (
         <>
-            <AdminNavbar />
+           {user.role==='admin' && <AdminNavbar />}
+           {(user.role==='buyer' || user.role === 'seller') && <Navbar/>}
+           {Object.keys(user).length === 0 && <InitialNavbar />}
             {loading? 
             <span>Loading</span> : 
             <div className='container'>
