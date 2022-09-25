@@ -26,7 +26,7 @@
       :parameters {}
       :handler (fn [{{me :me} :db}]
                  (let [messages (getter me)]
-                   (ok (apply vector messages))))}}])
+                   (ok (map #(.getMsg_id %) messages))))}}])
 
 
 (def routes
