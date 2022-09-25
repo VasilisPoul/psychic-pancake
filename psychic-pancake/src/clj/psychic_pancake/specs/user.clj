@@ -58,10 +58,10 @@
     :swagger/example {:name "Bob's House" :longitude 10.2221 :latitude 32.822222222221}}))
 
 (s/def :usr/country
-  (st/spec {:spec :common/country-name
-            :description "User Country"
-            :json-schema/default "Germany"
-            :swagger/example "Germany"}))
+  (ds/spec {:spec {:name :common/country-name
+                   :longitude number?
+                   :latitude number?}
+            :description "User Country"}))
 
 (s/def :usr/vat
   (st/spec {:spec string?
@@ -127,7 +127,7 @@
    :VAT :usr/vat
    :phone_num :usr/phone_num
    :password :usr/password
-   :country :usr/country
+   :country :common/country-name
    :location :usr/location})
 
 (def user-login-shape
