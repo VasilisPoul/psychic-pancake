@@ -28,7 +28,7 @@
             :handler (fn [{{body :body} :parameters
                           db :db}]
                        (cond
-                         (not (.getActive ^Listing (:listing db)))
+                         (not (.isActive ^Listing (:listing db)))
                          (not-acceptable {:reason "Invalid bid attempted"
                                           :info "The listing is not currently active"})
                          (<= (:amount body)
