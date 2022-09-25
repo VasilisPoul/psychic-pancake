@@ -7,7 +7,7 @@
             [psychic-pancake.orm.core :as orm]
             [psychic-pancake.orm.user :as orm.user]
             [psychic-pancake.specs.decoders.user
-             :refer [this->UserRef]]))
+             :refer [this->UserRef ->CountryName]]))
 
 (s/def :usr/uid
   (st/spec {:spec string?

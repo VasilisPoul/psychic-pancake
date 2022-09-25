@@ -37,7 +37,13 @@
    ["/listings"
     {:muuntaja instance-with-xml
      :get
-     {:responses {200 (comp not nil?)}
+     {:responses {200 {:body [{:item_id :item/id
+                               :name :item/name
+                               :categories [:item/category]
+                               :currently :item/price
+                               :first_bid :item/price
+                               :bids [:bid/ref]
+                               :country :usr/country}]}}
       :handler
       (fn [req]
         (ok 

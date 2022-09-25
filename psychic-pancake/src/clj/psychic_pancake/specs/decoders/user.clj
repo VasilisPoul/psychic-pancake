@@ -17,3 +17,16 @@
                              this->UserRef))
   nil
   (this->UserRef [_] nil))
+
+(defprotocol ICountryName
+  (->CountryName [this]))
+
+(extend-protocol ICountryName
+  String
+  (->CountryName [this] this)
+  psychic_pancake.Country
+  (->CountryName [this] (.getName this))
+  java.util.Map
+  (->CountryName [this] (:name this))
+  nil
+  (->CountryName [_] nil))
