@@ -28,10 +28,6 @@ export default function User() {
                             <td>{user.role ? user.role : '-'}</td>
                         </tr>
                         <tr>
-                            <th>Url</th>
-                            <td>{user.self ? user.self : '-'}</td>
-                        </tr>
-                        <tr>
                             <th>Username</th>
                             <td>{user.uid ? user.uid : '-'}</td>
                         </tr>

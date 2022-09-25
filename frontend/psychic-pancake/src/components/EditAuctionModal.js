@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import axios from "../api/axios";
 import default_image from '../assets/default-image.js'
 
-export default function AddAuctionModal({ listing_url, listing }) {
+export default function EditAuctionModal({ listing_url, listing }) {
     const [images, setImages] = useState([]);
     useEffect(() => {
         for (let i = 0; i < listing.images.length; i++) {
-            console.log("im here!!!!")
             axios.get(listing.images[i]).then(
                 function (response) {
                     setImages(oldArray => [...oldArray, response.data.image])

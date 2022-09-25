@@ -5,11 +5,31 @@ import { UserContext } from "../components/UserContext";
 import EditAuctionModal from "../components/EditAuctionModal"
 import SendMessageModal from "../components/SendMessageModal";
 import AddBidModal from "../components/AddBidModal";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "../api/axios";
 import '../style.css'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useNavigate } from "react-router-dom";
+
+const BidView = ({ bid_url }) => {
+  const [bid, setBid] = useState({});
+  console.log(bid_url)
+  useEffect(() => {
+    axios.get(bid_url).then(
+      (response) => {
+        setBid(response.data);
+      }
+    )
+      .catch((error) => console.log(error))
+
+  }, [])
+  console.log({ bid })
+  return (
+    <>
+      <li><span>{bid.amount}</span></li>
+    </>
+  );
+}
 
 export default function Auction() {
   const { user, setUser } = useContext(UserContext);
@@ -17,8 +37,7 @@ export default function Auction() {
   const [listing, setListing] = useState({})
   const [loading, setLoading] = useState(true);
   const [images, setImages] = useState([]);
-  const [bidsArray, setBidsArray] = useState([]);
-  let images_array = [];
+  const [sellerUid, setSellerUid] = useState('')
   const navigate = useNavigate();
   const HandleDelete = (e) => {
     e.preventDefault();
@@ -43,6 +62,7 @@ export default function Auction() {
       .then(
         function (response) {
           setListing(response.data);
+          setSellerUid(response.data.seller.split('/')[3]);
           for (let i = 0; i < response.data.images.length; i++) {
             axios.get(response.data.images[i]).then(
               function (response) {
@@ -50,33 +70,30 @@ export default function Auction() {
               }
             )
           }
-
-          setLoading(false);
-
+          setLoading(false)
         }
       )
       .catch();
 
 
-    axios.get(`/api/listings/${auctionId}/bids`)
-      .then(
-        function (response) {
-          setListing(response.data);
-          for (let i = 0; i < response.data.images.length; i++) {
-            axios.get(response.data.images[i]).then(
-              function (response) {
-                setBidsArray(response.data)
-              }
-            )
-          }
+    // axios.get(`/api/listings/${auctionId}/bids`)
+    //   .then(
+    //     function (response) {
+    //       setListing(response.data);
+    //       for (let i = 0; i < response.data.images.length; i++) {
+    //         axios.get(response.data.images[i]).then(
+    //           function (response) {
+    //             setBidsArray(response.data)
+    //           }
+    //         )
+    //       }
 
-          setLoading(false);
+    //       setLoading(false);
 
-        }
-      )
-      .catch()
+    //     }
+    //   )
+    //   .catch()
   }, [])
-
   return (
     <>
       {!loading &&
@@ -107,27 +124,26 @@ export default function Auction() {
                   <h1 className='mb-4'>{listing.name}</h1>
                   <div className='col-sm-6'>
                     {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
-                    {user['role'] === 'seller' && <EditAuctionModal listing={listing} listing_url={`/api/listings/${auctionId}`} />}
+                    {user['username'] === sellerUid && <EditAuctionModal listing={listing} listing_url={`/api/listings/${auctionId}`} />}
                   </div>
                   <div className='col-sm-6'>
                     {user['role'] === 'buyer' && <SendMessageModal to={listing.seller.split('/')[3]} />}
-                    {user['role'] === 'seller' && <div className='btn btn-danger w-100 mb-3' onClick={HandleDelete}>Delete</div>}
+                    {user['username'] === sellerUid && <div className='btn btn-danger w-100 mb-3' onClick={HandleDelete}>Delete</div>}
                   </div>
                   <div className="row">
-                   
+
                     <div className="col-sm-6">
                       <div className='ml-5'>
                         <h4>Bids</h4>
-
                         <div class="dropdown w-100">
                           <button class="btn dropdown-toggle w-100 " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             {listing.currently}
                           </button>
                           <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            {bidsArray.map((bid_url) => {
-                              return(
+                            {listing.bids && listing.bids.map((bid_url) => {
+                              return (
                                 <>
-                                  {/* <BidView bid_url={bid_url} /> */}
+                                  <BidView bid_url={bid_url} />
                                 </>
                               );
                             })}
@@ -136,20 +152,24 @@ export default function Auction() {
                       </div>
                     </div>
                   </div>
+                  <div className="row">
+                   
+                    <Link to={`/user/${sellerUid}`} > <h4>Seller</h4></Link>
+                  </div>
                 </div>
                 <div>
                   <h4>Description:</h4>
                   <p className='lead flex-shrink-0'> {listing.description}</p>
                 </div>
                 <div id="map d-flex align-items-center jusify-content-center mt-4" style={{ width: "80%", height: "100vh", zIndex: '1' }}>
-                  <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+                  <MapContainer center={[listing.location.latitude, listing.location.longitude]} zoom={13} scrollWheelZoom={false}>
                     <TileLayer
                       attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-                    <Marker position={[51.505, -0.09]}>
+                    <Marker position={[listing.location.latitude, listing.location.longitude]}>
                       <Popup>
-                        A pretty CSS3 popup. <br /> Easily customizable.
+                        {listing.location.name}
                       </Popup>
                     </Marker>
                   </MapContainer>
