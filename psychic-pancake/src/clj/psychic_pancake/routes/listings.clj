@@ -31,7 +31,8 @@
                      :query
                      :parameters)
            :responses {200 {:body [:listing/ref]}}}  ;get all listings with filters
-     :post {:fetch! [{:key :user-ref
+     :post {:auth? :seller
+            :fetch! [{:key :user-ref
                       :req->id (comp :uid :identity)
                       :type :user}]
             :responses {200 {:body map?}}
@@ -52,6 +53,7 @@
    ["/:listing-id"
     {:swagger {:tags ["listing"]}
      :parameters {:path {:listing-id pos-int?}}
+     :auth? :buyer
      :fetch! [{:key :listing
                :req->id (comp :listing-id :path :parameters)
                :type :listing}]}
@@ -83,14 +85,14 @@
                 (do
                   (orm.listing/delete-by-id id)
                   (ok {:deleted id})))}
-      :get {:responses {200 {:body specs.listings/listing-shape}}
-            :muuntaja fmt/instance-with-xml
-           :handler
-           (fn [{{listing :listing} :db}]
-             (do
-               (mark-seen! listing)
-               (-> listing
-                 orm/obj->map
-                 transform-listing
-                 ok)))}}]
+      :get {:auth? true
+            :responses {200 {:body specs.listings/listing-shape}}
+            :handler
+            (fn [{{listing :listing} :db}]
+              (do
+                (mark-seen! listing)
+                (-> listing
+                    orm/obj->map
+                    transform-listing
+                    ok)))}}]
     routes.bids/routes]])

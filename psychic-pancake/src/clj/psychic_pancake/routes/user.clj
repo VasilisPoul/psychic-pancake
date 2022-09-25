@@ -63,7 +63,8 @@
            :handler user-get-handler}}]
     ["/items-bought"
      {:get
-      {:responses {200 {:body (s/coll-of :listing/ref)}}
+      {:auth? :buyer
+       :responses {200 {:body (s/coll-of :listing/ref)}}
        :handler (comp
                  ok
                  #(orm.listing/get-by-winner % :show_all false)

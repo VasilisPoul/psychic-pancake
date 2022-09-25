@@ -18,7 +18,7 @@
    {:swagger {:tags ["bid"]}}
    [""
     {:swagger {:security [{:apiAuth []}]}
-     :post {:auth? true
+     :post {:auth? :buyer
             :fetch! [{:type :user
                       :req->id (comp :uid :identity)
                       :key :bidder}]
