@@ -2,14 +2,13 @@ import { useContext, useEffect, useState } from "react";
 import InitialNavbar from "../components/InitialNavbar";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../components/UserContext";
-import auction from '../resources/auction.webp';
 import EditAuctionModal from "../components/EditAuctionModal"
 import SendMessageModal from "../components/SendMessageModal";
 import AddBidModal from "../components/AddBidModal";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import '../style.css'
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useNavigate } from "react-router-dom";
 
 export default function Auction() {

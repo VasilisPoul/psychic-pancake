@@ -4,7 +4,39 @@ import '../style.css'
 import axios from '../api/axios';
 import countries_csv from '../assets/countries.csv';
 import Papa from 'papaparse';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet'
+import '../../node_modules/leaflet-geosearch/dist/geosearch.css';
+import '../style.css'
+import { map } from 'leaflet';
+
+
 export default function Signup() {
+
+
+  const SearchField = (props) => {
+    const provider = new OpenStreetMapProvider();
+
+    // @ts-ignore
+
+
+    const map = useMap();
+    console.log({ map })
+    useEffect(() => {
+
+      const searchControl = new GeoSearchControl({
+        provider: provider,
+        ...props,
+      });
+
+      console.log(searchControl._val);
+      map.addControl(searchControl);
+      map.invalidateSize()
+      return () => map.removeControl(searchControl);
+    }, []);
+
+    return null;
+  };
 
   const navigate = useNavigate();
 
@@ -72,7 +104,6 @@ export default function Signup() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [countriesRecords, setCountiresRecords] = useState([]);
 
-
   useEffect(() => {
     Papa.parse(countries_csv, {
       download: true,
@@ -93,18 +124,12 @@ export default function Signup() {
   return (
     <>
       <div className="Auth-form-container">
-        <form className="Auth-form" onSubmit={HandleSignUp}>
-          <div className="Auth-form-content" id="nav-tabContent">
+        <form className="Signup-form" onSubmit={HandleSignUp}>
+          <div className="Auth-form-content">
             <h3 className="Auth-form-title">Sign Up</h3>
-            <nav>
-              <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                <button className="nav-link active" id="nav-general-tab" data-bs-toggle="tab" data-bs-target="#nav-general" type="button" role="tab" aria-controls="nav-general" aria-selected="true">General</button>
-                <button className="nav-link" id="nav-personal-tab" data-bs-toggle="tab" data-bs-target="#nav-personal" type="button" role="tab" aria-controls="nav-personal" aria-selected="false">Personal</button>
-                <button className="nav-link" id="nav-address-tab" data-bs-toggle="tab" data-bs-target="#nav-address" type="button" role="tab" aria-controls="nav-address" aria-selected="false">Address</button>
-              </div>
-            </nav>
-            <div className="tab-content" id="nav-tabContent">
-              <div className="tab-pane fade show active" id="nav-general" role="tabpanel" aria-labelledby="nav-general-tab">
+
+            <div className="row">
+              <div className="col">
                 <>
                   <div className="form-outline mb-4 form-group mt-3">
                     <label className="form-label">Username</label><br />
@@ -159,7 +184,7 @@ export default function Signup() {
                   </div>
                 </>
               </div>
-              <div className="tab-pane fade" id="nav-personal" role="tabpanel" aria-labelledby="nav-personal-tab">
+              <div className="col">
                 <>
                   <div className="form-group mt-3">
                     <label className="form-label">Name</label><br />
@@ -202,7 +227,7 @@ export default function Signup() {
                   </div>
                 </>
               </div>
-              <div className="tab-pane fade" id="nav-address" role="tabpanel" aria-labelledby="nav-address-tab">
+              <div className="col">
                 <>
                   <div className="form-group mt-3">
                     <label>Country</label>
@@ -219,36 +244,21 @@ export default function Signup() {
                       </ul>
                     </div>
                   </div>
-                  <div className="form-group mt-3">
-                    <label>Street name</label>
-                    <input required
-                      type="text"
-                      name="street"
-                      className="form-control mt-1"
-                      placeholder="Enter Street"
-                      onChange={(e) => { setStreetName(e.target.value) }} />
-                  </div>
-                  <div className="form-group mt-3">
-                    <label>Street number</label><br />
-                    <input required
-                      type="text"
-                      name="number"
-                      className="form-control mt-1"
-                      placeholder="Enter your street number"
-                      onChange={(e) => { setStreetNumber(e.target.value) }} />
-
-                  </div>
-                  <div className="form-group mt-3">
-                    <label> Post code</label><br />
-                    <input required
-                      type="text"
-                      name="post-code"
-                      className="form-control mt-1"
-                      placeholder="Re-enter your password"
-                      onChange={(e) => { setPostCode(e.target.value) }} />
-
+                 <div className='mt-4'>
+                  <label>Please fill your address in the map below:</label>
+                 
+                  <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                    <SearchField
+                       popupFormat={({ query, result }) => result.label} />
+                  </MapContainer>
                   </div>
                 </>
+                <div id="map">
+                </div>
               </div>
             </div>
             <div className="d-grid gap-2 mt-3">
@@ -260,7 +270,9 @@ export default function Signup() {
               </button>
             </div>
           </div>
+
         </form>
+
       </div>
     </>
   );
