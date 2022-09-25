@@ -22,21 +22,23 @@
    {:conflicting true
     :get
      {:responses {200 {:body (s/coll-of :msg/ref)}}
-      :parameters {}
-      :handler (fn [req]
-                 (ok
-                  (->> req
-                       :identity
-                       :uid
-                       orm.user/get-by-id
-                       getter
-                       (map (fn [^Message msg] (.getMsg_id msg))))))}}])
+      :parameters {:query {:limit pos-int? :after pos-int?}}
+      :handler (fn [{{me :me} :db
+                    {{l :limit a :after} :query} :parameters}]
+                 (let [messages (getter me)]
+                   (ok
+                    {:messages messages
+                     :last-timestamp (.getTimestamp
+                                      (last messages))})))}}])
 
 
 (def routes
   ["/messages"
    {:swagger {:tags ["messages"] :security [{:apiAuth []}]}
-    :auth? true}
+    :auth? true
+    :fetch! [{:key :me
+              :req->id (comp :uid :identity)
+              :type :user}]}
    [""
     {:post
      {:parameters {:body {:to :usr/uid

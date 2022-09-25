@@ -61,6 +61,7 @@
   (ds/spec {:spec {:name :common/country-name
                    :longitude number?
                    :latitude number?}
+            :name ::country
             :description "User Country"}))
 
 (s/def :usr/vat

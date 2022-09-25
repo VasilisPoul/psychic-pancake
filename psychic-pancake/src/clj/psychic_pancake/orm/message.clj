@@ -2,7 +2,8 @@
   (:require
    [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.user :as orm.user]
-   [psychic-pancake.orm.query-builder :refer [str->query]])
+   [psychic-pancake.orm.query-builder :refer
+    [str->query strs->dbfn]])
   (:import [psychic_pancake User Message]
            [org.hibernate.query IllegalSelectQueryException]))
 
@@ -30,20 +31,22 @@
       (orm/find! Message uid))))
 
 (def get-outbox 
-  (comp
-   (str->query
-    (str "select m from Message m "
-         "where m.from = :uid "
-         "and m.sender_deleted = false"))
-   (partial hash-map :uid)))
+  (strs->dbfn
+   "select m from Message m"
+   "where m.from = ?1"
+   "and m.sender_deleted = false"
+   "and m.timestamp < :after"
+   "ORDER BY m.timestamp"
+   "LIMIT :limit"))
 
-(def get-inbox
- (comp
-  (str->query
-   (str "select m from Message m "
-        "where m.to = :uid "
-        "and m.receiver_deleted = false"))
-  (partial hash-map :uid)))
+(def get-inbox 
+  (strs->dbfn
+   "select m from Message m"
+   "where m.to = ?1"
+   "and m.sender_deleted = false"
+   "and m.timestamp < :after"
+   "ORDER BY m.timestamp"
+   "LIMIT :limit"))
 
 
 (def delete-from
