@@ -13,10 +13,6 @@
    [spec-tools.data-spec :as ds]))
 
 
-(defn transform-listing [listing]
-  (-> listing
-      (update :country :name)))
-
 (def routes
   ["/listings"
    [""
@@ -72,7 +68,6 @@
                           (merge params)
                           orm.listing/create!
                           orm/obj->map
-                          transform-listing
                           ok)
                         (conflict
                          {:reason "Cannot edit listing"
@@ -93,6 +88,5 @@
                 (mark-seen! listing)
                 (-> listing
                     orm/obj->map
-                    transform-listing
                     ok)))}}]
     routes.bids/routes]])
