@@ -35,7 +35,7 @@
    "select m from Message m"
    "where m.from = ?1"
    "and m.sender_deleted = false"
-   "and m.timestamp < :after"
+   "and (:after = NULL or m.timestamp < :after)"
    "ORDER BY m.timestamp"
    "LIMIT :limit"))
 
@@ -44,7 +44,7 @@
    "select m from Message m"
    "where m.to = ?1"
    "and m.sender_deleted = false"
-   "and m.timestamp < :after"
+   "and (:after = NULL or m.timestamp < :after)"
    "ORDER BY m.timestamp"
    "LIMIT :limit"))
 

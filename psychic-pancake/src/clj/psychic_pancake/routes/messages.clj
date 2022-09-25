@@ -2,6 +2,7 @@
   (:require
    [ring.util.http-response :refer :all]
    [spec-tools.core :as st]
+   [spec-tools.data-spec :as ds]
    [clojure.spec.alpha :as s]
    [psychic-pancake.specs.common :refer [resp-404able]]
    [psychic-pancake.routes.common :refer [resp-404]]
@@ -22,7 +23,7 @@
    {:conflicting true
     :get
      {:responses {200 {:body (s/coll-of :msg/ref)}}
-      :parameters {:query {:limit pos-int? :after pos-int?}}
+      :parameters {:query {:limit pos-int? (ds/opt :after) pos-int?}}
       :handler (fn [{{me :me} :db
                     {{l :limit a :after} :query} :parameters}]
                  (let [messages (getter me)]

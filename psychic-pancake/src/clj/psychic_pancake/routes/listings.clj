@@ -47,7 +47,8 @@
                   (notify-listing-ends listing)
                   (ok {:listing listing}))))}}]
    ["/:listing-id"
-    {:swagger {:tags ["listing"]}
+    {:swagger {:tags ["listing"]
+               :security [{:apiAuth []}]}
      :parameters {:path {:listing-id pos-int?}}
      :fetch! [{:key :listing
                :req->id (comp :listing-id :path :parameters)
@@ -90,3 +91,4 @@
                     orm/obj->map
                     ok)))}}]
     routes.bids/routes]])
+
