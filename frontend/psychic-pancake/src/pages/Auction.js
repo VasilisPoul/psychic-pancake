@@ -73,14 +73,39 @@ export default function Auction() {
             )
           }
           axios.get(response.data.seller)
-          .then((response1) => setSeller(response1.data))
+            .then((response1) => setSeller(response1.data))
           setLoading(false)
         }
       )
       .catch();
 
-    
+
+
   }, [])
+
+  const HandleActivate = (e) => {
+    e.preventDefault();
+    try {
+      axios.put(`/api/listings/${auctionId}`, { activate: true }, {
+        headers: {
+          'accept': 'application/json',
+          'Content-Type': 'application/json',
+          'authorization': localStorage.getItem('AuthToken')
+        }
+      })
+        .then(function (response) {
+          window.location.reload(false);
+        })
+        .catch(
+          function (error) {
+          }
+        )
+    }
+    catch (error) {
+      alert(error)
+    }
+  }
+
   return (
     <>
       {!loading &&
@@ -104,8 +129,9 @@ export default function Auction() {
 
                 <div className="row">
                   <h1 className='mb-4'>{listing.name}</h1>
+                  {user['username'] === sellerUid && <div className="btn" onClick={HandleActivate} >Activate</div>}
                   <div className='col-sm-6'>
-                    {user['role'] === 'buyer' && <AddBidModal listing={listing} />}
+                    {user['role'] === 'buyer' && listing.active && <AddBidModal listing={listing} />}
                     {user['username'] === sellerUid && <EditAuctionModal listing={listing} listing_url={`/api/listings/${auctionId}`} />}
                   </div>
                   <div className='col-sm-6'>
@@ -138,12 +164,12 @@ export default function Auction() {
                     <div className='col'>
                       <Link to={`/user/${sellerUid}`} > <h4>Seller</h4></Link>
                     </div>
-                    
+
                   </div>
                   <div className="row">
-                      <h4>Seller rating</h4>
-                            <span>{seller.rating}</span>
-                    </div>
+                    <h4>Seller rating</h4>
+                    <span>{seller.rating}</span>
+                  </div>
                 </div>
                 <div>
                   <h4>Description:</h4>

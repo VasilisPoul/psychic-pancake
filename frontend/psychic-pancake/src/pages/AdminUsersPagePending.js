@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "../api/axios";
 import AdminNavbar from "../components/AdminNavbar";
-
+import { useNavigate } from "react-router-dom";
 const UserInstance = (props) => {
-
+const navigate = useNavigate();
     const HandleYes = (e) => {
         e.preventDefault();
         try {
@@ -54,7 +54,7 @@ const UserInstance = (props) => {
     }, [])
     return (
         <>
-        {userData.uid !== 'admin' && <tr>
+        {userData.uid !== 'admin' && <tr style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>
             {/* <th scope="row">{userData.id}</th> */}
             <td>{userData.uid}</td>
             <td>{userData.first_name}</td>
