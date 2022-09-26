@@ -115,7 +115,8 @@
    (ds/opt :radius) (s/nilable number?)
    (ds/opt :position_lon) number?
    (ds/opt :position_lat) number?
-   (ds/opt :only_active) boolean?})
+   (ds/opt :only_active) boolean?
+   (ds/opt :after) :common/time})
 
 (def listing-post-shape
   {:name :item/name
