@@ -83,7 +83,10 @@
                            {params :body
                             {id :listing-id} :path} :parameters}]
                         (if (contains? params :activate)
-                          (orm.listing/activate! listing)
+                          (-> listing
+                              orm.listing/activate!
+                              orm/obj->map
+                              ok)
                           (if (empty? (.getBids listing))
                             (-> listing
                                 (orm.listing/update! params)

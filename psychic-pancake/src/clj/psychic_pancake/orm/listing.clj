@@ -45,10 +45,10 @@
           orm/refresh!))))
 
 (defn activate! [listing]
-  (when (.isActivated listing)
+  (when (not (.isActivated listing))
       (-> (doto listing
             (.setActivated true)
-            (.setStarted (jt/instant)))
+            (.setStarted (jt/instant->sql-timestamp (jt/instant))))
           orm/merge!
           orm/refresh!
           orm/with-session)))
@@ -86,7 +86,7 @@
          "and (l.seller.rating >= :seller_rating or :seller_rating = NULL) "
          "and (l.seller.uid = :seller_uid or :seller_uid = NULL) "
          #_("and (:radius = NULL or (POWER(:position_lon - l.location.longitude, 2) "
-         " + POWER(:position_lat - l.location.latitude, 2)) * 111 <= :radius)")
+            " + POWER(:position_lat - l.location.latitude, 2)) * 111 <= :radius)")
          )
     (format (str "(case (select count(b) from Bid b where b.listing = l) "
                  " when 0 then l.first_bid "
