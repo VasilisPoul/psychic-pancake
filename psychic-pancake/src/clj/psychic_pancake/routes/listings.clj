@@ -15,8 +15,6 @@
    [spec-tools.data-spec :as ds]
    [java-time :as jt]))
 
-(orm.listing/search-listings {:after (-> "Dec-19-22 00:00:00" parse-time jt/instant->sql-timestamp)})
-
 (def routes
   ["/listings"
    [""
