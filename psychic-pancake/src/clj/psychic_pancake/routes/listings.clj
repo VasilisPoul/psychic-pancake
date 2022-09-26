@@ -7,6 +7,7 @@
    [psychic-pancake.orm.notifications :refer
     [notify-listing-ends mark-seen!]]
    [psychic-pancake.orm.core :as orm]
+   [psychic-pancake.orm.query-builder :refer [*doto-query*]]
    [psychic-pancake.middleware.formats :as fmt]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [postwalk]]
@@ -22,11 +23,14 @@
                         specs.listings/listings-filters-shape}
            :handler (comp
                      ok
+                     (fn [listings] {:listings listings :last (-> listings last .getEnds)})
                      (partial apply vector)
-                     orm.listing/search-listings
+                     #(binding [*doto-query* (fn [q] (doto q (.setMaxResults 10)))]
+                        (orm.listing/search-listings %))
                      :query
                      :parameters)
-           :responses {200 {:body [:listing/ref]}}}  ;get all listings with filters
+           :responses {200 {:body {:listings [:listing/ref]
+                                   :last :common/time}}}}  ;get all listings with filters
      :post {:auth? :seller
             :fetch! [{:key :user-ref
                       :req->id (comp :uid :identity)

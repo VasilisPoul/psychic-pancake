@@ -74,6 +74,8 @@
         (bind-positional! pos)
         (bind-named! named))))
 
+
+
 (defn- execute! [^Query q]
   (if (bound? #'*session*)
     (try
@@ -88,11 +90,20 @@
   q)
 
 
+(def ^:dynamic *doto-query*)
+
+(defn createQuery [session qstr]
+  ((if (bound? #'*doto-query*)
+     *doto-query*
+     identity)
+   (.createQuery session qstr)))
+
+
 (defn str->query
   ([^String query-string params]
    (if (bound? #'*session*)
      (-> *session*
-         (.createQuery query-string)
+         (createQuery query-string)
          (query-bind-params params)
          execute!)
      (with-session
@@ -103,7 +114,7 @@
 (defn strs->dbfn [& strs]
   (wrap-session
    #(-> *session*
-         (.createQuery (join " " strs))
+         (createQuery (join " " strs))
          (bind! %&)
          execute!)))
 
