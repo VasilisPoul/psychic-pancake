@@ -52,7 +52,7 @@
                        java-time/local-date-time
                        java-time/instant->sql-timestamp
                        java-time/instant))
-(def parse-time (partial java-time/instant time-formatter))
+(def parse-time (partial java-time/java-date time-formatter))
 
 
 (s/def :common/time
