@@ -1,7 +1,7 @@
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
 import auction from '../resources/auction.webp';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import InitialNavbar from '../components/InitialNavbar';
 import countries_csv from '../assets/countries.csv';
@@ -59,6 +59,14 @@ function CardListing(props) {
 export default function HomePage(props) {
   const [listings_array, setListings] = useState([])
   const [countriesRecords, setCountiresRecords] = useState([]);
+  const [last, setLast] = useState('');
+  const currentPath = useLocation().pathname;
+  const navigate = useNavigate();
+  console.log("params: ", currentPath)
+  const useQuery = () => new URLSearchParams(useLocation().after);
+
+  let query = useQuery();
+  const dateAfter = query.get('after');
 
   useEffect(() => {
     Papa.parse(countries_csv, {
@@ -74,7 +82,8 @@ export default function HomePage(props) {
 
     axios.get('/api/listings?only_active=true').then(
       function (response) {
-        setListings(response.data)
+        setLast(response.data.last)
+        setListings(response.data.listings)
       }
     )
   }, [])
@@ -90,7 +99,35 @@ export default function HomePage(props) {
       url += maxPrice ? `&price_max=${maxPrice}` : ''
       axios.get(url).then(
         function (response) {
-          setListings(response.data)
+          setLast(response.data.last)
+          setListings(response.data.listings)
+        }
+      ).catch(
+        function (error) {
+          alert(error)
+        }
+      )
+    }
+    catch (error) {
+      alert(error)
+    }
+  }
+
+  const HandleLoadMore = (e) => {
+    try {
+      e.preventDefault()
+      let url = `/api/listings`
+      url += `?only_active=${isActive}`
+      url += name ? `&name=${name}` : ''
+      url += country ? `&country=${country}` : ''
+      url += minPrice ? `&price_min=${minPrice}` : ''
+      url += maxPrice ? `&price_max=${maxPrice}` : ''
+      url += last ? `&after=${last}` : ''
+      console.log(url)
+      axios.get(url).then(
+        function (response) {
+          setLast(response.data.last)
+          setListings(response.data.listings)
         }
       ).catch(
         function (error) {
@@ -175,6 +212,7 @@ export default function HomePage(props) {
               </>
             );
           })}
+          {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Load More</div>}
         </div>
       </div>
     </>

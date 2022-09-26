@@ -64,7 +64,7 @@ const ListingView = (props) => {
 export default function UserAuctions() {
   const [list, setList] = useState([])
   const { user, setUser } = useContext(UserContext);
-
+  const [last,setLast] = useState('')
   useEffect(() => {
     if (user['role'] === 'buyer') {
       try {
@@ -85,7 +85,8 @@ export default function UserAuctions() {
     else if (user['role'] === 'seller') {
       axios.get('/api/listings?only_active=false&seller_uid=' + user['username']).then(
         function (response) {
-          setList(response.data)
+          setLast(response.data.last)
+          setList(response.data.listings)
         }
       )
     }
