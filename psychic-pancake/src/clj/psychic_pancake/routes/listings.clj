@@ -3,6 +3,7 @@
    [ring.util.http-response :refer :all]
    [psychic-pancake.routes.listings.bids :as routes.bids]
    [psychic-pancake.specs.listings :as specs.listings]
+   [psychic-pancake.specs.common :refer [parse-time]]
    [psychic-pancake.orm.listing :as orm.listing]
    [psychic-pancake.orm.notifications :refer
     [notify-listing-ends mark-seen!]]
@@ -11,8 +12,10 @@
    [psychic-pancake.middleware.formats :as fmt]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [postwalk]]
-   [spec-tools.data-spec :as ds]))
+   [spec-tools.data-spec :as ds]
+   [java-time :as jt]))
 
+(orm.listing/search-listings {:after (-> "Dec-19-22 00:00:00" parse-time jt/instant->sql-timestamp)})
 
 (def routes
   ["/listings"
@@ -23,14 +26,18 @@
                         specs.listings/listings-filters-shape}
            :handler (comp
                      ok
-                     (fn [listings] {:listings listings :last (-> listings last .getEnds)})
+                     (fn [listings]
+                       ((if (empty? listings) identity
+                            #(assoc % :last (-> listings last .getEnds))) {:listings listings}))
                      (partial apply vector)
                      #(binding [*doto-query* (fn [q] (doto q (.setMaxResults 10)))]
                         (orm.listing/search-listings %))
+                     #(if (contains? % :after)
+                        (update % :after (comp jt/instant->sql-timestamp parse-time)))
                      :query
                      :parameters)
            :responses {200 {:body {:listings [:listing/ref]
-                                   :last :common/time}}}}  ;get all listings with filters
+                                   (ds/opt :last) :common/time}}}}  ;get all listings with filters
      :post {:auth? :seller
             :fetch! [{:key :user-ref
                       :req->id (comp :uid :identity)
