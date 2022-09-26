@@ -18,7 +18,7 @@
                        #(->> %
                              (Image. nil (:seller params))
                              orm/merge!)))
-      ;; (update :started parse-time)
+      (assoc :started (jt/instant->sql-timestamp (jt/instant)))
       (update :ends parse-time)
       (assoc :bids [])
       (assoc :activated false)
