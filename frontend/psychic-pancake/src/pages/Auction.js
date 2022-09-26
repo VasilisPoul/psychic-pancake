@@ -39,7 +39,7 @@ export default function Auction() {
   const [images, setImages] = useState([]);
   const [sellerUid, setSellerUid] = useState('')
   const [seller, setSeller] = useState({});
-
+  const [active, setActive] = useState(false);
   const navigate = useNavigate();
   const HandleDelete = (e) => {
     e.preventDefault();
@@ -64,6 +64,8 @@ export default function Auction() {
       .then(
         function (response) {
           setListing(response.data);
+          setActive(response.data.active);
+          console.log(response.data.active)
           setSellerUid(response.data.seller.split('/')[3]);
           for (let i = 0; i < response.data.images.length; i++) {
             axios.get(response.data.images[i]).then(
@@ -94,6 +96,7 @@ export default function Auction() {
         }
       })
         .then(function (response) {
+          setActive(true);
           window.location.reload(false);
         })
         .catch(
@@ -105,7 +108,7 @@ export default function Auction() {
       alert(error)
     }
   }
-
+  console.log({active})
   return (
     <>
       {!loading &&
@@ -129,7 +132,7 @@ export default function Auction() {
 
                 <div className="row">
                   <h1 className='mb-4'>{listing.name}</h1>
-                  {user['username'] === sellerUid && <div className="btn" onClick={HandleActivate} >Activate</div>}
+                  {user['username'] === sellerUid && !active && <div className="btn" onClick={HandleActivate} >Activate</div>}
                   <div className='col-sm-6'>
                     {user['role'] === 'buyer' && listing.active && <AddBidModal listing={listing} />}
                     {user['username'] === sellerUid && <EditAuctionModal listing={listing} listing_url={`/api/listings/${auctionId}`} />}

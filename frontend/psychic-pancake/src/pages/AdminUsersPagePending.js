@@ -54,12 +54,12 @@ const navigate = useNavigate();
     }, [])
     return (
         <>
-        {userData.uid !== 'admin' && <tr style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>
+        {userData.uid !== 'admin' && <tr>
             {/* <th scope="row">{userData.id}</th> */}
-            <td>{userData.uid}</td>
-            <td>{userData.first_name}</td>
-            <td>{userData.last_name}</td>
-            <td>{userData.role}</td>
+            <td style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>{userData.uid}</td>
+            <td style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>{userData.first_name}</td>
+            <td style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>{userData.last_name}</td>
+            <td style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${userData.uid}`)}}>{userData.role}</td>
             <td>
                 <span className="fw-bold" style={{ cursor: "pointer" }} onClick={HandleYes}>yes</span>&nbsp;<span style={{ cursor: "pointer" }} className="fw-bold" onClick={HandleNo}>no</span>
             </td>
