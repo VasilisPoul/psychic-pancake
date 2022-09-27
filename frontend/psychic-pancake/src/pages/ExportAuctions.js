@@ -42,7 +42,7 @@ export default function ExportAuctions() {
             <AdminNavbar />
 
             <div className="container">
-                <div className="row mt-5">
+                <div className="row mt-5 mb-3">
                     <div className="col">
                         <div className="btn btn-outline-dark w-100" onClick={HandleXML}>Export in XML</div>
                     </div>
