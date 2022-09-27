@@ -13,11 +13,9 @@ export default function AddAuctionModal() {
   const HandleSubmit = (e) => {
     e.preventDefault()
     if(images.length === 0){
-      console.log({default_image})
       setImages([default_image])
       return;
     }
-    console.log("images",{images})
  
     try {
       axios.post("/api/listings", { name, categories, description, first_bid, ends, images }, {
@@ -52,7 +50,6 @@ export default function AddAuctionModal() {
     // console.log(dateString)
     // console.log(year, months_arr[month-1], day)
     let finalDateTime = `${months_arr[month - 1]}-${day}-${year.slice(-2)} ${timeString}:00`
-    console.log(finalDateTime)
     setEnds(finalDateTime)
   }
   const convertBase64 = (file) => {

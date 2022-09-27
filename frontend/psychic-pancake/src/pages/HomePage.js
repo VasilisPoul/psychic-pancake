@@ -1,7 +1,7 @@
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
 import auction from '../resources/auction.webp';
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams, createSearchParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import InitialNavbar from '../components/InitialNavbar';
 import countries_csv from '../assets/countries.csv';
@@ -12,8 +12,8 @@ function CardListing(props) {
   const item = props.item;
 
   const [itemData, setItemData] = useState({});
-  const [ loading, setLoading ] = useState(true);
-  
+  const [loading, setLoading] = useState(true);
+
   const [img, setImg] = useState('')
   useEffect(() => {
     axios.get(item).then(
@@ -21,8 +21,7 @@ function CardListing(props) {
         setItemData(response.data);
         setLoading(false);
         axios.get(response.data.images[0]).then(
-          function(response) {
-            console.log(response.data)
+          function (response) {
             setImg(response.data.image)
           }
         )
@@ -30,28 +29,28 @@ function CardListing(props) {
     ).catch()
   }, [])
   const item_id = item.split('/')[3]
-  const linkTo = '/auction/'+item_id
+  const linkTo = '/auction/' + item_id
   const navigate = useNavigate()
   const HandleClick = (e) => {
     navigate(linkTo);
   }
   return (
     <>
-    {!loading && <div className='card mb-3' style={{"height": "10px;", cursor:"pointer"}}>
-      <div className="g-0 row"  onClick={HandleClick}>
-        <div className='col-md-4'>
-          <img width={"173px"} height={"173px"} src={img} className="card-img-top embed-responsive-item" style={{ width: "100%;", cursor:"pointer", height: "15vw;","object-fit":"cover"}} alt="..." />
+      {!loading && <div className='card mb-3' style={{ "height": "10px;", cursor: "pointer" }}>
+        <div className="g-0 row" onClick={HandleClick}>
+          <div className='col-md-4'>
+            <img width={"173px"} height={"173px"} src={img} className="card-img-top embed-responsive-item" style={{ width: "100%;", cursor: "pointer", height: "15vw;", "object-fit": "cover" }} alt="..." />
+          </div>
+          <div className='col-md-8'>
+            <div className="card-body">
+              <h5 className="card-title">{itemData.name}</h5>
+              <p className="card-text text-truncate">{itemData.description}</p>
+              <div><span><small>Highest bid:</small>{itemData.currently}$</span></div>
+              <div className='text-truncate'><small>Ends: </small> {itemData.ends}</div>
+            </div>
+          </div>
         </div>
-        <div className='col-md-8'>
-        <div className="card-body">
-          <h5 className="card-title">{itemData.name}</h5>
-          <p className="card-text text-truncate">{itemData.description}</p>
-          <div><span><small>Highest bid:</small>{itemData.currently}$</span></div>
-          <div className='text-truncate'><small>Ends: </small> {itemData.ends}</div>
-        </div>
-      </div>
-      </div>
-    </div>}
+      </div>}
     </>
   )
 }
@@ -62,11 +61,26 @@ export default function HomePage(props) {
   const [last, setLast] = useState('');
   const currentPath = useLocation().pathname;
   const navigate = useNavigate();
-  console.log("params: ", currentPath)
   const useQuery = () => new URLSearchParams(useLocation().after);
 
-  let query = useQuery();
-  const dateAfter = query.get('after');
+  const [isActive, setIsActive] = useState(true);
+  const [country, setCountry] = useState('');
+  const [name, setName] = useState('');
+  const [minPrice, setMinPrice] = useState(null);
+  const [maxPrice, setMaxPrice] = useState(null);
+  const [categories, setCategories] = useState('');
+  const [after, setAfter] = useState('');
+  // let query = useQuery();
+  // console.log({ query })
+  const [query] = useSearchParams();
+  console.log({ query });
+  const dateAfter_q = query.get('after');
+  const isActive_q = query.get('only_active');
+  const country_q = query.get('country');
+  const name_q = query.get('name');
+  const minPrice_q = query.get('min_price'); //parseInt
+  const maxPrice_q = query.get('max_price'); //parseInt
+  const categories_q = query.get('categories');
 
   useEffect(() => {
     Papa.parse(countries_csv, {
@@ -79,81 +93,67 @@ export default function HomePage(props) {
 
       }
     });
-
-    axios.get('/api/listings?only_active=true').then(
+    let url = `/api/listings`
+    url += isActive_q ? `?only_active=${isActive_q}` : ''
+    url += name_q ? `&name=${name_q}` : ''
+    url += country_q ? `&country=${country_q}` : ''
+    url += minPrice_q ? `&price_min=${minPrice_q}` : ''
+    url += maxPrice_q ? `&price_max=${maxPrice_q}` : ''
+    url += dateAfter_q ? `&after=${dateAfter_q}` : ''
+    axios.get(url).then(
       function (response) {
         setLast(response.data.last)
         setListings(response.data.listings)
       }
     )
-  }, [])
+  }, [navigate])
 
   const HandleSubmit = (e) => {
-    try {
-      e.preventDefault()
-      let url = `/api/listings`
-      url += `?only_active=${isActive}`
-      url += name ? `&name=${name}` : ''
-      url += country ? `&country=${country}` : ''
-      url += minPrice ? `&price_min=${minPrice}` : ''
-      url += maxPrice ? `&price_max=${maxPrice}` : ''
-      axios.get(url).then(
-        function (response) {
-          setLast(response.data.last)
-          setListings(response.data.listings)
-        }
-      ).catch(
-        function (error) {
-          alert(error)
-        }
-      )
-    }
-    catch (error) {
-      alert(error)
-    }
+
+    e.preventDefault();
+    // let url = `/auctions`
+    // url += isActive ? `?only_active=${isActive}` : ''
+    // url += name ? `&name=${name}` : ''
+    // url += country ? `&country=${country}` : ''
+    // url += minPrice ? `&price_min=${minPrice}` : ''
+    // url += maxPrice ? `&price_max=${maxPrice}` : ''
+    // url += after ? `&after=${after}` : ''
+    // navigate(url)
+
+    navigate({
+      pathname: "/auctions",
+      search: `?${createSearchParams({
+        only_active: isActive,
+        name: name,
+        country: country,
+        price_min: parseFloat(minPrice),
+        price_max: parseFloat(maxPrice),
+        after: after
+      })}`
+    });
   }
 
   const HandleLoadMore = (e) => {
-    try {
-      e.preventDefault()
-      let url = `/api/listings`
-      url += `?only_active=${isActive}`
-      url += name ? `&name=${name}` : ''
-      url += country ? `&country=${country}` : ''
-      url += minPrice ? `&price_min=${minPrice}` : ''
-      url += maxPrice ? `&price_max=${maxPrice}` : ''
-      url += last ? `&after=${last}` : ''
-      console.log(url)
-      axios.get(url).then(
-        function (response) {
-          setLast(response.data.last)
-          setListings(response.data.listings)
-        }
-      ).catch(
-        function (error) {
-          alert(error)
-        }
-      )
-    }
-    catch (error) {
-      alert(error)
-    }
+    e.preventDefault()
+    navigate({
+      pathname: "/auctions",
+      search: `?${createSearchParams({
+        only_active: isActive,
+        name: name,
+        country: country,
+        price_min: parseFloat(minPrice),
+        price_max: parseFloat(maxPrice),
+        after: after
+      })}`
+    });
   }
-
-  const [isActive, setIsActive] = useState(true);
-  const [country, setCountry] = useState('');
-  const [name, setName] = useState('');
-  const [minPrice, setMinPrice] = useState(null);
-  const [maxPrice, setMaxPrice] = useState(null);
-  const [categories, setCategories] = useState('');
-
-
+  // console.log()
   return (
-    <>
-      {localStorage.getItem('AuthToken') ? <Navbar /> : <InitialNavbar/>}
+    <div key={query}>
+      {localStorage.getItem('AuthToken') ? <Navbar /> : <InitialNavbar />}
       <div className='container mt-3'>
         <form className="row mr-2" onSubmit={HandleSubmit}>
-          <div className="dropdown col" style={{paddingLeft: "0px"}}>
+          <div className="dropdown col" style={{ paddingLeft: "0px" }}>
             <button className="btn btn-light w-100 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               {isActive ? 'Active Only' : 'All'}
             </button>
@@ -208,13 +208,13 @@ export default function HomePage(props) {
           {listings_array.map((item, idx) => {
             return (
               <>
-                <CardListing item={item} key={item}/>
+                <CardListing item={item} key={item} />
               </>
             );
           })}
-          {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Load More</div>}
+           {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Load More</div>}
         </div>
       </div>
-    </>
+    </div>
   );
 }
