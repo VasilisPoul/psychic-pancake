@@ -15,7 +15,6 @@ export default function WelcomePage() {
       .then((response) => {
         if(!response.data.installed){
           setLoading(false)
-          console.log(!response.data.installed)
           navigate('/install')
         }
         else {

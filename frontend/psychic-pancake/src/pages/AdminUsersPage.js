@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 export default function AdminUsersPagePanel() {
     const navigate = useNavigate();
     const UserView = ({user_link}) => {
-        console.log({user_link})
         const [user, setUser] = useState({}); 
         useEffect(() => {
             axios.get(user_link, 
@@ -21,7 +20,6 @@ export default function AdminUsersPagePanel() {
                 }
             ).catch((error) => {console.log(error)})
     }, [])
-    console.log(user)
     return (
         <>
             <tr style={{cursor: 'pointer'}} onClick={() => {navigate(`/user/${user.uid}`)}}>
@@ -49,7 +47,6 @@ useEffect(() => {
 
     }
 }, [])
-console.log(usersList)
 return (
     <>
         <AdminNavbar />

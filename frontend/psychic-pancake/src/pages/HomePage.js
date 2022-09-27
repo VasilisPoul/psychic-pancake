@@ -1,7 +1,6 @@
 import axios from '../api/axios';
 import Navbar from '../components/Navbar';
-import auction from '../resources/auction.webp';
-import { Link, useNavigate, useLocation, useParams, createSearchParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useLocation, createSearchParams, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import InitialNavbar from '../components/InitialNavbar';
 import countries_csv from '../assets/countries.csv';
@@ -71,9 +70,7 @@ export default function HomePage(props) {
   const [categories, setCategories] = useState('');
   const [after, setAfter] = useState('');
   // let query = useQuery();
-  // console.log({ query })
   const [query] = useSearchParams();
-  console.log({ query });
   const dateAfter_q = query.get('after');
   const isActive_q = query.get('only_active');
   const country_q = query.get('country');
@@ -100,54 +97,49 @@ export default function HomePage(props) {
     url += minPrice_q ? `&price_min=${minPrice_q}` : ''
     url += maxPrice_q ? `&price_max=${maxPrice_q}` : ''
     url += dateAfter_q ? `&after=${dateAfter_q}` : ''
+    url += categories_q ? `&after=${categories_q}` : ''
+
     axios.get(url).then(
       function (response) {
         setLast(response.data.last)
         setListings(response.data.listings)
       }
-    )
-  }, [navigate])
-
+    ).catch((error) => {console.log(error)})
+  }, [navigate, query])
+  
   const HandleSubmit = (e) => {
 
-    e.preventDefault();
-    // let url = `/auctions`
-    // url += isActive ? `?only_active=${isActive}` : ''
-    // url += name ? `&name=${name}` : ''
-    // url += country ? `&country=${country}` : ''
-    // url += minPrice ? `&price_min=${minPrice}` : ''
-    // url += maxPrice ? `&price_max=${maxPrice}` : ''
-    // url += after ? `&after=${after}` : ''
-    // navigate(url)
+    const urlParams = new Object()
+    if (isActive) urlParams.only_active = isActive;
+    if (name) urlParams.name = name;
+    if (country) urlParams.country = country;
+    if (isActive) urlParams.only_active = isActive;
+    if (minPrice) urlParams.price_max = minPrice;
+    if (maxPrice) urlParams.price_max = maxPrice;
+    if (categories) urlParams.categories = categories;
+    if (after) urlParams.after = after;
 
     navigate({
       pathname: "/auctions",
-      search: `?${createSearchParams({
-        only_active: isActive,
-        name: name,
-        country: country,
-        price_min: parseFloat(minPrice),
-        price_max: parseFloat(maxPrice),
-        after: after
-      })}`
+      search: `?${createSearchParams(urlParams)}`
     });
   }
 
   const HandleLoadMore = (e) => {
-    e.preventDefault()
+    const urlParams = new Object()
+    if (isActive) urlParams.only_active = isActive;
+    if (name) urlParams.name = name;
+    if (country) urlParams.country = country;
+    if (isActive) urlParams.only_active = isActive;
+    if (minPrice) urlParams.price_max = minPrice;
+    if (maxPrice) urlParams.price_max = maxPrice;
+    if (categories) urlParams.categories = categories;
+    if (after) urlParams.after = after;
     navigate({
       pathname: "/auctions",
-      search: `?${createSearchParams({
-        only_active: isActive,
-        name: name,
-        country: country,
-        price_min: parseFloat(minPrice),
-        price_max: parseFloat(maxPrice),
-        after: after
-      })}`
+      search: `?${createSearchParams(urlParams)}`
     });
   }
-  // console.log()
   return (
     <div key={query}>
       {localStorage.getItem('AuthToken') ? <Navbar /> : <InitialNavbar />}

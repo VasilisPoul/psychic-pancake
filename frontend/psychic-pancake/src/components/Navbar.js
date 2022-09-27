@@ -20,7 +20,6 @@ const NotificationView = ({ item }) => {
 
         }
     }, [])
-    console.log(notification)
     let sender = null; 
     if (notification.type === 'message-notification'){
         sender = notification.from.split('/')[3]
@@ -108,7 +107,6 @@ export default function Navbar() {
                                 </button>
                                 <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     {notifications.map((item) => {
-                                        console.log(item)
                                         return <NotificationView item={item} />
 
                                     })}

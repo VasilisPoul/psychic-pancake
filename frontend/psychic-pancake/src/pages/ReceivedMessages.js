@@ -57,7 +57,6 @@ const MessageInstance = (props) => {
   const idx = props.idx;
   const [message, setMessage] = useState({});
   const [from, setFrom] = useState('')
-  console.log(`messageUrl: ${messageUrl}`)
   useEffect(() => {
     axios.get(messageUrl, {
       headers: {
@@ -74,7 +73,6 @@ const MessageInstance = (props) => {
 
   const [currentMessage, setCurrentMessage] = useState('');
   const msgModal = `#msgModal${idx}`
-  console.log(messageUrl)
   const HandleDelete = (e) => {
     try {
       e.preventDefault();
@@ -133,7 +131,6 @@ export default function ReceivedMessages() {
     })
       .then(
         function (response) {
-          console.log(response.data)
           setOutbox(response.data)
           setLoading(false);
         }

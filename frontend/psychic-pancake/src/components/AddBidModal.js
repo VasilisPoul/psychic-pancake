@@ -13,7 +13,6 @@ export default function AddBidModal(props) {
   }
 
   const HandleSubmit = (e) => {
-    console.log(amount)
     try {
       e.preventDefault();
       axios.post(`/api/listings/${listing.item_id}/bids`,
@@ -32,7 +31,6 @@ export default function AddBidModal(props) {
         .catch(
           function (error) {
             alert('You have to bid higher than the current highest bid.')
-            console.log(amount)
             window.location.reload(false)
           }
         )

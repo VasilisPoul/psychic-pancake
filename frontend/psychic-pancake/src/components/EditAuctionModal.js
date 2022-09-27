@@ -18,7 +18,6 @@ export default function EditAuctionModal({ listing_url, listing }) {
     const [categories, setCategories] = useState(listing.categories);
     const [first_bid, setFirstBid] = useState(listing.first_bid);
     const [ends, setEnds] = useState(listing.ends);
-    console.log({images})
     const HandleSubmit = (e) => {
         e.preventDefault()
 
@@ -53,7 +52,6 @@ export default function EditAuctionModal({ listing_url, listing }) {
         var months_arr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
             "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         let finalDateTime = `${months_arr[month - 1]}-${day}-${year.slice(-2)} ${timeString}:00`
-        console.log(finalDateTime)
         setEnds(finalDateTime)
     }
     const convertBase64 = (file) => {
@@ -77,8 +75,6 @@ export default function EditAuctionModal({ listing_url, listing }) {
         }
         setImages(base64Array)
     }
-
-    console.log({ listing })
 
     return (
         <>

@@ -54,7 +54,6 @@ const MessageInstance = (props) => {
   const messageUrl = props.messageUrl;
   const idx = props.idx;
   const [message, setMessage] = useState({});
-  console.log(`messageUrl: ${messageUrl}`)
   useEffect(() => {
     axios.get(messageUrl, {
       headers: {
@@ -131,7 +130,6 @@ export default function SentMessages() {
     })
       .then(
         function (response) {
-          console.log(response.data)
           setOutbox(response.data)
           setLoading(false);
         }

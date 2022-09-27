@@ -13,7 +13,6 @@ import { useNavigate } from "react-router-dom";
 
 const BidView = ({ bid_url }) => {
   const [bid, setBid] = useState({});
-  console.log(bid_url)
   useEffect(() => {
     axios.get(bid_url).then(
       (response) => {
@@ -23,7 +22,6 @@ const BidView = ({ bid_url }) => {
       .catch((error) => console.log(error))
 
   }, [])
-  console.log({ bid })
   return (
     <>
       <li><span>{bid.amount}</span></li>
@@ -65,7 +63,6 @@ export default function Auction() {
         function (response) {
           setListing(response.data);
           setActive(response.data.active);
-          console.log(response.data.active)
           setSellerUid(response.data.seller.split('/')[3]);
           for (let i = 0; i < response.data.images.length; i++) {
             axios.get(response.data.images[i]).then(
@@ -108,7 +105,6 @@ export default function Auction() {
       alert(error)
     }
   }
-  console.log({active})
   return (
     <>
       {!loading &&

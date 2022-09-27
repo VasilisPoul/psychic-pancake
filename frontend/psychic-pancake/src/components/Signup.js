@@ -19,7 +19,6 @@ export default function Signup() {
   }
 
   const SearchField = (props) => {
-    console.log(props)
     const provider = new OpenStreetMapProvider();
 
     // @ts-ignore
@@ -123,7 +122,6 @@ export default function Signup() {
     setCountry(e.target.innerHTML)
   }
 
-  console.log(locationData)
   return (
     <>
       <div className="Auth-form-container">
