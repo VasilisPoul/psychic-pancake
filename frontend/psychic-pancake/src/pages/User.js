@@ -35,7 +35,6 @@ export default function User() {
         })
         .then((response) => alert('Done'))
     }
-    console.log({user})
 
     return (
         <>

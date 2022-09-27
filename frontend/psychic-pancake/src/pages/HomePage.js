@@ -61,14 +61,13 @@ export default function HomePage(props) {
   const currentPath = useLocation().pathname;
   const navigate = useNavigate();
   const useQuery = () => new URLSearchParams(useLocation().after);
-
+  const [loading, setLoading] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [country, setCountry] = useState('');
   const [name, setName] = useState('');
   const [minPrice, setMinPrice] = useState(null);
   const [maxPrice, setMaxPrice] = useState(null);
   const [categories, setCategories] = useState('');
-  const [after, setAfter] = useState('');
   // let query = useQuery();
   const [query] = useSearchParams();
   const dateAfter_q = query.get('after');
@@ -103,12 +102,13 @@ export default function HomePage(props) {
       function (response) {
         setLast(response.data.last)
         setListings(response.data.listings)
+        setLoading(false);
       }
     ).catch((error) => {console.log(error)})
   }, [navigate, query])
   
   const HandleSubmit = (e) => {
-
+    e.preventDefault();
     const urlParams = new Object()
     if (isActive) urlParams.only_active = isActive;
     if (name) urlParams.name = name;
@@ -117,8 +117,8 @@ export default function HomePage(props) {
     if (minPrice) urlParams.price_max = minPrice;
     if (maxPrice) urlParams.price_max = maxPrice;
     if (categories) urlParams.categories = categories;
-    if (after) urlParams.after = after;
-
+    if (last) urlParams.after = last;
+    setListings([]);
     navigate({
       pathname: "/auctions",
       search: `?${createSearchParams(urlParams)}`
@@ -126,6 +126,7 @@ export default function HomePage(props) {
   }
 
   const HandleLoadMore = (e) => {
+    // e.preventDefault();
     const urlParams = new Object()
     if (isActive) urlParams.only_active = isActive;
     if (name) urlParams.name = name;
@@ -134,7 +135,8 @@ export default function HomePage(props) {
     if (minPrice) urlParams.price_max = minPrice;
     if (maxPrice) urlParams.price_max = maxPrice;
     if (categories) urlParams.categories = categories;
-    if (after) urlParams.after = after;
+    if (last) urlParams.after = last;
+    setListings([]);
     navigate({
       pathname: "/auctions",
       search: `?${createSearchParams(urlParams)}`
@@ -195,7 +197,7 @@ export default function HomePage(props) {
 
         </form>
       </div>
-      <div className='container mt-3'>
+      {loading ? <div className='d-flex justify-content-center'><span>Loading</span></div> : <div className='container mt-3'>
         <div className='row mb-2'>
           {listings_array.map((item, idx) => {
             return (
@@ -204,9 +206,9 @@ export default function HomePage(props) {
               </>
             );
           })}
-           {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Load More</div>}
+           {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Show Older</div>}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
