@@ -5,6 +5,8 @@
             [clojure.java.io :refer [resource reader]]
             [java-time]
             [clojure.string :as string]
+            [psychic-pancake.specs.decoders.user :refer
+             [->CountryName]]
             [psychic-pancake.specs.decoders.image :refer
              [this->ImageRef]])
   (:import [javax.xml.bind DatatypeConverter]
@@ -35,13 +37,17 @@
   (st/spec {:spec string?
             :decode/response #(this->ImageRef %2)}))
 
-(s/def :common/country-name
+(def country-names
   (with-open [r (-> "countries.csv" resource reader)]
     (->> r
          read-csv
          rest
          (map #(nth % 3))
          set)))
+
+(s/def :common/country-name
+  (st/spec {:spec country-names
+            :decode/response #(->CountryName %2)}))
 
 
 (def time-formatter (-> "LLL-dd-yy HH:mm:ss"

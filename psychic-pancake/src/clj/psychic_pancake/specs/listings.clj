@@ -31,10 +31,10 @@
 
 
 (s/def :bid/bidder
-  (st/spec {:spec {:Rating :usr/rating
-                   :UserID :usr/uid
-                   :Location :usr/location
-                   :Country :usr/country}
+  (st/spec {:spec {:rating :usr/rating
+                   :userid :usr/uid
+                   :location :usr/location-name
+                   :country :common/country-name}
             :description "The user who placed this bid"
             :swagger/example {:Rating 227
                               :UserID "Bob"
@@ -51,12 +51,12 @@
             :description "Time at which this bid will be over"
             :swagger/example "Dec-19-01 00:00:00"}))
 
-(s/def :listing/poster
+(s/def :listing/seller
   (st/spec {:spec (ds/spec ::seller
                            {:rating :usr/rating
                             :uid :usr/uid
-                            :location :usr/location
-                            :country :usr/country})
+                            :location :usr/location-name
+                            :country :common/country-name})
             :description "The user who posted the listing"
             :swagger/example {:rating 942
                               :uid "Alice"
@@ -78,7 +78,7 @@
             :decode/response #(dec.l/this->ListingRef %2)}))
 
 (s/def :listing/bid
-  (ds/spec {:bidder :usr/ref
+  (ds/spec {:bidder :bid/bidder
             :time :common/time
             :ammount :item/price}))
 

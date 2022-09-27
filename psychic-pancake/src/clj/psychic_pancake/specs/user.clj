@@ -57,6 +57,10 @@
     :name ::location
     :swagger/example {:name "Bob's House" :longitude 10.2221 :latitude 32.822222222221}}))
 
+(s/def :usr/location-name
+  (st/spec {:spec string?
+            :decode/response #(:name %2)}))
+
 (s/def :usr/country
   (ds/spec {:spec {:name :common/country-name
                    :longitude number?

@@ -41,14 +41,21 @@
      :get
      {:responses {200 {:body [{:item_id :item/id
                                :name :item/name
-                               :categories [:item/category]
+                               :categories (s/coll-of
+                                            :item/category)
                                :currently :item/price
                                :first_bid :item/price
-                               :bids [:bid/ref]
-                               :country :usr/country}]}}
+                               :number_of_bids integer?
+                               :bids (s/coll-of :listing/bid)
+                               :country :common/country-name
+                               :seller :listing/seller}]}}
       :handler
       (fn [req]
         (ok 
          (vary-meta
-          (->clj (orm.listing/search-listings {:only_active false}))
-           merge {:name :Items})))}}]])
+          (->> {:only_active false}
+              orm.listing/search-listings 
+              ->clj
+              (map #(assoc % :number_of_bids (-> % :bids count)))
+              (apply vector))
+          merge {:name :Items})))}}]])
