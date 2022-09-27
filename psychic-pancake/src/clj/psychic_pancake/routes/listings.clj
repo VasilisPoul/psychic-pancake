@@ -31,7 +31,8 @@
                      #(binding [*doto-query* (fn [q] (doto q (.setMaxResults 10)))]
                         (orm.listing/search-listings %))
                      #(if (contains? % :after)
-                        (update % :after (comp jt/instant->sql-timestamp parse-time)))
+                        (update % :after (comp jt/instant->sql-timestamp parse-time))
+                        %)
                      :query
                      :parameters)
            :responses {200 {:body {:listings [:listing/ref]
