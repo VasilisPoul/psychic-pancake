@@ -78,7 +78,7 @@ export default function AddAuctionModal() {
     <>
       <button type="button" className=" btn btn-light mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">New Auction</button>
 
-      <div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="Auth-form-container">
           <div className="modal-dialog" role="document">
             <div className="modal-content">

@@ -16,20 +16,14 @@ const Footer = () => <footer className="page-footer font-small blue pt-4" style=
 
       <hr className="clearfix w-100 d-md-none pb-0" />
 
-      <div className="col-md-3 mb-md-0 mb-3">
-        <h5 className="text-uppercase">General</h5>
-        <ul className="list-unstyled">
-          <li><Link to="/signup">Sign Up</Link></li>
-          <li><Link to="/login">Sign In</Link></li>
-        </ul>
-      </div>
+      <div className="d-flex justify-content-center">
+        <div>
 
-      <div className="col-md-3 mb-md-0 mb-3">
         <h5 className="text-uppercase">Browse</h5>
         <ul className="list-unstyled">
-          <li><Link to="/">Feed</Link></li>
-          {/* <li><Link to="/Auctions">Jobs</Link></li> */}
+          <li><Link to="/auctions">Feed</Link></li>
         </ul>
+        </div>
       </div>
     </div>
   </div>

@@ -11,7 +11,7 @@ const MessageModal = (props) => {
 
   return (
 
-    <div className="modal fade" id={msgModal.substring(1)} tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" onClick={(e) => { console.log(message) }}>
+    <div className="modal fade" id={msgModal.substring(1)} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" onClick={(e) => { console.log(message) }}>
       <div className="Auth-form-container">
         <div className="modal-dialog modal-lg" style={{ width: "1250px", height: "250px" }} role="document">
           <div className="modal-content">

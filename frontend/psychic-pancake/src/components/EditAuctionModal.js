@@ -80,7 +80,7 @@ export default function EditAuctionModal({ listing_url, listing }) {
         <>
             <button type="button" className="btn btn-outline-dark mb-3 w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit Auction</button>
 
-            <div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="Auth-form-container">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">

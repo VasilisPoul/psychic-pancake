@@ -36,7 +36,7 @@ export default function SendMessageModal(props) {
     <>
       <button type="button" className=" btn btn-dark w-100 mb-3" data-bs-toggle="modal" data-bs-target="#msgModal">New Message</button>
 
-      <div className="modal fade" id="msgModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="modal fade" id="msgModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="Auth-form-container">
           <div className="modal-dialog" role="document">
             <div className="modal-content">

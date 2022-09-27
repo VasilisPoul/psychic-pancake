@@ -10,6 +10,7 @@ import axios from "../api/axios";
 import '../style.css'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const BidView = ({ bid_url }) => {
   const [bid, setBid] = useState({});
@@ -29,6 +30,43 @@ const BidView = ({ bid_url }) => {
   );
 }
 
+const SuggestionView = ({ suggestion }) => {
+  const [suggestionInfo, setSuggestionInfo] = useState({});
+  const [img, setImg] = useState({});
+  const navigate = useNavigate();
+  useEffect(() => {
+    axios.get(suggestion).then(
+      function (response) {
+        setSuggestionInfo(response.data)
+        axios.get(response.data.images[0]).then(
+          function (response) {
+            setImg(response.data.image)
+          }
+        )
+      }
+    )
+  }, [])
+
+  const HandleClick = (e) => {
+    e.preventDefault();
+    navigate(`/auction/${suggestion.item_id}`)
+  }
+
+  return (
+    <>
+      <div className="col">
+        <div className="card" onClick={HandleClick}>
+          <img src={img} className="card-img-top" alt="..." />
+          <div className="card-body">
+            <h5 className="card-title">{suggestionInfo.name}</h5>
+            <p className="card-text">{suggestionInfo.description}</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function Auction() {
   const { user, setUser } = useContext(UserContext);
   const auctionId = useParams().id
@@ -38,6 +76,7 @@ export default function Auction() {
   const [sellerUid, setSellerUid] = useState('')
   const [seller, setSeller] = useState({});
   const [active, setActive] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
   const HandleDelete = (e) => {
     e.preventDefault();
@@ -78,7 +117,11 @@ export default function Auction() {
       )
       .catch();
 
-
+    axios.get('/api/listings?only_active=true').then(
+      function (response) {
+        setSuggestions(response.data);
+      }
+    )
 
   }, [])
 
@@ -105,13 +148,14 @@ export default function Auction() {
       alert(error)
     }
   }
+  console.log(suggestions.listings)
   return (
     <>
       {!loading &&
         <div>
           {(localStorage.getItem('AuthToken')) ? <Navbar /> : <InitialNavbar />}
           <div className="container mt-3">
-            <div className='row'>
+            <div className='row h-80'>
               <div className='col mb-2'>
 
                 {
@@ -147,13 +191,13 @@ export default function Auction() {
                             {listing.currently}
                           </button>
                           <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            {listing.bids && listing.bids.map((bid_url) => {
+                            {listing.bids ? listing.bids.map((bid_url, idx) => {
                               return (
                                 <>
-                                  <BidView bid_url={bid_url} />
+                                  {<BidView bid_url={bid_url} />}
                                 </>
                               );
-                            })}
+                            }) :  <li><span>Empty</span></li>}
                           </ul>
                         </div>
                       </div>
@@ -187,13 +231,19 @@ export default function Auction() {
                     </Marker>
                   </MapContainer>
                 </div>
-
               </div>
             </div>
-
+            {user.role === 'buyer' &&<div className="row mb-5">
+              <h4 className='mb-1'>You may also like</h4>
+              {suggestions.listings && suggestions.listings.map((suggestion, idx) => {
+                return <>{idx < 5 && <SuggestionView suggestion={suggestion} />}</>
+              })}
+            </div>}
           </div>
 
-        </div>}
+          <Footer />
+        </div>
+        }
     </>
   );
 }
