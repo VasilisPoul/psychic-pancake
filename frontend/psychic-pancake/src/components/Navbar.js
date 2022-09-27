@@ -31,10 +31,10 @@ const NotificationView = ({ item }) => {
                 <Link className="nav-link" to="/received-messages">New message from {sender}</Link>
             </div>}
             {notification.type ==='bid-notification'&& <div className="dropdown-item" >
-                <Link className="nav-link" to="">New bid <small>{notification.when}</small></Link>
+                <Link className="nav-link"  to={`/auction/${notification.listing.split('/')[3]}`}>New bid <small>{notification.when}</small></Link>
             </div>}
             {notification.type ==='listing-notification'&& <div className="dropdown-item" >
-                <Link className="nav-link" to="">Your Auction just ended <small>{notification.when}</small></Link>
+                <Link className="nav-link" to={`/auction/${notification.listing.split('/')[3]}`}>Your Auction just ended <small>{notification.when}</small></Link>
             </div>} 
         </>
     );
