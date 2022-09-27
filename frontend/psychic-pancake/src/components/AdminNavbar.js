@@ -25,6 +25,9 @@ export default function AdminNavbar() {
                             <li className="nav-link">
                                 <Link to="/pending">Pending Users</Link>
                             </li>
+                            <li className="nav-link">
+                                <Link to="/export-auctions">Export Auctions</Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

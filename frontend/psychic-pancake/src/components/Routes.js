@@ -19,6 +19,7 @@ import UserAuctions from '../pages/UserAuctions';
 import Auction from '../pages/Auction';
 import SentMessages from '../pages/SentMessages';
 import ReceivedMessages from '../pages/ReceivedMessages';
+import ExportAuctions from '../pages/ExportAuctions';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -46,6 +47,7 @@ export default function RoutesComponent() {
         <Route path="/user/:id" element={<User />} />
         <Route path="/sent-messages" element={ <SentMessages />} />
         <Route path="/received-messages" element={ <ReceivedMessages />} />
+        <Route path='/export-auctions' element={(isAdmin ? <ExportAuctions /> : <span>Not Authorized.</span>)} />
       </Routes>
     </BrowserRouter>
   );
