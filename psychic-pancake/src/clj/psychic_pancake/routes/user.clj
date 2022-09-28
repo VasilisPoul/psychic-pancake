@@ -108,3 +108,5 @@
              (ok {:new-rating new-rating
                   :user user}))))}}]]])
 
+
+(orm/merge! (doto  (orm/find! User "user_name") (.setRating 100)))
