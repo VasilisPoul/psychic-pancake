@@ -41,7 +41,11 @@
                  ;; buddy
                  [buddy/buddy-auth "3.0.1"]
                  [buddy/buddy-sign "3.4.333"]
-                 [buddy/buddy-hashers "1.8.158"]]
+                 [buddy/buddy-hashers "1.8.158"]
+                 ;; ml
+                 [uncomplicate/neanderthal "0.45.0"]
+                 [org.bytedeco/mkl-platform-redist "2020.3-1.5.4"]
+]
 
   :min-lein-version "2.0.0"
   
@@ -65,7 +69,9 @@
    :dev           [:project/dev :profiles/dev]
    :test          [:project/dev :project/test :profiles/test]
 
-   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn" ]
+   :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"
+                             "--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
+                             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
                   :dependencies [[org.clojure/tools.namespace "1.2.0"]
                                  [pjstadig/humane-test-output "0.11.0"]
                                  [prone "2021-04-23"]
