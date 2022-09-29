@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import '../style.css'
 import axios from "../api/axios";
 import countries_csv from '../assets/countries.csv';
 import Papa from 'papaparse';
+import { InstallContext } from "./InstallContext";
 
 export default function SetupAdmin(props) {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ export default function SetupAdmin(props) {
   const [loading, setLoading] = useState(false)
   const [countriesRecords, setCountiresRecords] = useState([]);
 
+  const { installed, setInstalled } = useContext(InstallContext)
   const HandleSubmit = (e) => {
     e.preventDefault();
     try {
@@ -35,11 +37,12 @@ export default function SetupAdmin(props) {
         // role: 'admin'
       })
         .then((response) => {
-          localStorage.setItem("InstalledToken", true); 
+
+          setInstalled(true)
           navigate("/")
         }
         )
-        .catch()
+        .catch(() => setInstalled(false))
     } catch (error) {
 
     }

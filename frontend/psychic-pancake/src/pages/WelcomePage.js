@@ -27,7 +27,7 @@ export default function WelcomePage() {
   }, []);
   return (
     <>
-   {!loading && <div>
+   <div>
 
    
       <InitialNavbar/>
@@ -56,7 +56,7 @@ export default function WelcomePage() {
         </div>
       </div>
       <Footer />
-      </div>}
+      </div>
     </>
   );
 }

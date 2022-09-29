@@ -9,7 +9,7 @@ function InstallContextComponent(props) {
       axios.get('/api/install')
       .then((response) => {
         if(!response.data.installed){
-            localStorage.setItem("InstalledToken", false)
+            localStorage.setItem("InstalledToken", 'false')
           setInstalled(false)
           
         }
