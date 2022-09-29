@@ -1,13 +1,15 @@
 import RoutesComponent from './components/Routes';
-import { useMemo, useContext } from 'react';
 import { UserContextComponent, UserContext } from './components/UserContext';
+import { InstallContext, InstallContextComponent } from './components/InstallContext'
 
 function App() {
 
   return (
-    <UserContextComponent>
-      <RoutesComponent />
-    </UserContextComponent>
+    <InstallContextComponent>
+      <UserContextComponent>
+        <RoutesComponent />
+      </UserContextComponent>
+    </InstallContextComponent>
   );
 }
 

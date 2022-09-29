@@ -31,10 +31,11 @@ export default function SetupAdmin(props) {
           longitude: 0
         },
         last_name: 'admin',
-        first_name: 'admin',
-        role: 'admin'
+        first_name: 'admin'
+        // role: 'admin'
       })
         .then((response) => {
+          localStorage.setItem("InstalledToken", true); 
           navigate("/")
         }
         )
