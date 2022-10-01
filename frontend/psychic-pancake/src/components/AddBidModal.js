@@ -44,7 +44,7 @@ export default function AddBidModal(props) {
       <button type="button" className=" btn btn-outline-dark mb-3 w-100" data-bs-toggle="modal" data-bs-target="#bidModal">New Bid</button>
 
       <div className="modal fade" id="bidModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="Auth-form-container">
+        <div className="form-container">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
@@ -53,8 +53,8 @@ export default function AddBidModal(props) {
 
               </div>
               <div className="modal-body">
-                {!validation && <form className="Auth-form" onSubmit={HandleValidation}>
-                  <div className="Auth-form-content">
+                {!validation && <form className="a-form" onSubmit={HandleValidation}>
+                  <div className="a-form-c">
                     <div className="form-group mt-3">
                     </div>
                     <div className="form-group mt-3">

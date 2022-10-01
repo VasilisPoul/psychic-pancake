@@ -9,22 +9,22 @@ import axios from '../api/axios';
 export default function WelcomePage() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    try {
-      axios.get('/api/install')
-      .then((response) => {
-        if(!response.data.installed){
-          setLoading(false)
-          navigate('/install')
-        }
-        else {
-          setLoading(false);
-        }
-      })
-    } catch (error) {
+  // useEffect(() => {
+  //   try {
+  //     axios.get('/api/install')
+  //     .then((response) => {
+  //       if(!response.data.installed){
+  //         setLoading(false)
+  //         navigate('/install')
+  //       }
+  //       else {
+  //         setLoading(false);
+  //       }
+  //     })
+  //   } catch (error) {
 
-    }
-  }, []);
+  //   }
+  // }, []);
   return (
     <>
    <div>

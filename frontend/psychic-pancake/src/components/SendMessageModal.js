@@ -37,7 +37,7 @@ export default function SendMessageModal(props) {
       <button type="button" className=" btn btn-dark w-100 mb-3" data-bs-toggle="modal" data-bs-target="#msgModal">New Message</button>
 
       <div className="modal fade" id="msgModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div className="Auth-form-container">
+        <div className="form-container">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
@@ -45,8 +45,8 @@ export default function SendMessageModal(props) {
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
               </div>
               <div className="modal-body">
-                <form className="Auth-form" onSubmit={HandleSubmit}>
-                  <div className="Auth-form-content">
+                <form className="a-form" onSubmit={HandleSubmit}>
+                  <div className="a-form-c">
                     <div className="form-group mt-3">
                     </div>
                     <div className="form-group mt-3">

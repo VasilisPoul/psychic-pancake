@@ -3,7 +3,7 @@ import axios from "../api/axios";
 const InstallContext = createContext();
 
 function InstallContextComponent(props) {
-  const [installed, setInstalled] = useState(false);
+  const [installed, setInstalled] = useState('');
   useEffect(() => {
     try {
       axios.get('/api/install')

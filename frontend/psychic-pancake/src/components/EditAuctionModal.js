@@ -81,7 +81,7 @@ export default function EditAuctionModal({ listing_url, listing }) {
             <button type="button" className="btn btn-outline-dark mb-3 w-100" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit Auction</button>
 
             <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="Auth-form-container">
+                <div className="form-container">
                     <div className="modal-dialog" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -89,9 +89,9 @@ export default function EditAuctionModal({ listing_url, listing }) {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" />
                             </div>
                             <div className="modal-body">
-                                <form className="Auth-form" onSubmit={HandleSubmit}>
-                                    <div className="Auth-form-content">
-                                        <h3 className="Auth-form-title">Auction Information</h3>
+                                <form className="a-form" onSubmit={HandleSubmit}>
+                                    <div className="a-form-c">
+                                        <h3 className="a-form-t">Auction Information</h3>
                                         <div className="form-group mt-3">
                                             <label>Name</label>
                                             <input

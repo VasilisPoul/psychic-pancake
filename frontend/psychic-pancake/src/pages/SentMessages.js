@@ -10,7 +10,7 @@ const MessageModal = (props) => {
   return (
 
     <div className="modal fade" id={msgModal.substring(1)} tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" onClick={(e) => { console.log(message) }}>
-      <div className="Auth-form-container">
+      <div className="form-container">
         <div className="modal-dialog modal-lg" style={{ width: "1250px", height: "250px" }} role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -18,7 +18,7 @@ const MessageModal = (props) => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
             </div>
             <div className="modal-body">
-              <div className="Auth-form-content">
+              <div className="a-form-c">
                 <div className="form-group mt-3">
                 </div>
                 <div className="form-group mt-3 border-bottom">

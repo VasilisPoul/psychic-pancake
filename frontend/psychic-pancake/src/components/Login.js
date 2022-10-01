@@ -50,10 +50,10 @@ export default function Login(props) {
   }
 
   return (
-    <div className={classNames(frontPage ? '' : "Auth-form-container")}>
-      <form className="Auth-form" onSubmit={LogInUser}>
-        <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Sign In</h3>
+    <div className={classNames(frontPage ? '' : "form-container")}>
+      <form className="a-form" onSubmit={LogInUser}>
+        <div className="a-form-c">
+          <h3 className="a-form-t">Sign In</h3>
           <div className="text-center">
             Not registered yet?{" "}
             <Link to="/signup" className="link-primary">
@@ -86,9 +86,6 @@ export default function Login(props) {
               Cancel
             </button>}
           </div>
-          <p className="text-center mt-2">
-            Forgot <a href="#">password?</a>
-          </p>
         </div>
       </form>
     </div>

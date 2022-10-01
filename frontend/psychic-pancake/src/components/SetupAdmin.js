@@ -66,10 +66,10 @@ export default function SetupAdmin(props) {
   }
 
   return (
-    <div className="Auth-form-container">
-      <form className="Auth-form" onSubmit={HandleSubmit}>
-        <div className="Auth-form-content">
-          <h3 className="Auth-form-title">Admin Information</h3>
+    <div className="form-container">
+      <form className="a-form" onSubmit={HandleSubmit}>
+        <div className="a-form-c">
+          <h3 className="a-form-t">Admin Information</h3>
           <div className="form-group mt-3">
             <label>Admin Username</label>
             <input

@@ -22,6 +22,7 @@ import Auction from '../pages/Auction';
 import SentMessages from '../pages/SentMessages';
 import ReceivedMessages from '../pages/ReceivedMessages';
 import ExportAuctions from '../pages/ExportAuctions';
+import GoToInstall from '../pages/GotoInstall';
 
 export default function RoutesComponent() {
   const { user, setUser } = useContext(UserContext);
@@ -33,18 +34,10 @@ export default function RoutesComponent() {
   isLoggedIn = localStorage.getItem('AuthToken');
 
   isAdmin = isLoggedIn && (user['role'] === 'admin');
-  console.log(installed)
   return (
     <>
-      {!installed ?
-        <BrowserRouter>
-          <Routes>
-            <Route path="/install" element={<SetupAdmin />} />
-            <Route path='*' element={<Navigate to='/install' />} />
-          </Routes>
-
-        </BrowserRouter>
-        :
+      {installed===true &&
+        
         <BrowserRouter>
           <Routes>
             <Route path="/" element={(isAdmin ? <Navigate to="users" /> : (isLoggedIn ? <Navigate to="/auctions" /> : <WelcomePage />))} />
@@ -63,6 +56,15 @@ export default function RoutesComponent() {
             <Route path='/export-auctions' element={(isAdmin ? <ExportAuctions /> : <span>Not Authorized.</span>)} />
             <Route path="*" component={<span>Not found.</span>} />
           </Routes>
+        </BrowserRouter>
+        
+       }
+       {installed===false&& <BrowserRouter>
+          <Routes>
+            <Route path="/install" element={<SetupAdmin />} />
+            <Route path='*' element={<Navigate to='/install' />} />
+          </Routes>
+
         </BrowserRouter>
       }
     </>

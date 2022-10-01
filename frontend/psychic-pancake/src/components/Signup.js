@@ -124,10 +124,10 @@ export default function Signup() {
 
   return (
     <>
-      <div className="Auth-form-container">
+      <div className="form-container">
         <form className="Signup-form" onSubmit={HandleSignUp}>
-          <div className="Auth-form-content">
-            <h3 className="Auth-form-title">Sign Up</h3>
+          <div className="a-form-c">
+            <h3 className="a-form-t">Sign Up</h3>
 
             <div className="row">
               <div className="col">
