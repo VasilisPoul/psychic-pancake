@@ -45,7 +45,8 @@
                  ;; ml
                  [uncomplicate/neanderthal "0.45.0"]
                  [org.bytedeco/mkl-platform-redist "2020.3-1.5.4"]
-]
+                 [clj-glob "1.0.0"]
+                 [org.clojure/data.priority-map "1.1.0"]]
 
   :min-lein-version "2.0.0"
   
