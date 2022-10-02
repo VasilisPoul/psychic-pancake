@@ -205,7 +205,7 @@ export default function HomePage(props) {
               </>
             );
           })}
-           {listings_array.length===8 && <div className='btn' onClick={HandleLoadMore}>Show Older</div>}
+           {last && <div className='btn' onClick={HandleLoadMore}>Show Older</div>}
         </div>
       </div>}
     </div>
