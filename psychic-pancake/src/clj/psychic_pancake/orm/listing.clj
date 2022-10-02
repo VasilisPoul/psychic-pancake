@@ -89,7 +89,7 @@
          "and (%1$s <= :price_max or :price_max = NULL) "
          "and (l.country.name = :country or :country = NULL) "
          "and (:seller_rating = NULL or l.seller.rating >= :seller_rating) "
-         "and ((l.activated AND  NOW() < l.ends) or :only_active = FALSE) "
+         "and ((l.activated = TRUE AND NOW() < l.ends) or :only_active = FALSE) "
          "and (c.name in :categories or coalesce(:categories) IS NULL) "
          "and (l.seller.rating >= :seller_rating or :seller_rating = NULL) "
          "and (l.seller.uid = :seller_uid or :seller_uid = NULL) "
