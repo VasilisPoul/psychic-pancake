@@ -21,14 +21,18 @@
      :post {:auth? :buyer
             :fetch! [{:type :user
                       :req->id (comp :uid :identity)
-                      :key :bidder}]
+                      :key :bidder}
+                     {:key :listing
+                      :req->id
+                      (comp :listing-id :path :parameters)
+                      :type :listing}]
             :parameters {:body
                          {:amount :item/price}}
             :responses {200 {:bid :bid/ref}}
             :handler (fn [{{body :body} :parameters
                           db :db}]
                        (cond
-                         (not (.isActive ^Listing (:listing db)))
+                         (not (.getActive ^Listing (:listing db)))
                          (not-acceptable {:reason "Invalid bid attempted"
                                           :info "The listing is not currently active"})
                          (<= (:amount body)

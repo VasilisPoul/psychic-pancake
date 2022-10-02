@@ -67,7 +67,7 @@
                       (let [active? #(some-> %
                                              Integer/parseInt
                                              orm.listing/get-by-id
-                                             .isActive)]
+                                             .getActive)]
                         (->> (-> req :identity :uid)                                           uid->recommendations
                              (filter active?)
                              (take 5)
