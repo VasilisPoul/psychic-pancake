@@ -10,6 +10,7 @@
    [psychic-pancake.orm.core :as orm]
    [psychic-pancake.orm.query-builder :refer [*doto-query*]]
    [psychic-pancake.middleware.formats :as fmt]
+   [psychic-pancake.ml.matrix-factorization :refer [state uid->recommendations]]
    [clojure.spec.alpha :as s]
    [clojure.walk :refer [postwalk]]
    [spec-tools.data-spec :as ds]
@@ -56,11 +57,27 @@
                 (do
                   (notify-listing-ends listing)
                   (ok {:listing listing}))))}}]
-
+   ["/recommended"
+    {:auth? :buyer
+     :swagger {:tags ["listing"]
+               :security [{:apiAuth []}]}
+     :conflicting true
+     :get {:responses {200 {:body (s/coll-of :listing/ref)}}
+           :handler (fn [req]
+                      (let [active? #(some-> %
+                                             Integer/parseInt
+                                             orm.listing/get-by-id
+                                             .isActive)]
+                        (->> (-> req :identity :uid)                                           uid->recommendations
+                             (filter active?)
+                             (take 5)
+                             (apply vector)
+                             ok)))}}]
 
    ["/:listing-id"
     {:swagger {:tags ["listing"]
                :security [{:apiAuth []}]}
+     :conflicting true
      :parameters {:path {:listing-id pos-int?}}}
     [""
      {

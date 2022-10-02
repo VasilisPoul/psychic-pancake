@@ -8,6 +8,8 @@
    [psychic-pancake.middleware.formats :refer [->XML instance-with-xml]]))
 
 
+(declare all-listings)
+
 (def routes
   ["/admin"
    {:swagger {:tags ["admin"] :security [{:apiAuth []}]}
@@ -51,11 +53,14 @@
                                :seller :listing/seller}]}}
       :handler
       (fn [req]
-        (ok 
-         (vary-meta
-          (->> {:only_active false}
-              orm.listing/search-listings 
-              ->clj
-              (map #(assoc % :number_of_bids (-> % :bids count)))
-              (apply vector))
-          merge {:name :Items})))}}]])
+        (ok (all-listings)))}}]])
+
+
+(defn all-listings []
+  (vary-meta
+   (->> {:only_active false}
+        orm.listing/search-listings 
+        ->clj
+        (map #(assoc % :number_of_bids (-> % :bids count)))
+        (apply vector))
+   merge {:name :Items}))

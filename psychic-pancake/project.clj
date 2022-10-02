@@ -46,6 +46,7 @@
                  [uncomplicate/neanderthal "0.45.0"]
                  [org.bytedeco/mkl-platform-redist "2020.3-1.5.4"]
                  [clj-glob "1.0.0"]
+                 [neanderthal-stick "0.4.0"]
                  [org.clojure/data.priority-map "1.1.0"]]
 
   :min-lein-version "2.0.0"
@@ -72,7 +73,8 @@
 
    :project/dev  {:jvm-opts ["-Dconf=dev-config.edn"
                              "--add-opens=java.base/jdk.internal.ref=ALL-UNNAMED"
-                             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
+                             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"
+                             ]
                   :dependencies [[org.clojure/tools.namespace "1.2.0"]
                                  [pjstadig/humane-test-output "0.11.0"]
                                  [prone "2021-04-23"]
@@ -94,3 +96,4 @@
                   :resource-paths ["env/test/resources"] }
    :profiles/dev {}
    :profiles/test {}})
+
