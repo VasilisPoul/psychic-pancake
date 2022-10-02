@@ -89,7 +89,7 @@
                     {msg :msg} :db}]
                  (let [message_id (-> msg orm/->clj :msg_id)]
                    (do
-                     (mark-seen! msg)
+                     (mark-seen! msg me)
                      (orm.message/delete-from me message_id)
                      (ok {}))))}}]])
 
