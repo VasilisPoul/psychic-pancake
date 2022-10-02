@@ -96,7 +96,7 @@ export default function HomePage(props) {
     url += minPrice_q ? `&price_min=${minPrice_q}` : ''
     url += maxPrice_q ? `&price_max=${maxPrice_q}` : ''
     url += dateAfter_q ? `&after=${dateAfter_q}` : ''
-    url += categories_q ? `&after=${categories_q}` : ''
+    url += categories_q ? `&categories=${categories_q}` : ''
 
     axios.get(url).then(
       function (response) {
@@ -110,14 +110,13 @@ export default function HomePage(props) {
   const HandleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new Object()
-    if (isActive) urlParams.only_active = isActive;
+    urlParams.only_active = isActive;
     if (name) urlParams.name = name;
     if (country) urlParams.country = country;
-    if (isActive) urlParams.only_active = isActive;
     if (minPrice) urlParams.price_max = minPrice;
     if (maxPrice) urlParams.price_max = maxPrice;
     if (categories) urlParams.categories = categories;
-    if (last) urlParams.after = last;
+
     setListings([]);
     navigate({
       pathname: "/auctions",
@@ -128,10 +127,9 @@ export default function HomePage(props) {
   const HandleLoadMore = (e) => {
     // e.preventDefault();
     const urlParams = new Object()
-    if (isActive) urlParams.only_active = isActive;
+    urlParams.only_active = isActive;
     if (name) urlParams.name = name;
     if (country) urlParams.country = country;
-    if (isActive) urlParams.only_active = isActive;
     if (minPrice) urlParams.price_max = minPrice;
     if (maxPrice) urlParams.price_max = maxPrice;
     if (categories) urlParams.categories = categories;
