@@ -78,7 +78,7 @@
       (fn [{{me :uid} :identity
           {msg :msg} :db}]
         (do
-          (mark-seen! msg)
+          (mark-seen! msg me)
           (-> msg
             orm/obj->map
             (clojure.set/rename-keys {:msg_id :self})

@@ -58,39 +58,46 @@
     :displayAt (now)
     :message_ref msg}))
 
-(defmulti mark-seen! class)
+(defmulti mark-seen! (fn [x _] (class x)))
 
-(defmethod mark-seen! Message [^Message msg]
+(defmethod mark-seen! Message [^Message msg uid]
   ((strs->dbfn
     "UPDATE Notification AS n"
     "SET is_seen = TRUE"
     "WHERE n.message_ref.msg_id=?1"
-    "AND n.displayAt < NOW()")
-   (.getMsg_id msg)))
+    "AND n.displayAt < NOW()"
+    "AND n.user.uid = ?2")
+   (.getMsg_id msg)
+   uid))
 
-(defmethod mark-seen! Bid [^Bid bid]
+(defmethod mark-seen! Bid [^Bid bid uid]
   ((strs->dbfn
     "UPDATE Notification AS n"
     "SET is_seen = TRUE"
     "WHERE n.bid_ref.id=?1"
-    "AND n.displayAt < NOW()")
-   (.getId bid)))
+    "AND n.displayAt < NOW()"
+    "AND n.user.uid=?2")
+   (.getId bid)
+   uid))
 
-(defmethod mark-seen! Listing [^Listing listing]
+(defmethod mark-seen! Listing [^Listing listing uid]
   ((juxt
     (strs->dbfn
      "UPDATE Notification n"
      "SET is_seen = TRUE"
      "WHERE n.listing_ref.item_id=?1"
-     "AND n.displayAt < NOW()")
+     "AND n.displayAt < NOW()"
+     "AND n.user.uid = ?2")
     (strs->dbfn
      "UPDATE Notification n"
      "SET is_seen = TRUE"
      "WHERE n.bid_ref.id in"
      "(SELECT b.id FROM Bid b"
      "WHERE b.listing.item_id=?1)"
-     "AND n.displayAt < NOW()"))
-   (.getItem_id listing)))
+     "AND n.displayAt < NOW()"
+     "AND n.user.uid = ?2"))
+   (.getItem_id listing)
+   uid))
 
 
 (defmulti notifications-of class)

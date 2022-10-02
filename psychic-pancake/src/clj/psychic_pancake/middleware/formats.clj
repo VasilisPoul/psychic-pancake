@@ -67,6 +67,8 @@
        (xml/element :Description {} [(.getDescription this)])])))
   Date
   (->XML [this] (format-time this))
+  java.sql.Timestamp
+  (->XML [this] (format-time this))
   Bid
   (->XML [this]
     (xml/element :Bid
@@ -80,7 +82,7 @@
                           (xml/element
                            :Country {}
                            [(-> bidder .getCountry ->XML)])]))
-              (xml/element :Time {} [(.getTime this)])
+              (xml/element :Time {} [(-> this .getTime ->XML)])
               (xml/element :Amount {}
                        [(->> this .getAmount (str "$"))])]))
   Location
@@ -156,3 +158,4 @@
 ;; (xml/emit-str (->XML {:foo :bar}))
 
 ;; (xml/element :foo :bar)
+

@@ -88,9 +88,10 @@
                       :type :listing}]
             :responses {200 {:body specs.listings/listing-shape}}
             :handler
-            (fn [{{listing :listing} :db}]
+            (fn [{{listing :listing} :db
+                 {uid :uid} :identity}]
               (do
-                (mark-seen! listing)
+                (mark-seen! listing uid)
                 (-> listing
                     orm/obj->map
                     ok)))}}
