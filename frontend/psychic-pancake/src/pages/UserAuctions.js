@@ -43,7 +43,7 @@ const ListingView = (props) => {
     <div className="card mb-3">
       <div className="row g-0">
         <div className="col-md-4">
-          <img src={img} className="img-fluid rounded-start" alt="..." />
+        <img width={"173px"} height={"173px"} src={img} className="card-img-top embed-responsive-item" style={{ width: "100%;", cursor: "pointer", height: "15vw;", "object-fit": "cover" }} alt="..." />
         </div>
         <div className="col-md-8">
           <div className='row'>

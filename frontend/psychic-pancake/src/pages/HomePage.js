@@ -90,7 +90,7 @@ export default function HomePage(props) {
       }
     });
     let url = `/api/listings`
-    url += isActive_q ? `?only_active=${isActive_q}` : ''
+    url += isActive_q ? `?only_active=${isActive_q}` : '?only_active=true'
     url += name_q ? `&name=${name_q}` : ''
     url += country_q ? `&country=${country_q}` : ''
     url += minPrice_q ? `&price_min=${minPrice_q}` : ''
@@ -140,6 +140,7 @@ export default function HomePage(props) {
       search: `?${createSearchParams(urlParams)}`
     });
   }
+  console.log({listings_array})
   return (
     <div key={query}>
       {localStorage.getItem('AuthToken') ? <Navbar /> : <InitialNavbar />}
@@ -204,7 +205,7 @@ export default function HomePage(props) {
               </>
             );
           })}
-           {listings_array.length===10 && <div className='btn' onClick={HandleLoadMore}>Show Older</div>}
+           {listings_array.length===8 && <div className='btn' onClick={HandleLoadMore}>Show Older</div>}
         </div>
       </div>}
     </div>
