@@ -89,9 +89,9 @@
             :responses {200 {:body specs.listings/listing-shape}}
             :handler
             (fn [{{listing :listing} :db
-                 {uid :uid} :identity}]
+                 :as req}]
               (do
-                (mark-seen! listing uid)
+                (some->> req :identity :uid (mark-seen! listing))
                 (-> listing
                     orm/obj->map
                     ok)))}}
